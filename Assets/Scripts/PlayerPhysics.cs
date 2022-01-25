@@ -20,6 +20,8 @@ public class PlayerPhysics : MonoBehaviour
     public bool  enableSprint;        // Check for dashes rather than sprinting
     [HideInInspector]
     public bool  startSprint;         // Check for dashes rather than sprinting
+    [HideInInspector]
+    public int   airLock;             // Can't change direction in midair
 
     // Calculated Values ======================================================
     private float effectiveGravity;   // The gravity after forces are applied
@@ -37,6 +39,7 @@ public class PlayerPhysics : MonoBehaviour
         physicsRate = 60;
         launch = 0.0f;
         travel = 0.0f;
+        airLock = 0;
 
         fTimeGravity = WorldRules.gravity / physicsRate;
         fTimeDrag = WorldRules.drag / physicsRate;
@@ -83,11 +86,13 @@ public class PlayerPhysics : MonoBehaviour
             if (effectiveMovement < 0.0f)
             {
                 effectiveMovement += fTimeFloorDrag;
+                airLock = -1;
             }
             // Moving right
             else if (effectiveMovement > 0.0f)
             {
                 effectiveMovement -= fTimeFloorDrag;
+                airLock = 1;
             }
         }
         else if (controller.pState == PlayerController.PlayerStates.Airborne)
@@ -96,11 +101,13 @@ public class PlayerPhysics : MonoBehaviour
             if (effectiveMovement < 0.0f)
             {
                 effectiveMovement += fTimeDrag;
+                airLock = -1;
             }
             // Moving right
             else if (effectiveMovement > 0.0f)
             {
                 effectiveMovement -= fTimeDrag;
+                airLock = 1;
             }
         }
 
@@ -123,7 +130,10 @@ public class PlayerPhysics : MonoBehaviour
         if ((opponent.transform.position.x > pos.x && effectiveMovement < 0.0f) ||
             (opponent.transform.position.x < pos.x && effectiveMovement > 0.0f))
         {
-            controller.gState = PlayerController.GroundStates.Backdash;
+            if (controller.gState != PlayerController.GroundStates.Sprint)
+            {
+                controller.gState = PlayerController.GroundStates.Backdash;
+            }
             enableSprint = true;
         }
 
@@ -131,7 +141,10 @@ public class PlayerPhysics : MonoBehaviour
         if ((opponent.transform.position.x > pos.x && effectiveMovement > 0.0f) ||
             (opponent.transform.position.x < pos.x && effectiveMovement < 0.0f))
         {
-            controller.gState = PlayerController.GroundStates.Dash;
+            if (controller.gState != PlayerController.GroundStates.Sprint)
+            {
+                controller.gState = PlayerController.GroundStates.Dash;
+            }
             enableSprint = true;
         }
 
@@ -141,6 +154,7 @@ public class PlayerPhysics : MonoBehaviour
             controller.gState = PlayerController.GroundStates.Neutral;
             effectiveMovement = 0.0f;
             enableSprint = false;
+            airLock = 0;
         }
 
         pos.x += effectiveMovement;

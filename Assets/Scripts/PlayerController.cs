@@ -73,5 +73,27 @@ public class PlayerController : MonoBehaviour
                 physics.travel = 0.0f;
             }
         }
+        else if (pState == PlayerStates.Airborne)
+        {
+            if (gState == GroundStates.Sprint)
+            {
+                if (Input.GetKeyDown(controls.Left) && physics.airLock == -1)
+                {
+                    physics.startSprint = true;
+                    physics.travel = -sprint;
+                }
+                else if (Input.GetKeyDown(controls.Right) && physics.airLock == 1)
+                {
+                    physics.startSprint = true;
+                    physics.travel = sprint;
+                }
+
+                if (Input.GetKeyUp(controls.Left) || Input.GetKeyUp(controls.Right))
+                {
+                    physics.startSprint = false;
+                    physics.travel = 0.0f;
+                }
+            }
+        }
     }
 }
