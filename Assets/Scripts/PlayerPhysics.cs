@@ -16,6 +16,10 @@ public class PlayerPhysics : MonoBehaviour
     public float launch;              // When extra Y force is applied
     [HideInInspector]
     public float travel;              // When extra X force is applied
+    [HideInInspector]
+    public bool  enableSprint;        // Check for dashes rather than sprinting
+    [HideInInspector]
+    public bool  startSprint;         // Check for dashes rather than sprinting
 
     // Calculated Values ======================================================
     private float effectiveGravity;   // The gravity after forces are applied
@@ -100,35 +104,46 @@ public class PlayerPhysics : MonoBehaviour
             }
         }
 
+        // --------------------------------------------------------
+        // - Sprinting -
+        // -------
+        if (enableSprint && startSprint)
+        {
+            controller.gState = PlayerController.GroundStates.Sprint;
+            effectiveMovement = travel;
+        }
+
+        // --------------------------------------------------------
+        // - Dashing -
+        // -------
+        effectiveMovement += travel;
+        if (controller.gState != PlayerController.GroundStates.Sprint) travel = 0.0f;
+
+        // If you're moving away from the opponent
+        if ((opponent.transform.position.x > pos.x && effectiveMovement < 0.0f) ||
+            (opponent.transform.position.x < pos.x && effectiveMovement > 0.0f))
+        {
+            controller.gState = PlayerController.GroundStates.Backdash;
+            enableSprint = true;
+        }
+
+        // If you're toward from the opponent
+        if ((opponent.transform.position.x > pos.x && effectiveMovement > 0.0f) ||
+            (opponent.transform.position.x < pos.x && effectiveMovement < 0.0f))
+        {
+            controller.gState = PlayerController.GroundStates.Dash;
+            enableSprint = true;
+        }
+
         // Come to a stop
         if (effectiveMovement < 0.01f && effectiveMovement > -0.01f)
         {
             controller.gState = PlayerController.GroundStates.Neutral;
             effectiveMovement = 0.0f;
+            enableSprint = false;
         }
 
-        effectiveMovement += travel;
-        travel = 0.0f;
         pos.x += effectiveMovement;
-
-        // If your opponent is to the right
-        if (opponent.transform.position.x > pos.x)
-        {
-            if (effectiveMovement < 0.0f)
-            {
-                controller.gState = PlayerController.GroundStates.Backdash;
-            }
-        }
-
-        // If your opponent is to the left
-        if (opponent.transform.position.x < pos.x)
-        {
-            if (effectiveMovement > 0.0f)
-            {
-                controller.gState = PlayerController.GroundStates.Dash;
-            }
-        }
-
         transform.position = pos;
     }
 }

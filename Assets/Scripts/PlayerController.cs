@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float speed;
+    public float sprint;
     public float dashDistance;
     public float jumpPower;
 
@@ -31,21 +31,47 @@ public class PlayerController : MonoBehaviour
         // --------------------------------------------------------
         // - Movement Inputs -
         // -------
-        if (Input.GetKeyDown(controls.Up) && pState == PlayerStates.Grounded)
+        if (pState == PlayerStates.Grounded)
         {
-            physics.launch += jumpPower;
-        }
-        if (Input.GetKeyDown(controls.Down))
-        {
+            if (Input.GetKeyDown(controls.Up))
+            {
+                physics.launch += jumpPower;
+            }
 
-        }
-        if (Input.GetKeyDown(controls.Left) && pState == PlayerStates.Grounded && gState == GroundStates.Neutral)
-        {
-            physics.travel -= dashDistance;
-        }
-        if (Input.GetKeyDown(controls.Right) && pState == PlayerStates.Grounded && gState == GroundStates.Neutral)
-        {
-            physics.travel += dashDistance;
+            if (Input.GetKeyDown(controls.Down))
+            {
+
+            }
+
+            if (Input.GetKeyDown(controls.Left) && gState == GroundStates.Neutral)
+            {
+                physics.travel -= dashDistance;
+            }
+            else if (Input.GetKeyDown(controls.Left) && gState != GroundStates.Neutral)
+            {
+                physics.startSprint = true;
+                physics.travel = -sprint;
+            }
+            else if (Input.GetKeyUp(controls.Left) && gState != GroundStates.Neutral)
+            {
+                physics.startSprint = false;
+                physics.travel = 0.0f;
+            }
+
+            if (Input.GetKeyDown(controls.Right) && gState == GroundStates.Neutral)
+            {
+                physics.travel += dashDistance;
+            }
+            else if (Input.GetKeyDown(controls.Right) && gState != GroundStates.Neutral)
+            {
+                physics.startSprint = true;
+                physics.travel = sprint;
+            }
+            else if (Input.GetKeyUp(controls.Right) && gState != GroundStates.Neutral)
+            {
+                physics.startSprint = false;
+                physics.travel = 0.0f;
+            }
         }
     }
 }
