@@ -6,7 +6,6 @@ public class PlayerPhysics : MonoBehaviour
 {
     // Positional Values ======================================================
     private Vector3 pos;              // Character height from the floor
-    private int     physicsRate;      // The FPS that the logic should flow at
     private float   fTimeGravity;     // Gravity locked to 60fps
     private float   fTimeDrag;        // Drag locked to 60fps
     private float   fTimeFloorDrag;   // FloorDrag locked to 60fps
@@ -36,14 +35,13 @@ public class PlayerPhysics : MonoBehaviour
     void Start()
     {
         controller = GetComponent<PlayerController>();
-        physicsRate = 60;
         launch = 0.0f;
         travel = 0.0f;
         airLock = 0;
 
-        fTimeGravity = WorldRules.gravity / physicsRate;
-        fTimeDrag = WorldRules.drag / physicsRate;
-        fTimeFloorDrag = WorldRules.floordrag / physicsRate;
+        fTimeGravity = WorldRules.gravity / WorldRules.physicsRate;
+        fTimeDrag = WorldRules.drag / WorldRules.physicsRate;
+        fTimeFloorDrag = WorldRules.floordrag / WorldRules.physicsRate;
 
         float halfHeight = transform.localScale.y * 0.5f;
         effectiveMinHeight = WorldRules.minHeight + halfHeight;

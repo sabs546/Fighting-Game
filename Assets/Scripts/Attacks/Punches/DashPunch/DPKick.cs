@@ -7,15 +7,14 @@ public class DPKick : BaseAttack
     public DPKick()
     {
         attackType = AttackType.Kick;
-        damage = 4;
-        startup = 3;
-        active = 2;
-        recovery = 15;
-        stun = 10;
-        followup = null;
+        Damage = 4;
+        Speed = new Vector3Int(3, 5, 20);
+        Stun = 10;
+        Followup = null;
 
-        range = new Vector2(2.0f, 1.0f);
-        knockBack = new Vector2(4.0f, 0.0f);
+        Range = new Vector2(2.0f, 1.0f);
+        Knockback = new Vector2(4.0f, 0.0f);
+        KnockbackType = -1;
 
     }
 }

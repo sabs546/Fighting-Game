@@ -10,10 +10,13 @@ public class PlayerAttackController : MonoBehaviour
     public enum AttackState { Empty, Startup, Active, Recovery };
     public AttackState state;
 
-    PlayerController controller;
-    SpriteRenderer sprite;
-    SetControls controls;
+    private PlayerController controller;
+    private SpriteRenderer sprite;
+    private SetControls controls;
     private int timer;
+
+    private PlayerPhysics physics;         // For your own knockback
+    private PlayerPhysics opponentPhysics; // For the opponents knockback
 
     // Start is called before the first frame update
     void Start()
@@ -25,6 +28,9 @@ public class PlayerAttackController : MonoBehaviour
         sprite = GetComponent<SpriteRenderer>();
         state = AttackState.Empty;
         timer = 0;
+
+        physics = GetComponent<PlayerPhysics>();
+        opponentPhysics = physics.opponent.GetComponent<PlayerPhysics>();
     }
 
     // Update is called once per frame
@@ -39,7 +45,7 @@ public class PlayerAttackController : MonoBehaviour
                 if (currentAttack != null)
                 {
                     state = AttackState.Startup;
-                    nextAttack = currentAttack.followup;
+                    nextAttack = currentAttack.Followup;
                 }
             }
             else if (Input.GetKeyDown(controls.Kick))
@@ -48,7 +54,7 @@ public class PlayerAttackController : MonoBehaviour
                 if (currentAttack != null)
                 {
                     state = AttackState.Startup;
-                    nextAttack = currentAttack.followup;
+                    nextAttack = currentAttack.Followup;
                 }
             }
         }
@@ -64,9 +70,9 @@ public class PlayerAttackController : MonoBehaviour
                     state = AttackState.Startup;
                     timer = 0;
                     Debug.Log(currentAttack.ToString());
-                    if (currentAttack.followup != null)
+                    if (currentAttack.Followup != null)
                     {
-                        nextAttack = currentAttack.followup;
+                        nextAttack = currentAttack.Followup;
                     }
                 }
             }
@@ -76,17 +82,18 @@ public class PlayerAttackController : MonoBehaviour
         if (state != AttackState.Empty)
         {
             timer++;
-            if (timer < currentAttack.startup)
+            if (timer < currentAttack.Speed.x)
             {
                 state = AttackState.Startup;
                 sprite.color = Color.cyan;
             }
-            else if (timer < currentAttack.active)
+            else if (timer < currentAttack.Speed.y)
             {
                 state = AttackState.Active;
                 sprite.color = Color.red;
+                SendFeedback(currentAttack.KnockbackType);
             }
-            else if (timer < currentAttack.recovery)
+            else if (timer < currentAttack.Speed.z)
             {
                 state = AttackState.Recovery;
                 sprite.color = Color.yellow;
@@ -126,5 +133,30 @@ public class PlayerAttackController : MonoBehaviour
                 break;
         }
         return null;
+    }
+
+    public void SendFeedback(int knockbackType)
+    {
+        switch (knockbackType)
+        {
+            case -1:
+                physics.launch -= (currentAttack.Knockback.y * 2.0f) / WorldRules.physicsRate;
+                physics.travel -= (currentAttack.Knockback.x * 2.0f) / WorldRules.physicsRate;
+                opponentPhysics.launch += currentAttack.Knockback.y / WorldRules.physicsRate;
+                opponentPhysics.travel += currentAttack.Knockback.x / WorldRules.physicsRate;
+                break;
+            case 0:
+                physics.launch -= currentAttack.Knockback.y / WorldRules.physicsRate;
+                physics.travel -= currentAttack.Knockback.x / WorldRules.physicsRate;
+                opponentPhysics.launch += currentAttack.Knockback.y / WorldRules.physicsRate;
+                opponentPhysics.travel += currentAttack.Knockback.x / WorldRules.physicsRate;
+                break;
+            case 1:
+                physics.launch -= currentAttack.Knockback.y / WorldRules.physicsRate;
+                physics.travel -= currentAttack.Knockback.x / WorldRules.physicsRate;
+                opponentPhysics.launch += (currentAttack.Knockback.y * 2.0f) / WorldRules.physicsRate;
+                opponentPhysics.travel += (currentAttack.Knockback.x * 2.0f) / WorldRules.physicsRate;
+                break;
+        }
     }
 }

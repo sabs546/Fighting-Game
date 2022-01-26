@@ -5,14 +5,13 @@ public class DashPunch : BaseAttack
     public DashPunch()
     {
         attackType = AttackType.Punch;
-        damage = 2;
-        startup = 5;
-        active = 2;
-        recovery = 10;
-        stun = 15;
-        followup = new DPKick();
+        Damage = 2;
+        Speed = new Vector3Int(5, 7, 17);
+        Stun = 15;
+        Followup = new DPKick();
 
-        range = new Vector2(2.0f, 1.0f);
-        knockBack = new Vector2(4.0f, 0.0f);
+        Range = new Vector2(2.0f, 1.0f);
+        Knockback = new Vector2(4.0f, 0.0f);
+        KnockbackType = 1;
     }
 }
