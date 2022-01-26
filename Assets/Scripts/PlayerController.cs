@@ -17,12 +17,14 @@ public class PlayerController : MonoBehaviour
 
     private SetControls controls;
     private PlayerPhysics physics;
+    private PlayerAttackController attackController;
 
     // Start is called before the first frame update
     void Start()
     {
         controls = GetComponent<SetControls>();
         physics = GetComponent<PlayerPhysics>();
+        attackController = GetComponent<PlayerAttackController>();
     }
 
     // Update is called once per frame
@@ -31,7 +33,23 @@ public class PlayerController : MonoBehaviour
         // --------------------------------------------------------
         // - Movement Inputs -
         // -------
-        if (pState == PlayerStates.Grounded)
+        // You shouldn't be able to move while attacking
+        if (attackController.state != PlayerAttackController.AttackState.Empty)
+        {
+            if (attackController.state == PlayerAttackController.AttackState.Startup)
+            {
+                
+            }
+            else if (attackController.state == PlayerAttackController.AttackState.Active)
+            {
+                
+            }
+            else if (attackController.state == PlayerAttackController.AttackState.Recovery)
+            {
+                
+            }
+        }
+        else if (pState == PlayerStates.Grounded)
         {
             if (Input.GetKeyDown(controls.Up))
             {

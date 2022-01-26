@@ -5,20 +5,26 @@ using UnityEngine;
 public class PlayerAttackController : MonoBehaviour
 {
     public enum AttackType { Punch, Kick, Throw };
-    private BaseAttack currentAttack;
+    public BaseAttack currentAttack;
     private BaseAttack nextAttack;
 
-    public enum AttackState { Empty, Starting, Active, Stopping };
+    public enum AttackState { Empty, Startup, Active, Recovery };
     public AttackState state;
 
     PlayerController controller;
+    SpriteRenderer sprite;
     SetControls controls;
+    private int timer;
+
     // Start is called before the first frame update
     void Start()
     {
         controller = GetComponent<PlayerController>();
         controls = GetComponent<SetControls>();
+        currentAttack = new BaseAttack();
+        sprite = GetComponent<SpriteRenderer>();
         state = AttackState.Empty;
+        timer = 0;
     }
 
     // Update is called once per frame
@@ -29,7 +35,32 @@ public class PlayerAttackController : MonoBehaviour
             currentAttack = FindAttack(AttackType.Punch);
             if (currentAttack != null)
             {
-                state = AttackState.Starting;
+                state = AttackState.Startup;
+            }
+        }
+        if (state != AttackState.Empty)
+        {
+            timer++;
+            if (timer < currentAttack.startup)
+            {
+                state = AttackState.Startup;
+                sprite.color = Color.cyan;
+            }
+            else if (timer < currentAttack.active)
+            {
+                state = AttackState.Active;
+                sprite.color = Color.red;
+            }
+            else if (timer < currentAttack.recovery)
+            {
+                state = AttackState.Recovery;
+                sprite.color = Color.yellow;
+            }
+            else
+            {
+                state = AttackState.Empty;
+                sprite.color = Color.white;
+                timer = 0;
             }
         }
     }
@@ -45,7 +76,10 @@ public class PlayerAttackController : MonoBehaviour
                         break;
 
                     case PlayerController.GroundStates.Dash:
-                        if (attackType == AttackType.Punch) return new DashPunch();
+                        if (attackType == AttackType.Punch)
+                        {
+                            return new DashPunch();
+                        }
                         break;
 
                     case PlayerController.GroundStates.Sprint:

@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 353790519}
   - component: {fileID: 353790523}
   - component: {fileID: 353790522}
+  - component: {fileID: 353790524}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -236,7 +237,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sprint: 0.1
-  dashDistance: 0.2
+  dashDistance: 0.5
   jumpPower: 0.5
   pState: 0
   gState: 0
@@ -260,6 +261,19 @@ MonoBehaviour:
   Punch: 117
   Kick: 105
   Throw: 111
+--- !u!114 &353790524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 353790518}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47b10881a1404e24c993c09e3ed74ff8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state: 0
 --- !u!1 &429183485
 GameObject:
   m_ObjectHideFlags: 0
