@@ -158,4 +158,10 @@ public class PlayerPhysics : MonoBehaviour
         pos.x += effectiveMovement;
         transform.position = pos;
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        travel *= 0.5f;
+        opponent.GetComponent<PlayerPhysics>().travel += effectiveMovement * 1.1f;
+    }
 }

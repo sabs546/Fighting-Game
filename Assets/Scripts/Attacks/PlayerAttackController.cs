@@ -17,6 +17,7 @@ public class PlayerAttackController : MonoBehaviour
 
     private PlayerPhysics physics;         // For your own knockback
     private PlayerPhysics opponentPhysics; // For the opponents knockback
+    private BoxCollider2D hitbox;          // The hitbox of the attack
 
     // Start is called before the first frame update
     void Start()
@@ -31,6 +32,9 @@ public class PlayerAttackController : MonoBehaviour
 
         physics = GetComponent<PlayerPhysics>();
         opponentPhysics = physics.opponent.GetComponent<PlayerPhysics>();
+        hitbox = gameObject.AddComponent<BoxCollider2D>();
+        hitbox.isTrigger = true;
+        hitbox.enabled = false;
     }
 
     // Update is called once per frame
@@ -44,6 +48,7 @@ public class PlayerAttackController : MonoBehaviour
                 currentAttack = FindAttack(controls.Punch);
                 if (currentAttack != null)
                 {
+                    if (transform.position.x > opponentPhysics.transform.position.x) { currentAttack.SideSwap(); }
                     state = AttackState.Startup;
                     nextAttack = currentAttack.Followup;
                 }
@@ -53,6 +58,7 @@ public class PlayerAttackController : MonoBehaviour
                 currentAttack = FindAttack(controls.Kick);
                 if (currentAttack != null)
                 {
+                    if (transform.position.x > opponentPhysics.transform.position.x) { currentAttack.SideSwap(); }
                     state = AttackState.Startup;
                     nextAttack = currentAttack.Followup;
                 }
@@ -67,6 +73,7 @@ public class PlayerAttackController : MonoBehaviour
                 currentAttack = nextAttack;
                 if (currentAttack != null)
                 {
+                    if (transform.position.x > opponentPhysics.transform.position.x) { currentAttack.SideSwap(); }
                     state = AttackState.Startup;
                     timer = 0;
                     Debug.Log(currentAttack.ToString());
@@ -91,12 +98,15 @@ public class PlayerAttackController : MonoBehaviour
             {
                 state = AttackState.Active;
                 sprite.color = Color.red;
-                SendFeedback(currentAttack.KnockbackType);
+                hitbox.enabled = true;
+                hitbox.offset = currentAttack.Range;
+                hitbox.size = currentAttack.Size;
             }
             else if (timer < currentAttack.Speed.z)
             {
                 state = AttackState.Recovery;
                 sprite.color = Color.yellow;
+                hitbox.enabled = false;
             }
             else
             {
@@ -133,6 +143,11 @@ public class PlayerAttackController : MonoBehaviour
                 break;
         }
         return null;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        SendFeedback(currentAttack.KnockbackType);
     }
 
     public void SendFeedback(int knockbackType)

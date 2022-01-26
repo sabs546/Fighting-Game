@@ -11,6 +11,9 @@ public class BaseAttack
     public BaseAttack Followup { get; protected set; }
 
     public Vector2 Range { get; protected set; }
+    public Vector2 Size { get; protected set; }
     public Vector2 Knockback { get; protected set; }
     public int KnockbackType { get; protected set; }
+
+    public virtual void SideSwap() { }
 }

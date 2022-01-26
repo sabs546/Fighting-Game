@@ -10,8 +10,15 @@ public class DashPunch : BaseAttack
         Stun = 15;
         Followup = new DPKick();
 
-        Range = new Vector2(2.0f, 1.0f);
+        Range = new Vector2(2.0f, 0.0f);
+        Size = new Vector2(1.0f, 1.0f);
         Knockback = new Vector2(4.0f, 0.0f);
         KnockbackType = 1;
+    }
+
+    public override void SideSwap()
+    {
+        Range = new Vector2(Range.x * -1.0f, 0.0f);
+        Knockback = new Vector2(Knockback.x * -1.0f, 0.0f);
     }
 }
