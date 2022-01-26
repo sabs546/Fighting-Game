@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerAttackController : MonoBehaviour
 {
-    public enum AttackType { Punch, Kick, Throw };
     public BaseAttack currentAttack;
     private BaseAttack nextAttack;
 
@@ -22,6 +21,7 @@ public class PlayerAttackController : MonoBehaviour
         controller = GetComponent<PlayerController>();
         controls = GetComponent<SetControls>();
         currentAttack = new BaseAttack();
+        nextAttack = new BaseAttack();
         sprite = GetComponent<SpriteRenderer>();
         state = AttackState.Empty;
         timer = 0;
@@ -30,14 +30,49 @@ public class PlayerAttackController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(controls.Punch) && state == AttackState.Empty)
+        // First attack
+        if (state == AttackState.Empty)
         {
-            currentAttack = FindAttack(AttackType.Punch);
-            if (currentAttack != null)
+            if (Input.GetKeyDown(controls.Punch))
             {
-                state = AttackState.Startup;
+                currentAttack = FindAttack(controls.Punch);
+                if (currentAttack != null)
+                {
+                    state = AttackState.Startup;
+                    nextAttack = currentAttack.followup;
+                }
+            }
+            else if (Input.GetKeyDown(controls.Kick))
+            {
+                currentAttack = FindAttack(controls.Kick);
+                if (currentAttack != null)
+                {
+                    state = AttackState.Startup;
+                    nextAttack = currentAttack.followup;
+                }
             }
         }
+        // The next part of the string
+        else if (state == AttackState.Recovery)
+        {
+            if ((Input.GetKeyDown(controls.Punch) && nextAttack.attackType == BaseAttack.AttackType.Punch) ||
+                (Input.GetKeyDown(controls.Kick)  && nextAttack.attackType == BaseAttack.AttackType.Kick))
+            {
+                currentAttack = nextAttack;
+                if (currentAttack != null)
+                {
+                    state = AttackState.Startup;
+                    timer = 0;
+                    Debug.Log(currentAttack.ToString());
+                    if (currentAttack.followup != null)
+                    {
+                        nextAttack = currentAttack.followup;
+                    }
+                }
+            }
+        }
+
+        // What happens in the attack state
         if (state != AttackState.Empty)
         {
             timer++;
@@ -65,7 +100,7 @@ public class PlayerAttackController : MonoBehaviour
         }
     }
 
-    BaseAttack FindAttack(AttackType attackType)
+    BaseAttack FindAttack(KeyCode attackType)
     {
         switch (controller.pState)
         {
@@ -76,10 +111,7 @@ public class PlayerAttackController : MonoBehaviour
                         break;
 
                     case PlayerController.GroundStates.Dash:
-                        if (attackType == AttackType.Punch)
-                        {
-                            return new DashPunch();
-                        }
+                        if (attackType == controls.Punch) { return new DashPunch(); }
                         break;
 
                     case PlayerController.GroundStates.Sprint:
