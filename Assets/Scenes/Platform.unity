@@ -155,7 +155,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   launch: 0
   travel: 0
-  sprinting: 0
+  enableSprint: 0
+  startSprint: 0
+  airLock: 0
   opponent: {fileID: 429183485}
 --- !u!212 &353790520
 SpriteRenderer:
@@ -255,6 +257,9 @@ MonoBehaviour:
   Down: 115
   Left: 97
   Right: 100
+  Punch: 117
+  Kick: 105
+  Throw: 111
 --- !u!1 &429183485
 GameObject:
   m_ObjectHideFlags: 0
@@ -309,6 +314,9 @@ MonoBehaviour:
   Down: 115
   Left: 97
   Right: 100
+  Punch: 0
+  Kick: 0
+  Throw: 0
 --- !u!114 &429183488
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -323,7 +331,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   launch: 0
   travel: 0
-  sprinting: 0
+  enableSprint: 0
+  startSprint: 0
+  airLock: 0
   opponent: {fileID: 353790518}
 --- !u!212 &429183489
 SpriteRenderer:

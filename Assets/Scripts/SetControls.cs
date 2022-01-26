@@ -8,4 +8,8 @@ public class SetControls : MonoBehaviour
     public KeyCode Down;
     public KeyCode Left;
     public KeyCode Right;
+
+    public KeyCode Punch;
+    public KeyCode Kick;
+    public KeyCode Throw;
 }
