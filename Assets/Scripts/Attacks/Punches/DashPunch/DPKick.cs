@@ -14,7 +14,7 @@ public class DPKick : BaseAttack
 
         Range = new Vector2(2.0f, 0.0f);
         Size = new Vector2(1.5f, 1.0f);
-        Knockback = new Vector2(4.0f, 0.0f);
+        Knockback = new Vector2(8.0f, 0.0f);
         KnockbackType = -1;
     }
 

@@ -46,8 +46,8 @@ public class PlayerPhysics : MonoBehaviour
         fTimeDrag = WorldRules.drag / WorldRules.physicsRate;
         fTimeFloorDrag = WorldRules.floordrag / WorldRules.physicsRate;
 
-        float halfHeight = transform.localScale.y * 0.5f;
-        float halfWidth = transform.localScale.x * 0.5f;
+        float halfHeight = transform.lossyScale.y * 0.5f;
+        float halfWidth = transform.lossyScale.x * 0.5f;
         effectiveMinHeight = WorldRules.minHeight + halfHeight;
         effectiveMaxHeight = WorldRules.maxHeight - halfHeight;
         effectiveMaxLeft = -WorldRules.maxWidth + halfWidth;
