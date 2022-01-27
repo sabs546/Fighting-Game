@@ -9,6 +9,7 @@ public class PlayerPhysics : MonoBehaviour
     private float   fTimeGravity;     // Gravity locked to 60fps
     private float   fTimeDrag;        // Drag locked to 60fps
     private float   fTimeFloorDrag;   // FloorDrag locked to 60fps
+    private float   oldPosX;          // Pre-collision xpos
 
     // Controlled Values ======================================================
     [HideInInspector]
@@ -27,6 +28,8 @@ public class PlayerPhysics : MonoBehaviour
     private float effectiveMovement;  // X-Axis Movement decay
     private float effectiveMinHeight; // The minHeight after removing the feet
     private float effectiveMaxHeight; // The maxHeight after removing the head
+    private float effectiveMaxLeft;   // The maxWidth after adding the half the player
+    private float effectiveMaxRight;  // The maxWidth after removing the half the player
 
     private PlayerController controller;
     public  GameObject       opponent;
@@ -44,8 +47,11 @@ public class PlayerPhysics : MonoBehaviour
         fTimeFloorDrag = WorldRules.floordrag / WorldRules.physicsRate;
 
         float halfHeight = transform.localScale.y * 0.5f;
+        float halfWidth = transform.localScale.x * 0.5f;
         effectiveMinHeight = WorldRules.minHeight + halfHeight;
         effectiveMaxHeight = WorldRules.maxHeight - halfHeight;
+        effectiveMaxLeft = -WorldRules.maxWidth + halfWidth;
+        effectiveMaxRight = WorldRules.maxWidth - halfWidth;
     }
 
     // Update is called once per frame
@@ -55,6 +61,7 @@ public class PlayerPhysics : MonoBehaviour
         effectiveGravity += fTimeGravity;                                                                                          // Gravity is always applied
         effectiveGravity -= launch;                                                                                                // Launch applies next for no real reason
         launch = 0.0f;                                                                                                             // External forces like jumping are nullified
+        oldPosX = pos.x;
         
         controller.aState = effectiveGravity < 0.0f ? PlayerController.AirStates.Rising : PlayerController.AirStates.Falling;      // Check if you're rising or falling
 
@@ -155,13 +162,49 @@ public class PlayerPhysics : MonoBehaviour
             airLock = 0;
         }
 
+        // --------------------------------------------------------
+        // - Collision -
+        // -------
         pos.x += effectiveMovement;
+        {
+            PlayerPhysics oppPhysics = opponent.GetComponent<PlayerPhysics>();
+            if (SideCollision(pos.x, pos.y, oppPhysics.pos.x, oppPhysics.pos.y))
+            {
+                pos.x = oldPosX;
+            }
+        }
+
+        // --------------------------------------------------------
+        // - Walls -
+        // -------
+        if (pos.x < effectiveMaxLeft)
+        {
+            pos.x = effectiveMaxLeft;
+            effectiveMovement = 0.0f;
+            travel = travel * 0.5f * -1.0f;
+        }
+        else if (pos.x > effectiveMaxRight)
+        {
+            pos.x = effectiveMaxRight;
+            effectiveMovement = 0.0f;
+            travel = travel * 0.5f * -1.0f;
+        }
+
         transform.position = pos;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private bool SideCollision(float playerX, float playerY, float enemyX, float enemyY)
     {
-        travel *= 0.5f;
-        opponent.GetComponent<PlayerPhysics>().travel += effectiveMovement * 1.1f;
+        float halfSpriteHeight = transform.lossyScale.y * 0.5f;
+        float halfSpriteWidth = transform.lossyScale.x * 0.5f;
+        if (playerX + halfSpriteWidth > enemyX - halfSpriteWidth &&
+            playerX - halfSpriteWidth < enemyX + halfSpriteWidth &&
+            playerY + halfSpriteHeight > enemyY - halfSpriteHeight &&
+            playerY - halfSpriteHeight < enemyY + halfSpriteHeight)
+        {
+            opponent.GetComponent<PlayerPhysics>().travel += effectiveMovement;
+            return true;
+        }
+        return false;
     }
 }
