@@ -9,7 +9,6 @@ public class PlayerPhysics : MonoBehaviour
     private float   fTimeGravity;     // Gravity locked to 60fps
     private float   fTimeDrag;        // Drag locked to 60fps
     private float   fTimeFloorDrag;   // FloorDrag locked to 60fps
-    private float   oldPosX;          // Pre-collision xpos
 
     // Controlled Values ======================================================
     [HideInInspector]
@@ -61,7 +60,6 @@ public class PlayerPhysics : MonoBehaviour
         effectiveGravity += fTimeGravity;                                                                                          // Gravity is always applied
         effectiveGravity -= launch;                                                                                                // Launch applies next for no real reason
         launch = 0.0f;                                                                                                             // External forces like jumping are nullified
-        oldPosX = pos.x;
         
         controller.aState = effectiveGravity < 0.0f ? PlayerController.AirStates.Rising : PlayerController.AirStates.Falling;      // Check if you're rising or falling
 
@@ -166,13 +164,6 @@ public class PlayerPhysics : MonoBehaviour
         // - Collision -
         // -------
         pos.x += effectiveMovement;
-        {
-            PlayerPhysics oppPhysics = opponent.GetComponent<PlayerPhysics>();
-            if (SideCollision(pos.x, pos.y, oppPhysics.pos.x, oppPhysics.pos.y))
-            {
-                pos.x = oldPosX;
-            }
-        }
 
         // --------------------------------------------------------
         // - Walls -
@@ -193,18 +184,9 @@ public class PlayerPhysics : MonoBehaviour
         transform.position = pos;
     }
 
-    private bool SideCollision(float playerX, float playerY, float enemyX, float enemyY)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        float halfSpriteHeight = transform.lossyScale.y * 0.5f;
-        float halfSpriteWidth = transform.lossyScale.x * 0.5f;
-        if (playerX + halfSpriteWidth > enemyX - halfSpriteWidth &&
-            playerX - halfSpriteWidth < enemyX + halfSpriteWidth &&
-            playerY + halfSpriteHeight > enemyY - halfSpriteHeight &&
-            playerY - halfSpriteHeight < enemyY + halfSpriteHeight)
-        {
-            opponent.GetComponent<PlayerPhysics>().travel += effectiveMovement;
-            return true;
-        }
-        return false;
+        travel *= 0.5f;
+        opponent.GetComponent<PlayerPhysics>().travel += effectiveMovement;
     }
 }
