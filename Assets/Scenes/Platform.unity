@@ -242,8 +242,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sprint: 0.2
-  dashDistance: 0.5
-  jumpPower: 0.5
+  dashDistance: 0.4
+  jumpPower: 0.4
   pState: 0
   gState: 0
   aState: 0

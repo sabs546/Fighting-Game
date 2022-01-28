@@ -126,8 +126,11 @@ public class PlayerPhysics : MonoBehaviour
         // --------------------------------------------------------
         // - Dashing -
         // -------
-        effectiveMovement += travel;
-        if (controller.gState != PlayerController.GroundStates.Sprint) travel = 0.0f;
+        if (controller.gState != PlayerController.GroundStates.Sprint)
+        {
+            effectiveMovement += travel;
+            travel = 0.0f;
+        }
 
         // If you're moving away from the opponent
         if ((opponent.transform.position.x > pos.x && effectiveMovement < 0.0f) ||
