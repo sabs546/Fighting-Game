@@ -21,6 +21,7 @@ public class PlayerController : MonoBehaviour
     private SetControls controls;
     private PlayerPhysics physics;
     private PlayerAttackController attackController;
+    private float dashBackup;
 
     // Start is called before the first frame update
     void Start()
@@ -28,6 +29,7 @@ public class PlayerController : MonoBehaviour
         controls = GetComponent<SetControls>();
         physics = GetComponent<PlayerPhysics>();
         attackController = GetComponent<PlayerAttackController>();
+        dashBackup = 0.0f;
     }
 
     // Update is called once per frame
@@ -36,8 +38,14 @@ public class PlayerController : MonoBehaviour
         // --------------------------------------------------------
         // - Movement Inputs -
         // -------
+        // Lag frame for dashing
+        if (dashBackup != 0.0f)
+        {
+            physics.travel += dashBackup;
+            dashBackup = 0.0f;
+        }
         // You shouldn't be able to move while attacking
-        if (attackController.state != PlayerAttackController.AttackState.Empty)
+        else if (attackController.state != PlayerAttackController.AttackState.Empty)
         {
             if (attackController.state == PlayerAttackController.AttackState.Startup)
             {
@@ -66,7 +74,7 @@ public class PlayerController : MonoBehaviour
 
             if (Input.GetKeyDown(controls.Left) && gState == GroundStates.Neutral)
             {
-                physics.travel -= dashDistance;
+                dashBackup = -dashDistance;
             }
             else if (Input.GetKeyDown(controls.Left) && gState != GroundStates.Neutral)
             {
@@ -81,7 +89,7 @@ public class PlayerController : MonoBehaviour
 
             if (Input.GetKeyDown(controls.Right) && gState == GroundStates.Neutral)
             {
-                physics.travel += dashDistance;
+                dashBackup = dashDistance;
             }
             else if (Input.GetKeyDown(controls.Right) && gState != GroundStates.Neutral)
             {

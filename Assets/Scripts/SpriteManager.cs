@@ -19,9 +19,24 @@ public class SpriteManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        animator.SetInteger("XDir", 0);
+        animator.SetInteger("YDir", 0);
+        animator.SetBool("Sprint", false);
         if (controller.pState == PlayerController.PlayerStates.Grounded)
         {
-            animator.SetInteger("YDir", 0);
+            if (controller.gState == PlayerController.GroundStates.Dash)
+            {
+                animator.SetInteger("XDir", 1);
+            }
+            else if (controller.gState == PlayerController.GroundStates.Backdash)
+            {
+                animator.SetInteger("XDir", -1);
+            }
+            else if (controller.gState == PlayerController.GroundStates.Sprint)
+            {
+                animator.SetBool("Sprint", true);
+                sprite.flipX = controller.currentSide == PlayerController.Side.Right ? true : false;
+            }
         }
         else if (controller.pState == PlayerController.PlayerStates.Airborne)
         {
@@ -29,7 +44,7 @@ public class SpriteManager : MonoBehaviour
             {
                 animator.SetInteger("YDir", 1);
             }
-            if (controller.aState == PlayerController.AirStates.Falling)
+            else if (controller.aState == PlayerController.AirStates.Falling)
             {
                 animator.SetInteger("YDir", -1);
             }

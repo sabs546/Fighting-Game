@@ -241,12 +241,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7e621b0140f7a04da8245bb9374556a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprint: 0.1
+  sprint: 0.2
   dashDistance: 0.5
   jumpPower: 0.5
   pState: 0
   gState: 0
   aState: 0
+  currentSide: 0
 --- !u!114 &353790523
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -398,6 +399,7 @@ MonoBehaviour:
   pState: 0
   gState: 0
   aState: 0
+  currentSide: 0
 --- !u!114 &429183487
 MonoBehaviour:
   m_ObjectHideFlags: 0
