@@ -182,6 +182,15 @@ public class PlayerPhysics : MonoBehaviour
         }
 
         transform.position = pos;
+        if (controller.gState != PlayerController.GroundStates.Sprint)
+        {
+            controller.currentSide = pos.x < opponent.GetComponent<PlayerPhysics>().pos.x ? PlayerController.Side.Left : PlayerController.Side.Right;
+        }
+        else
+        {
+                 if (effectiveMovement < 0) { controller.currentSide = PlayerController.Side.Right; }
+            else if (effectiveMovement > 0) { controller.currentSide = PlayerController.Side.Left; }
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

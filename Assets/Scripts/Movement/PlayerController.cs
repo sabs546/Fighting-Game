@@ -15,6 +15,9 @@ public class PlayerController : MonoBehaviour
     public GroundStates gState;
     public AirStates    aState;
 
+    public enum Side { Left, Right };
+    public Side currentSide;
+
     private SetControls controls;
     private PlayerPhysics physics;
     private PlayerAttackController attackController;

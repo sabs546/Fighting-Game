@@ -6,11 +6,14 @@ public class SpriteManager : MonoBehaviour
 {
     PlayerController controller;
     Animator animator;
+    SpriteRenderer sprite;
+
     // Start is called before the first frame update
     void Start()
     {
         controller = GetComponent<PlayerController>();
         animator = GetComponent<Animator>();
+        sprite = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
@@ -31,5 +34,7 @@ public class SpriteManager : MonoBehaviour
                 animator.SetInteger("YDir", -1);
             }
         }
+
+        sprite.flipX = controller.currentSide == PlayerController.Side.Right ? true : false;
     }
 }
