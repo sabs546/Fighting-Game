@@ -132,6 +132,7 @@ public class PlayerAttackController : MonoBehaviour
                         break;
 
                     case PlayerController.GroundStates.Sprint:
+                        if (attackType == controls.Punch) { return new SprintPunch(); }
                         break;
                 }
                 break;
