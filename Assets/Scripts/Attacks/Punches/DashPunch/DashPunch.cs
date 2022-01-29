@@ -6,12 +6,12 @@ public class DashPunch : BaseAttack
     {
         attackType = AttackType.Punch;
         Damage = 2;
-        Speed = new Vector3Int(5, 7, 17);
+        Speed = new Vector3Int(15, 17, 27);
         Stun = 15;
         Followup = new DPKick();
 
         Range = new Vector2(0.5f, 0.0f);
-        Size = new Vector2(1.0f, 1.0f);
+        Size = new Vector2(0.5f, 1.0f);
         Knockback = new Vector2(8.0f, 0.0f);
         KnockbackType = 1;
     }

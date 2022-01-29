@@ -5,6 +5,7 @@ using UnityEngine;
 public class SpriteManager : MonoBehaviour
 {
     PlayerController controller;
+    PlayerAttackController atkController;
     Animator animator;
     SpriteRenderer sprite;
 
@@ -12,6 +13,7 @@ public class SpriteManager : MonoBehaviour
     void Start()
     {
         controller = GetComponent<PlayerController>();
+        atkController = GetComponent<PlayerAttackController>();
         animator = GetComponent<Animator>();
         sprite = GetComponent<SpriteRenderer>();
     }
@@ -22,11 +24,16 @@ public class SpriteManager : MonoBehaviour
         animator.SetInteger("XDir", 0);
         animator.SetInteger("YDir", 0);
         animator.SetBool("Sprint", false);
+        animator.SetBool("Attacking", false);
         if (controller.pState == PlayerController.PlayerStates.Grounded)
         {
             if (controller.gState == PlayerController.GroundStates.Dash)
             {
                 animator.SetInteger("XDir", 1);
+                if (atkController.state != PlayerAttackController.AttackState.Empty)
+                {
+                    animator.SetBool("Attacking", true);
+                }
             }
             else if (controller.gState == PlayerController.GroundStates.Backdash)
             {
