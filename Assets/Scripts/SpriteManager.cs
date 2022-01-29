@@ -26,11 +26,21 @@ public class SpriteManager : MonoBehaviour
         animator.SetBool("Sprint", false);
         if (atkController.state != PlayerAttackController.AttackState.Empty)
         {
-            animator.SetBool("Attacking", true);
+            if (atkController.currentAttack.attackType == BaseAttack.AttackType.Punch)
+            {
+                animator.SetBool("Punch", true);
+                animator.SetBool("Kick", false);
+            }
+            else if (atkController.currentAttack.attackType == BaseAttack.AttackType.Kick)
+            {
+                animator.SetBool("Kick", true);
+                animator.SetBool("Punch", false);
+            }
         }
         else
         {
-            animator.SetBool("Attacking", false);
+            animator.SetBool("Punch", false);
+            animator.SetBool("Kick", false);
         }
 
         if (controller.pState == PlayerController.PlayerStates.Grounded)
