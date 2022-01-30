@@ -148,31 +148,9 @@ public class PlayerAttackController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        SendFeedback(currentAttack.KnockbackType);
-    }
-
-    public void SendFeedback(int knockbackType)
-    {
-        switch (knockbackType)
-        {
-            case -1:
-                physics.launch -= (currentAttack.Knockback.y * 2.0f) / WorldRules.physicsRate;
-                physics.travel -= (currentAttack.Knockback.x * 2.0f) / WorldRules.physicsRate;
-                opponentPhysics.launch += currentAttack.Knockback.y / WorldRules.physicsRate;
-                opponentPhysics.travel += currentAttack.Knockback.x / WorldRules.physicsRate;
-                break;
-            case 0:
-                physics.launch -= currentAttack.Knockback.y / WorldRules.physicsRate;
-                physics.travel -= currentAttack.Knockback.x / WorldRules.physicsRate;
-                opponentPhysics.launch += currentAttack.Knockback.y / WorldRules.physicsRate;
-                opponentPhysics.travel += currentAttack.Knockback.x / WorldRules.physicsRate;
-                break;
-            case 1:
-                physics.launch -= currentAttack.Knockback.y / WorldRules.physicsRate;
-                physics.travel -= currentAttack.Knockback.x / WorldRules.physicsRate;
-                opponentPhysics.launch += (currentAttack.Knockback.y * 2.0f) / WorldRules.physicsRate;
-                opponentPhysics.travel += (currentAttack.Knockback.x * 2.0f) / WorldRules.physicsRate;
-                break;
-        }
+        physics.launch -= currentAttack.Recoil.y / WorldRules.physicsRate;
+        physics.travel -= currentAttack.Recoil.x / WorldRules.physicsRate;
+        opponentPhysics.launch += currentAttack.Knockback.y / WorldRules.physicsRate;
+        opponentPhysics.travel += currentAttack.Knockback.x / WorldRules.physicsRate;
     }
 }

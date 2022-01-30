@@ -8,19 +8,20 @@ public class DPKick : BaseAttack
     {
         attackType = AttackType.Kick;
         Damage = 4;
-        Speed = new Vector3Int(13, 15, 30);
+        Speed = new Vector3Int(23, 25, 40);
         Stun = 10;
         Followup = null;
 
-        Range = new Vector2(1.0f, 0.0f);
+        Range = new Vector2(0.5f, 0.0f);
         Size = new Vector2(1.0f, 1.0f);
-        Knockback = new Vector2(8.0f, 0.0f);
-        KnockbackType = -1;
+        Recoil = new Vector2(16.0f, 0.0f);
+        Knockback = new Vector2(16.0f, 0.0f);
     }
 
     public override void SideSwap()
     {
         Range = new Vector2(Range.x * -1.0f, 0.0f);
+        Recoil = new Vector2(Recoil.x * -1.0f, 0.0f);
         Knockback = new Vector2(Knockback.x * -1.0f, 0.0f);
     }
 }
