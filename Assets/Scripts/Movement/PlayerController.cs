@@ -49,7 +49,14 @@ public class PlayerController : MonoBehaviour
             }
             else if (attackController.state == PlayerAttackController.AttackState.Recovery)
             {
-                
+
+            }
+
+            // Sprint attacks need to still cancel
+            if (Input.GetKeyUp(controls.Right) && gState != GroundStates.Neutral)
+            {
+                physics.startSprint = false;
+                physics.travel = 0.0f;
             }
         }
         else if (pState == PlayerStates.Grounded)
