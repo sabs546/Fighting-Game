@@ -101,6 +101,12 @@ public class PlayerAttackController : MonoBehaviour
                 hitbox.enabled = true;
                 hitbox.offset = currentAttack.Range;
                 hitbox.size = currentAttack.Size;
+                if (currentAttack.AlwaysRecoil)
+                {
+                    physics.launch -= currentAttack.Recoil.y / WorldRules.physicsRate;
+                         if (physics.travel < 0) physics.travel += currentAttack.Recoil.x / WorldRules.physicsRate;
+                    else if (physics.travel > 0) physics.travel -= currentAttack.Recoil.x / WorldRules.physicsRate;
+                }
             }
             else if (timer < currentAttack.Speed.z)
             {
@@ -148,8 +154,11 @@ public class PlayerAttackController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        physics.launch -= currentAttack.Recoil.y / WorldRules.physicsRate;
-        physics.travel -= currentAttack.Recoil.x / WorldRules.physicsRate;
+        if (!currentAttack.AlwaysRecoil)
+        {
+            physics.launch -= currentAttack.Recoil.y / WorldRules.physicsRate;
+            physics.travel -= currentAttack.Recoil.x / WorldRules.physicsRate;
+        }
         opponentPhysics.launch += currentAttack.Knockback.y / WorldRules.physicsRate;
         opponentPhysics.travel += currentAttack.Knockback.x / WorldRules.physicsRate;
     }

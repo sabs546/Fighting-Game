@@ -16,6 +16,7 @@ public class SPKick : BaseAttack
         Size = new Vector2(1.0f, 1.0f);
         Recoil = new Vector2(0.0f, 0.0f);
         Knockback = new Vector2(0.0f, 32.0f);
+        AlwaysRecoil = false;
     }
 
     public override void SideSwap()
