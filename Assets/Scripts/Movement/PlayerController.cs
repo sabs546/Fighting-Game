@@ -53,7 +53,7 @@ public class PlayerController : MonoBehaviour
             }
 
             // Sprint attacks need to still cancel
-            if (Input.GetKeyUp(controls.Right) && gState != GroundStates.Neutral)
+            if ((Input.GetKeyUp(controls.Left) || Input.GetKeyUp(controls.Right)) && gState != GroundStates.Neutral)
             {
                 physics.startSprint = false;
                 physics.travel = 0.0f;

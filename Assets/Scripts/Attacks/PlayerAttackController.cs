@@ -4,20 +4,23 @@ using UnityEngine;
 
 public class PlayerAttackController : MonoBehaviour
 {
+    // Attack Values =======================================================
     public BaseAttack currentAttack;
     private BaseAttack nextAttack;
-
+    
     public enum AttackState { Empty, Startup, Active, Recovery };
     public AttackState state;
 
-    private PlayerController controller;
-    private SpriteRenderer sprite;
-    private SetControls controls;
-    private int timer;
+    // Player Values =======================================================
+    private PlayerController controller;   // Player control
+    private SpriteRenderer sprite;         // Sprite control
+    private SetControls controls;          // Attack controls
 
+    // Attack Traits =======================================================
     private PlayerPhysics physics;         // For your own knockback
     private PlayerPhysics opponentPhysics; // For the opponents knockback
     private BoxCollider2D hitbox;          // The hitbox of the attack
+    private int timer;                     // Frame counter
 
     // Start is called before the first frame update
     void Start()
@@ -89,12 +92,12 @@ public class PlayerAttackController : MonoBehaviour
         if (state != AttackState.Empty)
         {
             timer++;
-            if (timer < currentAttack.Speed.x)
+            if (timer < currentAttack.Speed.x) // During attack startup
             {
                 state = AttackState.Startup;
                 sprite.color = Color.cyan;
             }
-            else if (timer < currentAttack.Speed.y)
+            else if (timer < currentAttack.Speed.y) // During attack active
             {
                 state = AttackState.Active;
                 sprite.color = Color.red;
@@ -103,18 +106,17 @@ public class PlayerAttackController : MonoBehaviour
                 hitbox.size = currentAttack.Size;
                 if (currentAttack.AlwaysRecoil)
                 {
-                    physics.launch -= currentAttack.Recoil.y / WorldRules.physicsRate;
-                         if (physics.travel < 0) physics.travel += currentAttack.Recoil.x / WorldRules.physicsRate;
-                    else if (physics.travel > 0) physics.travel -= currentAttack.Recoil.x / WorldRules.physicsRate;
+                    physics.travel += sprite.flipX ? currentAttack.Recoil.x / WorldRules.physicsRate : -currentAttack.Recoil.x / WorldRules.physicsRate;
                 }
             }
-            else if (timer < currentAttack.Speed.z)
+            else if (timer < currentAttack.Speed.z) // During attack recovery
             {
                 state = AttackState.Recovery;
                 sprite.color = Color.yellow;
                 hitbox.enabled = false;
+                if (controller.gState == PlayerController.GroundStates.Sprint) physics.startSprint = false;
             }
-            else
+            else // After attack completes
             {
                 state = AttackState.Empty;
                 sprite.color = Color.white;
@@ -154,11 +156,8 @@ public class PlayerAttackController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!currentAttack.AlwaysRecoil)
-        {
-            physics.launch -= currentAttack.Recoil.y / WorldRules.physicsRate;
-            physics.travel -= currentAttack.Recoil.x / WorldRules.physicsRate;
-        }
+        physics.launch -= currentAttack.Recoil.y / WorldRules.physicsRate;
+        if (!currentAttack.AlwaysRecoil) physics.travel -= currentAttack.Recoil.x / WorldRules.physicsRate;
         opponentPhysics.launch += currentAttack.Knockback.y / WorldRules.physicsRate;
         opponentPhysics.travel += currentAttack.Knockback.x / WorldRules.physicsRate;
     }

@@ -14,7 +14,7 @@ public class SprintPunch : BaseAttack
 
         Range = new Vector2(1.0f, 0.0f);
         Size = new Vector2(1.0f, 1.0f);
-        Recoil = new Vector2(-2.0f, 0.0f);
+        Recoil = new Vector2(-8.0f, 0.0f);
         Knockback = new Vector2(16.0f, 0.0f);
         AlwaysRecoil = true;
     }

@@ -12,7 +12,7 @@ public class DashPunch : BaseAttack
 
         Range = new Vector2(0.5f, 0.0f);
         Size = new Vector2(0.5f, 1.0f);
-        Recoil = new Vector2(-16.0f, 0.0f);
+        Recoil = new Vector2(-4.0f, 0.0f);
         Knockback = new Vector2(16.0f, 0.0f);
         AlwaysRecoil = false;
     }
