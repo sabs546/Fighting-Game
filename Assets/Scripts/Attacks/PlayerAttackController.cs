@@ -51,7 +51,7 @@ public class PlayerAttackController : MonoBehaviour
                 currentAttack = FindAttack(controls.Punch);
                 if (currentAttack != null)
                 {
-                    if (transform.position.x > opponentPhysics.transform.position.x) { currentAttack.SideSwap(); }
+                    if (sprite.flipX) { currentAttack.SideSwap(); }
                     state = AttackState.Startup;
                     nextAttack = currentAttack.Followup;
                 }
@@ -61,7 +61,7 @@ public class PlayerAttackController : MonoBehaviour
                 currentAttack = FindAttack(controls.Kick);
                 if (currentAttack != null)
                 {
-                    if (transform.position.x > opponentPhysics.transform.position.x) { currentAttack.SideSwap(); }
+                    if (sprite.flipX) { currentAttack.SideSwap(); }
                     state = AttackState.Startup;
                     nextAttack = currentAttack.Followup;
                 }
@@ -76,10 +76,9 @@ public class PlayerAttackController : MonoBehaviour
                 currentAttack = nextAttack;
                 if (currentAttack != null)
                 {
-                    if (transform.position.x > opponentPhysics.transform.position.x) { currentAttack.SideSwap(); }
+                    if (sprite.flipX) { currentAttack.SideSwap(); }
                     state = AttackState.Startup;
                     timer = 0;
-                    Debug.Log(currentAttack.ToString());
                     if (currentAttack.Followup != null)
                     {
                         nextAttack = currentAttack.Followup;
@@ -95,12 +94,12 @@ public class PlayerAttackController : MonoBehaviour
             if (timer < currentAttack.Speed.x) // During attack startup
             {
                 state = AttackState.Startup;
-                sprite.color = Color.cyan;
+                //sprite.color = Color.cyan;
             }
             else if (timer < currentAttack.Speed.y) // During attack active
             {
                 state = AttackState.Active;
-                sprite.color = Color.red;
+                //sprite.color = Color.red;
                 hitbox.enabled = true;
                 hitbox.offset = currentAttack.Range;
                 hitbox.size = currentAttack.Size;
@@ -112,14 +111,14 @@ public class PlayerAttackController : MonoBehaviour
             else if (timer < currentAttack.Speed.z) // During attack recovery
             {
                 state = AttackState.Recovery;
-                sprite.color = Color.yellow;
+                //sprite.color = Color.yellow;
                 hitbox.enabled = false;
                 if (controller.gState == PlayerController.GroundStates.Sprint) physics.startSprint = false;
             }
             else // After attack completes
             {
                 state = AttackState.Empty;
-                sprite.color = Color.white;
+                //sprite.color = Color.white;
                 timer = 0;
             }
         }
