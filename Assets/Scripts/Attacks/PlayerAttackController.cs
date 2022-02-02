@@ -43,7 +43,7 @@ public class PlayerAttackController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         // First attack
         if (state == AttackState.Empty && controller.gState != PlayerController.GroundStates.Stun)

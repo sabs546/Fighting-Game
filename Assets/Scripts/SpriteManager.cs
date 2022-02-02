@@ -19,7 +19,7 @@ public class SpriteManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         animator.SetInteger("XDir", 0);
         animator.SetInteger("YDir", 0);

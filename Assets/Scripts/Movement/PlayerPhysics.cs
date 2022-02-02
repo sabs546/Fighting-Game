@@ -54,7 +54,7 @@ public class PlayerPhysics : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         pos = transform.position;                                                                                                  // We can apply all the forces to this first
         effectiveGravity += fTimeGravity;                                                                                          // Gravity is always applied
