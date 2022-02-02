@@ -58,6 +58,8 @@ public class PlayerPhysics : MonoBehaviour
     {
         pos = transform.position;                                                                                                  // We can apply all the forces to this first
         effectiveGravity += fTimeGravity;                                                                                          // Gravity is always applied
+        if (controller.gState == PlayerController.GroundStates.Dash ||
+            controller.gState == PlayerController.GroundStates.Backdash) launch *= 0.75f;
         effectiveGravity -= launch;                                                                                                // Launch applies next for no real reason
         launch = 0.0f;                                                                                                             // External forces like jumping are nullified
         
