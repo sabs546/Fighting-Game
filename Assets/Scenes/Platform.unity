@@ -974,11 +974,11 @@ MonoBehaviour:
   p2: {fileID: 429183485}
   state: 0
   close:
-    distance: 5
+    distance: 15
     height: 5
     zoom: 7
   normal:
-    distance: 10
+    distance: 20
     height: 6.5
     zoom: 9
   far:
