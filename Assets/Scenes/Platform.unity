@@ -281,6 +281,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   state: 0
+  stunLimit: 0
 --- !u!95 &353790525
 Animator:
   serializedVersion: 3
@@ -519,6 +520,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   state: 0
+  stunLimit: 0
 --- !u!50 &429183492
 Rigidbody2D:
   serializedVersion: 4

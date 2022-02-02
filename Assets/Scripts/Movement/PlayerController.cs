@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     public float jumpPower;
 
     public enum PlayerStates { Crouching, Grounded, Airborne };
-    public enum GroundStates { Neutral, Dash, Backdash, Sprint };
+    public enum GroundStates { Neutral, Dash, Backdash, Sprint, Stun };
     public enum AirStates    { Rising, Falling };
     public PlayerStates pState;
     public GroundStates gState;
@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour
         // - Movement Inputs -
         // -------
         // You shouldn't be able to move while attacking
-        if (attackController.state != PlayerAttackController.AttackState.Empty)
+        if (attackController.state != PlayerAttackController.AttackState.Empty || gState == GroundStates.Stun)
         {
             if (attackController.state == PlayerAttackController.AttackState.Startup)
             {

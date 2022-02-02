@@ -9,7 +9,7 @@ public class SPKick : BaseAttack
         attackType = AttackType.Kick;
         Damage = 4;
         Speed = new Vector3Int(3, 5, 35);
-        Stun = 10;
+        Stun = 20;
         Followup = null; // SPKGroundPunch jump?
 
         Range = new Vector2(1.0f, 0.0f);

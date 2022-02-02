@@ -7,7 +7,7 @@ public class DashPunch : BaseAttack
         attackType = AttackType.Punch;
         Damage = 2;
         Speed = new Vector3Int(15, 17, 27);
-        Stun = 15;
+        Stun = 30;
         Followup = new DPKick();
 
         Range = new Vector2(0.5f, 0.0f);

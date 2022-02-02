@@ -117,7 +117,7 @@ public class PlayerPhysics : MonoBehaviour
         // --------------------------------------------------------
         // - Sprinting -
         // -------
-        if (enableSprint && startSprint)
+        if (enableSprint && startSprint && controller.gState != PlayerController.GroundStates.Stun)
         {
             controller.gState = PlayerController.GroundStates.Sprint;
             effectiveMovement = travel;
@@ -126,41 +126,47 @@ public class PlayerPhysics : MonoBehaviour
         // --------------------------------------------------------
         // - Dashing -
         // -------
-        if (controller.gState != PlayerController.GroundStates.Sprint)
+        if (controller.gState != PlayerController.GroundStates.Sprint && controller.gState != PlayerController.GroundStates.Stun)
         {
             effectiveMovement += travel;
             travel = 0.0f;
         }
 
-        // If you're moving away from the opponent
-        if ((opponent.transform.position.x > pos.x && effectiveMovement < 0.0f) ||
-            (opponent.transform.position.x < pos.x && effectiveMovement > 0.0f))
+        if (controller.gState != PlayerController.GroundStates.Stun)
         {
-            if (controller.gState != PlayerController.GroundStates.Sprint)
+            // If you're moving away from the opponent
+            if ((opponent.transform.position.x > pos.x && effectiveMovement < 0.0f) ||
+                (opponent.transform.position.x < pos.x && effectiveMovement > 0.0f))
             {
-                controller.gState = PlayerController.GroundStates.Backdash;
+                if (controller.gState != PlayerController.GroundStates.Sprint)
+                {
+                    controller.gState = PlayerController.GroundStates.Backdash;
+                }
+                enableSprint = true;
             }
-            enableSprint = true;
-        }
 
-        // If you're toward from the opponent
-        if ((opponent.transform.position.x > pos.x && effectiveMovement > 0.0f) ||
-            (opponent.transform.position.x < pos.x && effectiveMovement < 0.0f))
-        {
-            if (controller.gState != PlayerController.GroundStates.Sprint)
+            // If you're toward from the opponent
+            if ((opponent.transform.position.x > pos.x && effectiveMovement > 0.0f) ||
+                (opponent.transform.position.x < pos.x && effectiveMovement < 0.0f))
             {
-                controller.gState = PlayerController.GroundStates.Dash;
+                if (controller.gState != PlayerController.GroundStates.Sprint)
+                {
+                    controller.gState = PlayerController.GroundStates.Dash;
+                }
+                enableSprint = true;
             }
-            enableSprint = true;
-        }
 
-        // Come to a stop
-        if (effectiveMovement < 0.01f && effectiveMovement > -0.01f)
-        {
-            controller.gState = PlayerController.GroundStates.Neutral;
-            effectiveMovement = 0.0f;
-            enableSprint = false;
-            airLock = 0;
+            // Come to a stop
+            if (effectiveMovement < 0.01f && effectiveMovement > -0.01f)
+            {
+                if (controller.gState != PlayerController.GroundStates.Stun)
+                {
+                    controller.gState = PlayerController.GroundStates.Neutral;
+                }
+                effectiveMovement = 0.0f;
+                enableSprint = false;
+                airLock = 0;
+            }
         }
 
         // --------------------------------------------------------

@@ -21,6 +21,7 @@ public class PlayerAttackController : MonoBehaviour
     private PlayerPhysics opponentPhysics; // For the opponents knockback
     private BoxCollider2D hitbox;          // The hitbox of the attack
     private int timer;                     // Frame counter
+    public int  stunLimit;                 // How long the stun lasts
 
     // Start is called before the first frame update
     void Start()
@@ -32,6 +33,7 @@ public class PlayerAttackController : MonoBehaviour
         sprite = GetComponent<SpriteRenderer>();
         state = AttackState.Empty;
         timer = 0;
+        stunLimit = 0;
 
         physics = GetComponent<PlayerPhysics>();
         opponentPhysics = physics.opponent.GetComponent<PlayerPhysics>();
@@ -44,7 +46,7 @@ public class PlayerAttackController : MonoBehaviour
     void Update()
     {
         // First attack
-        if (state == AttackState.Empty)
+        if (state == AttackState.Empty && controller.gState != PlayerController.GroundStates.Stun)
         {
             if (Input.GetKeyDown(controls.Punch))
             {
@@ -87,6 +89,28 @@ public class PlayerAttackController : MonoBehaviour
             }
         }
 
+        // If there is some stun, start the clock
+        if (stunLimit > 0)
+        {
+            if (timer == 0)
+            {
+                controller.gState = PlayerController.GroundStates.Stun;
+                GetComponent<Animator>().SetBool("Stun", true);
+            }
+
+            if (timer < stunLimit)
+            {
+                timer++;
+            }
+            else
+            {
+                controller.gState = PlayerController.GroundStates.Neutral;
+                GetComponent<Animator>().SetBool("Stun", false);
+                stunLimit = 0;
+                timer = 0;
+            }
+        }
+
         // What happens in the attack state
         if (state != AttackState.Empty)
         {
@@ -120,6 +144,7 @@ public class PlayerAttackController : MonoBehaviour
                 state = AttackState.Empty;
                 //sprite.color = Color.white;
                 timer = 0;
+                stunLimit = 0;
             }
         }
     }
@@ -159,5 +184,10 @@ public class PlayerAttackController : MonoBehaviour
         if (!currentAttack.AlwaysRecoil) physics.travel -= currentAttack.Recoil.x / WorldRules.physicsRate;
         opponentPhysics.launch += currentAttack.Knockback.y / WorldRules.physicsRate;
         opponentPhysics.travel += currentAttack.Knockback.x / WorldRules.physicsRate;
+        
+        if (opponentPhysics.GetComponent<PlayerController>().pState == PlayerController.PlayerStates.Grounded)
+        {
+            opponentPhysics.GetComponent<PlayerAttackController>().stunLimit = currentAttack.Stun;
+        }
     }
 }
