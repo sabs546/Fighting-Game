@@ -24,6 +24,7 @@ public class SpriteManager : MonoBehaviour
         animator.SetInteger("XDir", 0);
         animator.SetInteger("YDir", 0);
         animator.SetBool("Sprint", false);
+        animator.SetBool("Crouch", false);
         if (atkController.state != PlayerAttackController.AttackState.Empty)
         {
             if (atkController.currentAttack.attackType == BaseAttack.AttackType.Punch)
@@ -43,11 +44,15 @@ public class SpriteManager : MonoBehaviour
             animator.SetBool("Kick", false);
         }
 
-        if (controller.pState == PlayerController.PlayerStates.Grounded)
+        if (controller.pState == PlayerController.PlayerStates.Grounded || controller.pState == PlayerController.PlayerStates.Crouching)
         {
             if (controller.gState == PlayerController.GroundStates.Dash)
             {
                 animator.SetInteger("XDir", 1);
+                if (controller.pState == PlayerController.PlayerStates.Crouching)
+                {
+                    animator.SetBool("Crouch", true);
+                }
             }
             else if (controller.gState == PlayerController.GroundStates.Backdash)
             {

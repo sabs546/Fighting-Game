@@ -176,6 +176,7 @@ public class PlayerAttackController : MonoBehaviour
                 break;
 
             case PlayerController.PlayerStates.Crouching:
+                if (attackType == controls.Kick) { return new SlideKick(); }
                 break;
         }
         return null;
