@@ -8,7 +8,7 @@ public class HitSparkManager : MonoBehaviour
     private Animator animator;
     public Camera cam;
 
-    public enum SparkType { Low, Mid, High };
+    public enum SparkType { Low, Mid, Launch };
     public SparkType Type;
 
     // Start is called before the first frame update
@@ -30,6 +30,12 @@ public class HitSparkManager : MonoBehaviour
         if (sparkType == SparkType.Mid)
         {
             animator.SetTrigger("Mid");
+            transform.position = new Vector3(xPos, yPos, 0.0f);
+        }
+
+        if (sparkType == SparkType.Launch)
+        {
+            animator.SetTrigger("Launch");
             transform.position = new Vector3(xPos, yPos, 0.0f);
         }
     }

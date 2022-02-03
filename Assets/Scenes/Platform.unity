@@ -215,7 +215,7 @@ GameObject:
   - component: {fileID: 151701392}
   - component: {fileID: 151701393}
   m_Layer: 0
-  m_Name: HitSpark
+  m_Name: HitSparkGenerator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

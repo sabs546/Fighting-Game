@@ -1,22 +1,22 @@
 fileFormatVersion: 2
-guid: 0ea007ac06c1e8245a0c6f0c4d833ebb
+guid: 656b278f7c0ba59498959db1afb08bd0
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1022901820658518260
-    second: MidSpark_Sheet_0_0
+      213: 2152538353794150207
+    second: LaunchSpark_0
   - first:
-      213: -3524287559175439234
-    second: MidSpark_Sheet_0_1
+      213: 7277334190566510223
+    second: LaunchSpark_1
   - first:
-      213: -1293179158992609779
-    second: MidSpark_Sheet_0_2
+      213: -6471626195314945887
+    second: LaunchSpark_2
   - first:
-      213: 7592864681324055645
-    second: MidSpark_Sheet_0_3
+      213: -2643062422717645934
+    second: LaunchSpark_3
   - first:
-      213: -2842242078421489290
-    second: MidSpark_Sheet_0_4
+      213: 3297739776797729024
+    second: LaunchSpark_4
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -102,7 +102,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: MidSpark_Sheet_0_0
+      name: LaunchSpark_0
       rect:
         serializedVersion: 2
         x: 0
@@ -116,14 +116,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c077c83b63cedc1f0800000000000000
-      internalID: -1022901820658518260
+      spriteID: f3fed476a3a5fdd10800000000000000
+      internalID: 2152538353794150207
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: MidSpark_Sheet_0_1
+      name: LaunchSpark_1
       rect:
         serializedVersion: 2
         x: 32
@@ -137,14 +137,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e7cf40d2327371fc0800000000000000
-      internalID: -3524287559175439234
+      spriteID: f8e858ca3e84ef460800000000000000
+      internalID: 7277334190566510223
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: MidSpark_Sheet_0_2
+      name: LaunchSpark_2
       rect:
         serializedVersion: 2
         x: 64
@@ -158,14 +158,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d0e9e4d0864bd0ee0800000000000000
-      internalID: -1293179158992609779
+      spriteID: 1a0d325734a2036a0800000000000000
+      internalID: -6471626195314945887
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: MidSpark_Sheet_0_3
+      name: LaunchSpark_3
       rect:
         serializedVersion: 2
         x: 96
@@ -179,14 +179,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d5c0eede2364f5960800000000000000
-      internalID: 7592864681324055645
+      spriteID: 29b3bb6eab4f15bd0800000000000000
+      internalID: -2643062422717645934
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: MidSpark_Sheet_0_4
+      name: LaunchSpark_4
       rect:
         serializedVersion: 2
         x: 128
@@ -200,8 +200,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 679e40673e35e88d0800000000000000
-      internalID: -2842242078421489290
+      spriteID: 00164b5dadce3cd20800000000000000
+      internalID: 3297739776797729024
       vertices: []
       indices: 
       edges: []
