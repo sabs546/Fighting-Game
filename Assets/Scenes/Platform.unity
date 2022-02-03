@@ -440,6 +440,7 @@ MonoBehaviour:
   launch: 0
   travel: 0
   enableSprint: 0
+  enableCrouch: 0
   startSprint: 0
   airLock: 0
   opponent: {fileID: 429183485}
@@ -562,6 +563,7 @@ MonoBehaviour:
   state: 0
   hitSpark: {fileID: 151701392}
   stunLimit: 0
+  enableLowAttacks: 0
 --- !u!95 &353790525
 Animator:
   serializedVersion: 3
@@ -815,6 +817,7 @@ MonoBehaviour:
   launch: 0
   travel: 0
   enableSprint: 0
+  enableCrouch: 0
   startSprint: 0
   airLock: 0
   opponent: {fileID: 353790518}
@@ -898,6 +901,7 @@ MonoBehaviour:
   state: 0
   hitSpark: {fileID: 151701392}
   stunLimit: 0
+  enableLowAttacks: 0
 --- !u!50 &429183492
 Rigidbody2D:
   serializedVersion: 4

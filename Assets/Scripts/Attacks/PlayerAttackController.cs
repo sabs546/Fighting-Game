@@ -23,6 +23,7 @@ public class PlayerAttackController : MonoBehaviour
     private int timer;                     // Frame counter
     public  HitSparkManager hitSpark;      // The hit sparks
     public int  stunLimit;                 // How long the stun lasts
+    public bool enableLowAttacks;          // Crouch attacks are locked normally
 
     // Start is called before the first frame update
     void Start()
@@ -193,11 +194,7 @@ public class PlayerAttackController : MonoBehaviour
         }
 
         Vector2 sparkPos = new Vector2(transform.position.x + (!sprite.flipX ? transform.lossyScale.x : -transform.lossyScale.x), transform.position.y);
-        if (currentAttack.SparkType == HitSparkManager.SparkType.Mid)
-        {
-            
-        }
-        else
+        if (currentAttack.SparkType == HitSparkManager.SparkType.Launch)
         {
             sparkPos.y += transform.lossyScale.y * 0.5f;
         }

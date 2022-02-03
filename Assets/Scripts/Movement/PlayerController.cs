@@ -68,7 +68,10 @@ public class PlayerController : MonoBehaviour
 
             if (Input.GetKeyDown(controls.Down))
             {
-
+                if (gState == GroundStates.Dash)
+                {
+                    physics.enableCrouch = true;
+                }
             }
 
             if (Input.GetKeyDown(controls.Left) && gState == GroundStates.Neutral)

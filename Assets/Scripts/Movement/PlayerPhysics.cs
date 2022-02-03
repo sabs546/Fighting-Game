@@ -18,6 +18,8 @@ public class PlayerPhysics : MonoBehaviour
     [HideInInspector]
     public bool  enableSprint;        // Check for dashes rather than sprinting
     [HideInInspector]
+    public bool  enableCrouch;        // Check for a crouch input
+    [HideInInspector]
     public bool  startSprint;         // Check for dashes rather than sprinting
     [HideInInspector]
     public int   airLock;             // Can't change direction in midair
@@ -154,6 +156,7 @@ public class PlayerPhysics : MonoBehaviour
                 if (controller.gState != PlayerController.GroundStates.Sprint)
                 {
                     controller.gState = PlayerController.GroundStates.Dash;
+                    if (enableCrouch) controller.pState = PlayerController.PlayerStates.Crouching;
                 }
                 enableSprint = true;
             }
@@ -167,6 +170,7 @@ public class PlayerPhysics : MonoBehaviour
                 }
                 effectiveMovement = 0.0f;
                 enableSprint = false;
+                enableCrouch = false;
                 airLock = 0;
             }
         }
