@@ -17,6 +17,7 @@ public class DPKick : BaseAttack
         Recoil = new Vector2(8.0f, 0.0f);
         Knockback = new Vector2(16.0f, 0.0f);
         AlwaysRecoil = false;
+        SparkType = HitSparkManager.SparkType.Mid;
     }
 
     public override void SideSwap()

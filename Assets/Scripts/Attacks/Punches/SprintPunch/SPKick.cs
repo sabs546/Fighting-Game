@@ -17,6 +17,7 @@ public class SPKick : BaseAttack
         Recoil = new Vector2(0.0f, 0.0f);
         Knockback = new Vector2(0.0f, 32.0f);
         AlwaysRecoil = false;
+        SparkType = HitSparkManager.SparkType.High;
     }
 
     public override void SideSwap()

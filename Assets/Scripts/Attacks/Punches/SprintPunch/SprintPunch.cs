@@ -17,6 +17,7 @@ public class SprintPunch : BaseAttack
         Recoil = new Vector2(-8.0f, 0.0f);
         Knockback = new Vector2(16.0f, 0.0f);
         AlwaysRecoil = true;
+        SparkType = HitSparkManager.SparkType.Mid;
     }
 
     public override void SideSwap()

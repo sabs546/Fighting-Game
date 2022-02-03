@@ -21,6 +21,7 @@ public class PlayerAttackController : MonoBehaviour
     private PlayerPhysics opponentPhysics; // For the opponents knockback
     private BoxCollider2D hitbox;          // The hitbox of the attack
     private int timer;                     // Frame counter
+    public  HitSparkManager hitSpark;      // The hit sparks
     public int  stunLimit;                 // How long the stun lasts
 
     // Start is called before the first frame update
@@ -190,5 +191,7 @@ public class PlayerAttackController : MonoBehaviour
         {
             opponentPhysics.GetComponent<PlayerAttackController>().stunLimit = currentAttack.Stun;
         }
+
+        hitSpark.CreateHitSpark(currentAttack.SparkType, transform.position.x + (!sprite.flipX ? transform.lossyScale.x : -transform.lossyScale.x), transform.position.y, !sprite.flipX);
     }
 }

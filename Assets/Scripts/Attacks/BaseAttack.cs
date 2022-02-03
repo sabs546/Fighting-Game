@@ -15,6 +15,7 @@ public class BaseAttack
     public Vector2 Recoil { get; protected set; }
     public Vector2 Knockback { get; protected set; }
     public bool AlwaysRecoil { get; protected set; }
+    public HitSparkManager.SparkType SparkType { get; protected set; }
 
     public virtual void SideSwap() { }
 }
