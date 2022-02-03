@@ -161,6 +161,7 @@ public class PlayerAttackController : MonoBehaviour
 
                     case PlayerController.GroundStates.Dash:
                         if (attackType == controls.Punch) { return new DashPunch(); }
+                        if (attackType == controls.Kick) { return new DashKick(); }
                         break;
 
                     case PlayerController.GroundStates.Sprint:
