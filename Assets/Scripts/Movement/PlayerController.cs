@@ -103,6 +103,12 @@ public class PlayerController : MonoBehaviour
                 physics.startSprint = false;
                 physics.travel = 0.0f;
             }
+
+            // For missed input ups
+            if (gState == GroundStates.Sprint && !Input.GetKey(controls.Left) && !Input.GetKey(controls.Right))
+            {
+                physics.startSprint = false;
+            }
         }
         else if (pState == PlayerStates.Airborne)
         {

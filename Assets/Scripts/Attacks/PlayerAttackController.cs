@@ -121,6 +121,11 @@ public class PlayerAttackController : MonoBehaviour
             {
                 state = AttackState.Startup;
                 //sprite.color = Color.cyan;
+                if (currentAttack.AlwaysRecoil)
+                {
+                    physics.travel += sprite.flipX ? currentAttack.Recoil.x / WorldRules.physicsRate : -currentAttack.Recoil.x / WorldRules.physicsRate;
+                    currentAttack.RemoveRecoil();
+                }
             }
             else if (timer < currentAttack.Speed.y) // During attack active
             {
@@ -129,10 +134,6 @@ public class PlayerAttackController : MonoBehaviour
                 hitbox.enabled = true;
                 hitbox.offset = currentAttack.Range;
                 hitbox.size = currentAttack.Size;
-                if (currentAttack.AlwaysRecoil)
-                {
-                    physics.travel += sprite.flipX ? currentAttack.Recoil.x / WorldRules.physicsRate : -currentAttack.Recoil.x / WorldRules.physicsRate;
-                }
             }
             else if (timer < currentAttack.Speed.z) // During attack recovery
             {

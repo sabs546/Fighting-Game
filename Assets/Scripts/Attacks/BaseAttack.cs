@@ -18,4 +18,8 @@ public class BaseAttack
     public HitSparkManager.SparkType SparkType { get; protected set; }
 
     public virtual void SideSwap() { }
+    public void RemoveRecoil()
+    {
+        AlwaysRecoil = false;
+    }
 }
