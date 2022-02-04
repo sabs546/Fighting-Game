@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class HitSparkManager : MonoBehaviour
 {
-    private SpriteRenderer sprite;
-    private Animator animator;
-    public Camera cam;
+    // Scripts ======================================
+    private SpriteRenderer sprite; // Spark visuals
+    private Animator animator;     // Spark animation
 
-    public enum SparkType { Null, Low, Mid, Launch };
-    public SparkType Type;
-    private bool active;
-    private float speed;
+    // Values =======================================================================
+    public enum SparkType { Null, Low, Mid, Launch }; // Helps choose the animation
+    public SparkType Type;                            // Holds that value
+    private bool active;                              // Tells the spark when to move
+    private float speed;                              // How fast the spark moves
 
     // Start is called before the first frame update
     void Start()
@@ -29,7 +30,7 @@ public class HitSparkManager : MonoBehaviour
         {
             transform.position = new Vector3(transform.position.x + (speed / WorldRules.physicsRate), transform.position.y);
         }
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Empty"))
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Empty")) // Otherwise it really would just fly off forever
         {
             active = false;
         }
@@ -39,7 +40,7 @@ public class HitSparkManager : MonoBehaviour
     {
         sprite.flipX = flipX;
         active = true;
-        speed = moveSpeed;
+        speed = moveSpeed; // Movespeed is usually how fast the player is moving at the time of the hit
         if (sparkType == SparkType.Mid)
         {
             animator.SetTrigger("Mid");

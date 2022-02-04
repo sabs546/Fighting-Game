@@ -4,26 +4,26 @@ using UnityEngine;
 
 public class PlayerAttackController : MonoBehaviour
 {
-    // Attack Values =======================================================
-    public BaseAttack currentAttack;
-    private BaseAttack nextAttack;
+    // Attack Values =======================================================================================
+    public BaseAttack currentAttack;                              // Attack currently playing
+    private BaseAttack nextAttack;                                // The next available attack in the string
     
-    public enum AttackState { Empty, Startup, Active, Recovery };
-    public AttackState state;
+    public enum AttackState { Empty, Startup, Active, Recovery }; // Attack phases
+    public AttackState state;                                     // And what will hold them
 
-    // Player Values =======================================================
+    // Player Values ========================================
     private PlayerController controller;   // Player control
     private SpriteRenderer sprite;         // Sprite control
     private SetControls controls;          // Attack controls
 
-    // Attack Traits =======================================================
+    // Attack Traits ====================================================
     private PlayerPhysics physics;         // For your own knockback
     private PlayerPhysics opponentPhysics; // For the opponents knockback
     private BoxCollider2D hitbox;          // The hitbox of the attack
     private int timer;                     // Frame counter
     public  HitSparkManager hitSpark;      // The hit sparks
     public int  stunLimit;                 // How long the stun lasts
-    public bool enableLowAttacks;          // Crouch attacks are locked normally
+    public bool enableLowAttacks;          // Unlock crouch attacks
 
     // Start is called before the first frame update
     void Start()

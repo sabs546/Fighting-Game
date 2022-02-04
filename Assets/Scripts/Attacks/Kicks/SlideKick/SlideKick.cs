@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SlideKick : BaseAttack
 {
@@ -10,6 +8,7 @@ public class SlideKick : BaseAttack
         Damage = 4;
         Speed = new Vector3Int(10, 12, 22);
         Stun = 30;
+        Followup = null;
 
         Range = new Vector2(0.25f, 0.0f);
         Size = new Vector2(0.5f, 1.0f);

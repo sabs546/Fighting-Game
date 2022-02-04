@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerPhysics : MonoBehaviour
 {
-    // Positional Values ======================================================
+    // Positional Values ===============================================
     private Vector3 pos;              // Character height from the floor
     private float   fTimeGravity;     // Gravity locked to 60fps
     private float   fTimeDrag;        // Drag locked to 60fps
@@ -24,7 +24,7 @@ public class PlayerPhysics : MonoBehaviour
     [HideInInspector]
     public int   airLock;             // Can't change direction in midair
 
-    // Calculated Values ======================================================
+    // Calculated Values ===============================================================
     private float effectiveGravity;   // The gravity after forces are applied
     private float effectiveMovement;  // X-Axis Movement decay
     private float effectiveMinHeight; // The minHeight after removing the feet
