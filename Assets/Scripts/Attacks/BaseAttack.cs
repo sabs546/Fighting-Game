@@ -2,7 +2,7 @@
 
 public class BaseAttack
 {
-    public enum AttackType { Punch, Kick };
+    public enum AttackType { Null, Punch, Kick };
     public AttackType attackType;
 
     public int Damage { get; protected set; }
