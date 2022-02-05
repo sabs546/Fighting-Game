@@ -5,6 +5,7 @@ public class CameraControl : MonoBehaviour
 {
     public GameObject p1;
     public GameObject p2;
+    public GameObject menuScreen;
     private Vector2 p1Pos;
     private Vector2 p2Pos;
     private Vector3 cameraPos;
@@ -64,22 +65,22 @@ public class CameraControl : MonoBehaviour
                 {
                     cam.orthographicSize -= growSpeed / WorldRules.physicsRate;
                     cam.transform.localScale -= new Vector3(zoomSpeed / WorldRules.physicsRate, zoomSpeed / WorldRules.physicsRate, 0.0f);
-
-                    // When the camera stops moving down you gain control, it looks dumb but just bear with me it's a simple game
-                    if (!p1.GetComponent<PlayerController>().enabled)
-                    {
-                        p1.GetComponent<PlayerPhysics>().enabled = true;
-                        p1.GetComponent<PlayerController>().enabled = true;
-                        p1.GetComponent<SpriteManager>().enabled = true;
-                        p2.GetComponent<PlayerPhysics>().enabled = true;
-                        p2.GetComponent<PlayerController>().enabled = true;
-                        p2.GetComponent<SpriteManager>().enabled = true;
-                    }
                 }
-                else
+                else if (cam.orthographicSize < close.zoom)
                 {
                     cam.orthographicSize += growSpeed / WorldRules.physicsRate;
                     cam.transform.localScale += new Vector3(zoomSpeed / WorldRules.physicsRate, zoomSpeed / WorldRules.physicsRate, 0.0f);
+                    menuScreen.SetActive(false);
+                }
+                else if (!p1.GetComponent<PlayerController>().enabled)
+                {
+                    // When the camera stops moving down you gain control, it looks dumb but just bear with me it's a simple game
+                    p1.GetComponent<PlayerPhysics>().enabled = true;
+                    p1.GetComponent<PlayerController>().enabled = true;
+                    p1.GetComponent<SpriteManager>().enabled = true;
+                    p2.GetComponent<PlayerPhysics>().enabled = true;
+                    p2.GetComponent<PlayerController>().enabled = true;
+                    p2.GetComponent<SpriteManager>().enabled = true;
                 }
 
                 if (cam.transform.position.y > close.height)
@@ -101,6 +102,7 @@ public class CameraControl : MonoBehaviour
             }
             else
             {
+                // From close
                 if (cam.orthographicSize < normal.zoom)
                 {
                     cam.orthographicSize += growSpeed / WorldRules.physicsRate;
@@ -110,6 +112,8 @@ public class CameraControl : MonoBehaviour
                 {
                     cameraPos.y += growSpeed / WorldRules.physicsRate;
                 }
+
+                // From far
                 if (cam.orthographicSize > normal.zoom)
                 {
                     cam.orthographicSize -= growSpeed / WorldRules.physicsRate;
@@ -120,8 +124,24 @@ public class CameraControl : MonoBehaviour
                     cameraPos.y -= growSpeed / WorldRules.physicsRate;
                 }
             }
-        }
 
+            // Camera locking
+            switch (state)
+            {
+                case CameraState.Close:
+                    if (cameraPos.y > close.height - 0.01f && cameraPos.y < close.height + 0.01f) cameraPos.y = close.height;
+                    if (cam.orthographicSize > close.zoom - 0.01f && cam.orthographicSize < close.zoom + 0.01f) cam.orthographicSize = close.zoom;
+                    break;
+                case CameraState.Normal:
+                    if (cameraPos.y > normal.height - 0.01f && cameraPos.y < normal.height + 0.01f) cameraPos.y = normal.height;
+                    if (cam.orthographicSize > normal.zoom - 0.01f && cam.orthographicSize < normal.zoom + 0.01f) cam.orthographicSize = normal.zoom;
+                    break;
+                case CameraState.Far:
+                    if (cameraPos.y > far.height - 0.01f && cameraPos.y < far.height + 0.01f) cameraPos.y = far.height;
+                    if (cam.orthographicSize > far.zoom - 0.01f && cam.orthographicSize < far.zoom + 0.01f) cam.orthographicSize = far.zoom;
+                    break;
+            }
+        }
         transform.position = cameraPos;
     }
 
