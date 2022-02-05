@@ -10,9 +10,10 @@ public class CameraControl : MonoBehaviour
     private Vector3 cameraPos;
 
     private Camera cam;
-    public enum CameraState { Close, Normal, Far };
+    public enum CameraState { Menu, Close, Normal, Far };
     public CameraState state;
 
+    public CameraSetting menu;
     public CameraSetting close;
     public CameraSetting normal;
     public CameraSetting far;
@@ -42,66 +43,91 @@ public class CameraControl : MonoBehaviour
 
         cameraPos.x = centreDistanceX / 2;
 
-        if (xDistance < close.distance)
+        if (state != CameraState.Menu)
         {
-            state = CameraState.Close;
-        }
-        else if (xDistance > far.distance)
-        {
-            state = CameraState.Far;
-        }
-        else
-        {
-            state = CameraState.Normal;
-        }
+            if (xDistance < close.distance)
+            {
+                state = CameraState.Close;
+            }
+            else if (xDistance > far.distance)
+            {
+                state = CameraState.Far;
+            }
+            else
+            {
+                state = CameraState.Normal;
+            }
 
-        if (state == CameraState.Close)
-        {
-            if (cam.orthographicSize > close.zoom)
+            if (state == CameraState.Close)
             {
-                cam.orthographicSize -= growSpeed / WorldRules.physicsRate;
-                cam.transform.localScale -= new Vector3(zoomSpeed / WorldRules.physicsRate, zoomSpeed / WorldRules.physicsRate, 0.0f);
+                if (cam.orthographicSize > close.zoom)
+                {
+                    cam.orthographicSize -= growSpeed / WorldRules.physicsRate;
+                    cam.transform.localScale -= new Vector3(zoomSpeed / WorldRules.physicsRate, zoomSpeed / WorldRules.physicsRate, 0.0f);
+
+                    // When the camera stops moving down you gain control, it looks dumb but just bear with me it's a simple game
+                    if (!p1.GetComponent<PlayerController>().enabled)
+                    {
+                        p1.GetComponent<PlayerPhysics>().enabled = true;
+                        p1.GetComponent<PlayerController>().enabled = true;
+                        p1.GetComponent<SpriteManager>().enabled = true;
+                        p2.GetComponent<PlayerPhysics>().enabled = true;
+                        p2.GetComponent<PlayerController>().enabled = true;
+                        p2.GetComponent<SpriteManager>().enabled = true;
+                    }
+                }
+                else
+                {
+                    cam.orthographicSize += growSpeed / WorldRules.physicsRate;
+                    cam.transform.localScale += new Vector3(zoomSpeed / WorldRules.physicsRate, zoomSpeed / WorldRules.physicsRate, 0.0f);
+                }
+
+                if (cam.transform.position.y > close.height)
+                {
+                    cameraPos.y -= growSpeed / WorldRules.physicsRate;
+                }
             }
-            if (cam.transform.position.y > close.height)
+            else if (state == CameraState.Far)
             {
-                cameraPos.y -= growSpeed / WorldRules.physicsRate;
+                if (cam.orthographicSize < far.zoom)
+                {
+                    cam.orthographicSize += growSpeed / WorldRules.physicsRate;
+                    cam.transform.localScale += new Vector3(zoomSpeed / WorldRules.physicsRate, zoomSpeed / WorldRules.physicsRate, 0.0f);
+                }
+                if (cam.transform.position.y < far.height)
+                {
+                    cameraPos.y += growSpeed / WorldRules.physicsRate;
+                }
             }
-        }
-        else if (state == CameraState.Far)
-        {
-            if (cam.orthographicSize < far.zoom)
+            else
             {
-                cam.orthographicSize += growSpeed / WorldRules.physicsRate;
-                cam.transform.localScale += new Vector3(zoomSpeed / WorldRules.physicsRate, zoomSpeed / WorldRules.physicsRate, 0.0f);
-            }
-            if (cam.transform.position.y < far.height)
-            {
-                cameraPos.y += growSpeed / WorldRules.physicsRate;
-            }
-        }
-        else
-        {
-            if (cam.orthographicSize < normal.zoom)
-            {
-                cam.orthographicSize += growSpeed / WorldRules.physicsRate;
-                cam.transform.localScale += new Vector3(zoomSpeed / WorldRules.physicsRate, zoomSpeed / WorldRules.physicsRate, 0.0f);
-            }
-            if (cam.transform.position.y < normal.height)
-            {
-                cameraPos.y += growSpeed / WorldRules.physicsRate;
-            }
-            if (cam.orthographicSize > normal.zoom)
-            {
-                cam.orthographicSize -= growSpeed / WorldRules.physicsRate;
-                cam.transform.localScale -= new Vector3(zoomSpeed / WorldRules.physicsRate, zoomSpeed / WorldRules.physicsRate, 0.0f);
-            }
-            if (cam.transform.position.y > normal.height)
-            {
-                cameraPos.y -= growSpeed / WorldRules.physicsRate;
+                if (cam.orthographicSize < normal.zoom)
+                {
+                    cam.orthographicSize += growSpeed / WorldRules.physicsRate;
+                    cam.transform.localScale += new Vector3(zoomSpeed / WorldRules.physicsRate, zoomSpeed / WorldRules.physicsRate, 0.0f);
+                }
+                if (cam.transform.position.y < normal.height)
+                {
+                    cameraPos.y += growSpeed / WorldRules.physicsRate;
+                }
+                if (cam.orthographicSize > normal.zoom)
+                {
+                    cam.orthographicSize -= growSpeed / WorldRules.physicsRate;
+                    cam.transform.localScale -= new Vector3(zoomSpeed / WorldRules.physicsRate, zoomSpeed / WorldRules.physicsRate, 0.0f);
+                }
+                if (cam.transform.position.y > normal.height)
+                {
+                    cameraPos.y -= growSpeed / WorldRules.physicsRate;
+                }
             }
         }
 
         transform.position = cameraPos;
+    }
+
+    public void StartGame()
+    {
+        state = CameraState.Normal;
     }
 }
 
