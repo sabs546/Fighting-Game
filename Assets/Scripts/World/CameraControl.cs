@@ -3,27 +3,34 @@ using UnityEngine;
 
 public class CameraControl : MonoBehaviour
 {
-    public GameObject p1;
+    // UI Stuff ======================================
+    public GameObject menuScreen; // To enable/disable
+    public GameObject fightUI;    // To enable/disable
+
+    // Positioning ====================================================================
+    public GameObject p1;      // Needed to calculate distance
     public GameObject p2;
-    public GameObject menuScreen;
-    private Vector2 p1Pos;
+    private Vector2 p1Pos;     // Saves time when getting position
     private Vector2 p2Pos;
-    private Vector3 cameraPos;
+    private Vector3 cameraPos; // Alter these values then apply them to the camera once
 
-    private Camera cam;
+    // States ===========================================================
     public enum CameraState { Menu, Close, Normal, Far };
-    public CameraState state;
+    public CameraState state; // Keeps track of where the camera is going
+    private Camera cam;       // To access orthographicSize
 
-    public CameraSetting menu;
-    public CameraSetting close;
-    public CameraSetting normal;
-    public CameraSetting far;
+    // State Value Storage ===================================
+    public CameraSetting menu;   // Store menu screen values
+    public CameraSetting close;  // When you're at the closest
+    public CameraSetting normal; // Everywhere else
+    public CameraSetting far;    // How did you get here?
+    public float growSpeed;      // Background resize speed
+    public float zoomSpeed;      // Camera zoom speed
 
-    private float centreDistanceX;
-    private float xDistance;
-    private float yDistance;
-    public float growSpeed;
-    public float zoomSpeed;
+    // Calculated Values ========================================
+    private float centreDistanceX; // To follow left/right
+    private float xDistance;       // Player to player X distance
+    private float yDistance;       // Player to player Y distance
 
     // Start is called before the first frame update
     void Start()
@@ -125,7 +132,7 @@ public class CameraControl : MonoBehaviour
                 }
             }
 
-            // Camera locking
+            // Camera locking, once you get here it has pretty much found a state and is just jittering in and out
             switch (state)
             {
                 case CameraState.Close:
@@ -148,6 +155,7 @@ public class CameraControl : MonoBehaviour
     public void StartGame()
     {
         state = CameraState.Normal;
+        fightUI.SetActive(true);
     }
 }
 
