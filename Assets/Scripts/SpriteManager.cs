@@ -76,6 +76,10 @@ public class SpriteManager : MonoBehaviour
             }
         }
 
-        sprite.flipX = controller.currentSide == PlayerController.Side.Right ? true : false;
+        // Can't turn around mid attack
+        if (atkController.state != PlayerAttackController.AttackState.Recovery)
+        {
+            sprite.flipX = controller.currentSide == PlayerController.Side.Right ? true : false;
+        }
     }
 }

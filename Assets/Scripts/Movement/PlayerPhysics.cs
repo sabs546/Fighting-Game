@@ -210,7 +210,7 @@ public class PlayerPhysics : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        travel *= 0.5f;
         opponent.GetComponent<PlayerPhysics>().travel += effectiveMovement;
+        startSprint = false;
     }
 }
