@@ -10,7 +10,7 @@ public class SPKick : BaseAttack
         Stun = 20;
         Followup = null; // SPKGroundPunch jump?
 
-        Range = new Vector2(1.0f, 0.0f);
+        Range = new Vector2(0.5f, 0.0f);
         Size = new Vector2(1.0f, 1.0f);
         Recoil = new Vector2(0.0f, 0.0f);
         Knockback = new Vector2(0.0f, 32.0f);

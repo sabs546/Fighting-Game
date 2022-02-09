@@ -174,6 +174,14 @@ public class PlayerAttackController : MonoBehaviour
                 break;
 
             case PlayerController.PlayerStates.Airborne:
+                switch (controller.aState)
+                {
+                    case PlayerController.AirStates.Rising:
+                        if (attackType == controls.Punch) { return new RisingPunch(); }
+                        break;
+                    case PlayerController.AirStates.Falling:
+                        break;
+                }
                 break;
 
             case PlayerController.PlayerStates.Crouching:
