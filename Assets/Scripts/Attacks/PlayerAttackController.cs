@@ -74,8 +74,8 @@ public class PlayerAttackController : MonoBehaviour
         // The next part of the string
         else if (state == AttackState.Recovery)
         {
-            if ((Input.GetKeyDown(controls.Punch) && nextAttack.attackType == BaseAttack.AttackType.Punch) ||
-                (Input.GetKeyDown(controls.Kick)  && nextAttack.attackType == BaseAttack.AttackType.Kick))
+            if (nextAttack != null && ((Input.GetKeyDown(controls.Punch) && nextAttack.attackType == BaseAttack.AttackType.Punch) ||
+                                       (Input.GetKeyDown(controls.Kick)  && nextAttack.attackType == BaseAttack.AttackType.Kick)))
             {
                 currentAttack = nextAttack;
                 if (currentAttack != null)
@@ -124,6 +124,7 @@ public class PlayerAttackController : MonoBehaviour
                 if (currentAttack.AlwaysRecoil)
                 {
                     physics.travel += sprite.flipX ? currentAttack.Recoil.x / WorldRules.physicsRate : -currentAttack.Recoil.x / WorldRules.physicsRate;
+                    physics.launch += currentAttack.Recoil.y / WorldRules.physicsRate;
                     currentAttack.RemoveRecoil();
                 }
             }
@@ -180,6 +181,7 @@ public class PlayerAttackController : MonoBehaviour
                         if (attackType == controls.Punch) { return new RisingPunch(); }
                         break;
                     case PlayerController.AirStates.Falling:
+                        if (attackType == controls.Kick) { return new FallingKick(); }
                         break;
                 }
                 break;
