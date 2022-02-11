@@ -15,6 +15,7 @@ public class SPKick : BaseAttack
         Recoil = new Vector2(0.0f, 0.0f);
         Knockback = new Vector2(0.0f, 32.0f);
         AlwaysRecoil = false;
+        DelayRecoil = false;
         SparkType = HitSparkManager.SparkType.Launch;
     }
 

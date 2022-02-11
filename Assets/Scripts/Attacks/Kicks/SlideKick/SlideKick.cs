@@ -15,6 +15,7 @@ public class SlideKick : BaseAttack
         Recoil = new Vector2(-16.0f, 0.0f);
         Knockback = new Vector2(16.0f, 0.0f);
         AlwaysRecoil = true;
+        DelayRecoil = false;
         SparkType = HitSparkManager.SparkType.Low;
     }
 

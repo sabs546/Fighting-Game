@@ -4590,11 +4590,16 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'DSH>K | DSH>P>K
+  m_text: 'Dash: Kick | Punch>Kick
 
-    SPR>P>K
+    Sprint: Punch>Kick
 
-    SLD>K'
+    Jump: Rising>Punch
+    | Kick
+
+    SLD>K
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a50fd38a2661c8f4d8b0b39ef6383763, type: 2}
   m_sharedMaterial: {fileID: -6993522698956005608, guid: a50fd38a2661c8f4d8b0b39ef6383763,
@@ -4664,12 +4669,12 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 1785234528}
-    characterCount: 29
+    characterCount: 75
     spriteCount: 0
-    spaceCount: 4
-    wordCount: 10
+    spaceCount: 11
+    wordCount: 13
     linkCount: 0
-    lineCount: 3
+    lineCount: 4
     pageCount: 1
     materialCount: 1
   m_isUsingLegacyAnimationComponent: 0

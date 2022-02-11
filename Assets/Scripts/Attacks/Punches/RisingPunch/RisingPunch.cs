@@ -15,13 +15,13 @@ public class RisingPunch : BaseAttack
         Recoil = new Vector2(-4.0f, 16.0f);
         Knockback = new Vector2(4.0f, 24.0f);
         AlwaysRecoil = true;
+        DelayRecoil = false;
         SparkType = HitSparkManager.SparkType.Launch;
     }
 
     public override void SideSwap()
     {
         Range = new Vector2(Range.x * -1.0f, 0.0f);
-        Recoil = new Vector2(Recoil.x * -1.0f, 0.0f);
         Knockback = new Vector2(Knockback.x * -1.0f, 0.0f);
     }
 }
