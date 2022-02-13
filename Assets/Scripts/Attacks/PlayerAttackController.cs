@@ -90,6 +90,17 @@ public class PlayerAttackController : MonoBehaviour
                 }
             }
         }
+        // This one is an odd case, where an attack transitions into another attack automatically
+        else if (state == AttackState.Active)
+        {
+            if (currentAttack is FallingKick && controller.pState == PlayerController.PlayerStates.Grounded)
+            {
+                currentAttack = new SlideKick();
+                state = AttackState.Startup;
+                timer = 0;
+                currentAttack.RemoveRecoil();
+            }
+        }
 
         // If there is some stun, start the clock
         if (stunLimit > 0)
