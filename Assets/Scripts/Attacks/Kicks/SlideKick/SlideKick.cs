@@ -17,6 +17,7 @@ public class SlideKick : BaseAttack
         AlwaysRecoil = true;
         DelayRecoil = false;
         SparkType = HitSparkManager.SparkType.Low;
+        SoundName = "Light_03";
     }
 
     public override void SideSwap()

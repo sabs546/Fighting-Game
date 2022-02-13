@@ -17,6 +17,7 @@ public class RisingPunch : BaseAttack
         AlwaysRecoil = true;
         DelayRecoil = false;
         SparkType = HitSparkManager.SparkType.Launch;
+        SoundName = "Heavy_01";
     }
 
     public override void SideSwap()

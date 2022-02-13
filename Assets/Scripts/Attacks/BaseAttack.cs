@@ -17,6 +17,7 @@ public class BaseAttack
     public bool AlwaysRecoil { get; protected set; }
     public bool DelayRecoil { get; protected set; }
     public HitSparkManager.SparkType SparkType { get; protected set; }
+    public string SoundName { get; protected set; }
 
     public virtual void SideSwap() { }
     public void RemoveRecoil()

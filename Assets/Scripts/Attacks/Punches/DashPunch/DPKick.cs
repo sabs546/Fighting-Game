@@ -17,6 +17,7 @@ public class DPKick : BaseAttack
         AlwaysRecoil = false;
         DelayRecoil = false;
         SparkType = HitSparkManager.SparkType.Mid;
+        SoundName = "Light_01";
     }
 
     public override void SideSwap()

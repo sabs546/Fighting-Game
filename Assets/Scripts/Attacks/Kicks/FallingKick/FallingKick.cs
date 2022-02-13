@@ -17,6 +17,7 @@ public class FallingKick : BaseAttack
         AlwaysRecoil = true;
         DelayRecoil = true;
         SparkType = HitSparkManager.SparkType.Low;
+        SoundName = "Light_03";
     }
 
     public override void SideSwap()

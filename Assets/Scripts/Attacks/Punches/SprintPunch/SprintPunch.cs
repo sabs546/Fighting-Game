@@ -17,6 +17,7 @@ public class SprintPunch : BaseAttack
         AlwaysRecoil = true;
         DelayRecoil = false;
         SparkType = HitSparkManager.SparkType.Mid;
+        SoundName = "Light_02";
     }
 
     public override void SideSwap()

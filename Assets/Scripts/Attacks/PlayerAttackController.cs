@@ -131,18 +131,27 @@ public class PlayerAttackController : MonoBehaviour
             if (timer < currentAttack.Speed.x) // During attack startup
             {
                 state = AttackState.Startup;
-                //sprite.color = Color.cyan;
                 if (currentAttack.AlwaysRecoil && !currentAttack.DelayRecoil)
                 {
                     physics.travel += sprite.flipX ? currentAttack.Recoil.x / WorldRules.physicsRate : -currentAttack.Recoil.x / WorldRules.physicsRate;
                     physics.launch += currentAttack.Recoil.y / WorldRules.physicsRate;
                     currentAttack.RemoveRecoil();
                 }
+                if (timer == 1)
+                {
+                    if (currentAttack.SparkType == HitSparkManager.SparkType.Launch)
+                    {
+                        GetComponent<AttackAudioManager>().PlaySound("Whiff_Heavy_01");
+                    }
+                    else if (currentAttack.SparkType == HitSparkManager.SparkType.Mid || currentAttack.SparkType == HitSparkManager.SparkType.Low)
+                    {
+                        GetComponent<AttackAudioManager>().PlaySound("Whiff_Light_01");
+                    }
+                }
             }
             else if (timer < currentAttack.Speed.y) // During attack active
             {
                 state = AttackState.Active;
-                //sprite.color = Color.red;
                 hitbox.enabled = true;
                 hitbox.offset = currentAttack.Range;
                 hitbox.size = currentAttack.Size;
@@ -156,14 +165,12 @@ public class PlayerAttackController : MonoBehaviour
             else if (timer < currentAttack.Speed.z) // During attack recovery
             {
                 state = AttackState.Recovery;
-                //sprite.color = Color.yellow;
                 hitbox.enabled = false;
                 if (controller.gState == PlayerController.GroundStates.Sprint) physics.startSprint = false;
             }
             else // After attack completes
             {
                 state = AttackState.Empty;
-                //sprite.color = Color.white;
                 timer = 0;
                 stunLimit = 0;
             }
@@ -229,5 +236,6 @@ public class PlayerAttackController : MonoBehaviour
         }
         hitSpark.CreateHitSpark(currentAttack.SparkType, sparkPos.x, sparkPos.y, !sprite.flipX, physics.travel);
         opponentPhysics.GetComponent<HealthManager>().SendDamage(currentAttack.Damage);
+        GetComponent<AttackAudioManager>().PlaySound(currentAttack.SoundName);
     }
 }
