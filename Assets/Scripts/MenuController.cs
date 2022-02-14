@@ -64,11 +64,13 @@ public class MenuController : MonoBehaviour
         {
             originalText.SetActive(false);
             newText.SetActive(true);
+            menuBlock.GetComponent<Button>().interactable = false;
         }
         if (currentPage == 1)
         {
             originalText.SetActive(true);
             newText.SetActive(false);
+            menuBlock.GetComponent<Button>().interactable = true;
         }
     }
 }
