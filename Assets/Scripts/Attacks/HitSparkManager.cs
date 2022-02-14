@@ -36,7 +36,7 @@ public class HitSparkManager : MonoBehaviour
         }
     }
 
-    public void CreateHitSpark(SparkType sparkType, float xPos, float yPos, bool flipX, float moveSpeed)
+    public void CreateHitSpark(SparkType sparkType, float xPos, float yPos, bool flipX, float moveSpeed, PlayerController.PlayerStates state = PlayerController.PlayerStates.Grounded)
     {
         sprite.flipX = flipX;
         active = true;
@@ -55,8 +55,16 @@ public class HitSparkManager : MonoBehaviour
 
         if (sparkType == SparkType.Low)
         {
-            animator.SetTrigger("Slide");
-            transform.position = new Vector3(xPos, yPos, 0.0f);
+            if (state == PlayerController.PlayerStates.Airborne)
+            {
+                animator.SetTrigger("Down");
+                transform.position = new Vector3(xPos, yPos, 0.0f);
+            }
+            else
+            {
+                animator.SetTrigger("Slide");
+                transform.position = new Vector3(xPos, yPos, 0.0f);
+            }
         }
     }
 }

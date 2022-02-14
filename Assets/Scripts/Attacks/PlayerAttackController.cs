@@ -234,8 +234,9 @@ public class PlayerAttackController : MonoBehaviour
         {
             sparkPos.y += transform.lossyScale.y * 0.5f;
         }
-        hitSpark.CreateHitSpark(currentAttack.SparkType, sparkPos.x, sparkPos.y, !sprite.flipX, physics.travel);
+        hitSpark.CreateHitSpark(currentAttack.SparkType, sparkPos.x, sparkPos.y, !sprite.flipX, physics.travel, controller.pState);
         opponentPhysics.GetComponent<HealthManager>().SendDamage(currentAttack.Damage);
         GetComponent<AttackAudioManager>().PlaySound(currentAttack.SoundName);
+        timer = currentAttack.Speed.z;
     }
 }
