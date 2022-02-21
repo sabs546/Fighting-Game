@@ -4657,7 +4657,9 @@ MonoBehaviour:
     Into Accordian Kick - Punch
     > Kick
 
-    Flying Knee - Kick'
+    Flying Knee - Kick
+
+    Into Stomp - Kick > Kick'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a50fd38a2661c8f4d8b0b39ef6383763, type: 2}
   m_sharedMaterial: {fileID: -6993522698956005608, guid: a50fd38a2661c8f4d8b0b39ef6383763,
@@ -4727,12 +4729,12 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 1002214192}
-    characterCount: 89
+    characterCount: 114
     spriteCount: 0
-    spaceCount: 17
-    wordCount: 17
+    spaceCount: 23
+    wordCount: 22
     linkCount: 0
-    lineCount: 4
+    lineCount: 5
     pageCount: 1
     materialCount: 1
   m_isUsingLegacyAnimationComponent: 0

@@ -78,6 +78,7 @@ public class PlayerAttackController : MonoBehaviour
                                        (Input.GetKeyDown(controls.Kick)  && nextAttack.attackType == BaseAttack.AttackType.Kick)))
             {
                 currentAttack = nextAttack;
+                GetComponent<SpriteManager>().EnableFollowup(true);
                 if (currentAttack != null)
                 {
                     if (sprite.flipX) { currentAttack.SideSwap(); }
@@ -173,6 +174,7 @@ public class PlayerAttackController : MonoBehaviour
                 state = AttackState.Empty;
                 timer = 0;
                 stunLimit = 0;
+                GetComponent<SpriteManager>().EnableFollowup(false);
             }
         }
     }
@@ -219,11 +221,24 @@ public class PlayerAttackController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        // Weight stuff
         physics.launch -= currentAttack.Recoil.y / WorldRules.physicsRate;
-        if (!currentAttack.AlwaysRecoil) physics.travel -= currentAttack.Recoil.x / WorldRules.physicsRate;
-        opponentPhysics.launch += currentAttack.Knockback.y / WorldRules.physicsRate;
         opponentPhysics.travel += currentAttack.Knockback.x / WorldRules.physicsRate;
+        opponentPhysics.launch += currentAttack.Knockback.y / WorldRules.physicsRate;
+        if (!currentAttack.AlwaysRecoil)
+        {
+            if (currentAttack.Recoil != Vector2.zero)
+            {
+                physics.travel -= currentAttack.Recoil.x / WorldRules.physicsRate;
+            }
+            else
+            {
+                physics.Brake();
+                opponentPhysics.Brake();
+            }
+        }
         
+        // Hitspark stuff
         if (opponentPhysics.GetComponent<PlayerController>().pState == PlayerController.PlayerStates.Grounded)
         {
             opponentPhysics.GetComponent<PlayerAttackController>().stunLimit = currentAttack.Stun;
@@ -235,6 +250,8 @@ public class PlayerAttackController : MonoBehaviour
             sparkPos.y += transform.lossyScale.y * 0.5f;
         }
         hitSpark.CreateHitSpark(currentAttack.SparkType, sparkPos.x, sparkPos.y, !sprite.flipX, physics.travel, controller.pState);
+
+        // Other stuff
         opponentPhysics.GetComponent<HealthManager>().SendDamage(currentAttack.Damage);
         GetComponent<AttackAudioManager>().PlaySound(currentAttack.SoundName);
         timer = currentAttack.Speed.y;

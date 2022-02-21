@@ -59,7 +59,7 @@ public class PlayerController : MonoBehaviour
                 physics.travel = 0.0f;
             }
         }
-        else if (pState == PlayerStates.Grounded)
+        else if (pState == PlayerStates.Grounded && gState != GroundStates.Stun)
         {
             if (Input.GetKeyDown(controls.Up))
             {

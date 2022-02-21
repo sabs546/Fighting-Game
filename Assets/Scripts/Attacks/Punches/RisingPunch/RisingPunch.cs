@@ -22,7 +22,7 @@ public class RisingPunch : BaseAttack
 
     public override void SideSwap()
     {
-        Range = new Vector2(Range.x * -1.0f, 0.0f);
-        Knockback = new Vector2(Knockback.x * -1.0f, 0.0f);
+        Range = new Vector2(Range.x * -1.0f, Range.y);
+        Knockback = new Vector2(Knockback.x * -1.0f, Knockback.y);
     }
 }

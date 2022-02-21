@@ -121,7 +121,7 @@ public class PlayerPhysics : MonoBehaviour
         // --------------------------------------------------------
         // - Sprinting -
         // -------
-        if (enableSprint && startSprint && controller.gState != PlayerController.GroundStates.Stun)
+        if (enableSprint && startSprint)
         {
             controller.gState = PlayerController.GroundStates.Sprint;
             effectiveMovement = travel;
@@ -130,7 +130,7 @@ public class PlayerPhysics : MonoBehaviour
         // --------------------------------------------------------
         // - Dashing -
         // -------
-        if (controller.gState != PlayerController.GroundStates.Sprint && controller.gState != PlayerController.GroundStates.Stun)
+        if (controller.gState != PlayerController.GroundStates.Sprint)
         {
             effectiveMovement += travel;
             travel = 0.0f;
@@ -212,5 +212,10 @@ public class PlayerPhysics : MonoBehaviour
     {
         opponent.GetComponent<PlayerPhysics>().travel += effectiveMovement;
         startSprint = false;
+    }
+
+    public void Brake()
+    {
+        effectiveMovement = 0.0f;
     }
 }

@@ -82,4 +82,9 @@ public class SpriteManager : MonoBehaviour
             sprite.flipX = controller.currentSide == PlayerController.Side.Right ? true : false;
         }
     }
+
+    public void EnableFollowup(bool enable)
+    {
+        animator.SetBool("Followup", enable);
+    }
 }
