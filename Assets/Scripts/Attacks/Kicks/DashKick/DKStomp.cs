@@ -8,7 +8,7 @@ public class DKStomp : BaseAttack
         Damage = 2;
         Speed = new Vector3Int(15, 17, 40);
         Stun = 40;
-        Followup = null;
+        Followup = new DKSUppercut();
 
         Range = new Vector2(0.25f, -0.25f);
         Size = new Vector2(0.75f, 0.75f);
