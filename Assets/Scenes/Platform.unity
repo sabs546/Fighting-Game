@@ -1978,6 +1978,8 @@ GameObject:
   - component: {fileID: 429183487}
   - component: {fileID: 429183486}
   - component: {fileID: 429183491}
+  - component: {fileID: 429183499}
+  - component: {fileID: 429183500}
   - component: {fileID: 429183495}
   - component: {fileID: 429183492}
   - component: {fileID: 429183493}
@@ -2121,7 +2123,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 429183485}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 47b10881a1404e24c993c09e3ed74ff8, type: 3}
   m_Name: 
@@ -2337,6 +2339,43 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 7cd7e6e6a52382b4eb23c60275f9ebd3, type: 3}
   - {fileID: 8300000, guid: c1ed61bf8bcd5b6499b62ec97b696fd5, type: 3}
   - {fileID: 8300000, guid: dfd8bd9e1bb89f44ca3e94204d1d930b, type: 3}
+--- !u!114 &429183499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 429183485}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c82a17b60e2fd3a4280018db8664e741, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprint: 0.2
+  dashDistance: 0.4
+  jumpPower: 0.4
+  pState: 0
+  gState: 0
+  aState: 0
+  playStyle: 0
+  currentSide: 0
+  opponent: {fileID: 353790518}
+--- !u!114 &429183500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 429183485}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 028ad2c68142d3e449552a123c38f1de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state: 0
+  hitSpark: {fileID: 0}
+  stunLimit: 0
+  enableLowAttacks: 0
 --- !u!1 &462804186
 GameObject:
   m_ObjectHideFlags: 0
