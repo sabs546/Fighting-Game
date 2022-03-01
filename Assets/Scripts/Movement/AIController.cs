@@ -154,19 +154,61 @@ public class AIController : MonoBehaviour
                 // The important part though is that we're not within attack range, so below is what we do from that dash
                 // Being aggressive, we've decided already that they're going to approach
                 // The question is how?
-                // To determine this we're gonna need to know the current status of the opponent, for example grounded
-                if (opponentController.pState == PlayerController.PlayerStates.Grounded && pState == PlayerStates.Grounded)
+                // To determine this we're gonna need information on the state of either fighter
+                if (pState == PlayerStates.Grounded)
                 {
-                    // The following are dummy variables for the if statement below
-                    int distance = 0;  // So first we find their range from us
-                    int threshold = 0; // This will determine if they want to swap to sprint or not
-
-                    // We've aready started our approach, lets pretend they are too far away and we need to sprint instead
-                    if (distance > threshold)
+                    // If they're grounded and you're grounded, we can just gauge distance
+                    if (opponentController.pState == PlayerController.PlayerStates.Grounded)
                     {
-                        // This is where we'd send the signal to start the sprint
+                        // The following are dummy variables for the if statement below
+                        int distance = 0;  // So first we find their range from us
+                        int threshold = 0; // This will determine if they want to swap to sprint or not
+
+                        // We've aready started our approach, lets pretend they are too far away and we need to sprint instead
+                        if (distance > threshold)
+                        {
+                            // This is where we'd send the signal to start the sprint
+                        }
+                        // Otherwise continue with the dash decision Until we're within attack range
                     }
-                    // Otherwise continue with the dash decision Until we're within attack range
+                    // On the other hand if they're in the air this is gonna get a little complicated
+                    else if (opponentController.pState == PlayerController.PlayerStates.Airborne)
+                    {
+                        int distance = 0;
+                        int threshold = 0;
+                        // Depending on if the opponent is going to hit the ground or not, we can have different responses
+                        if (opponentController.aState == PlayerController.AirStates.Rising)
+                        {
+                            // My logic behind this is that if they're going up, they probably recently jumped and have some airborne time left
+                            // That means to reach them you probably might need a jump
+
+                            // You can't just jump though, they have to be within a range where jumping should actually catch them, for the most part
+                            if (distance > threshold)
+                            {
+                                // Also at this point we may trigger a sprint since that will increase the jump height
+                                // We would also jump because we're somewhere within the range of catching them
+                            }
+                        }
+                        else if (opponentController.aState == PlayerController.AirStates.Falling)
+                        {
+                            if (distance > threshold)
+                            {
+                                // We would trigger a sprint here to get closer for the attack
+                            }
+                        }
+                    }
+                }
+                // If you do jump for an attack, or jump with an attack and there's a whiff, you may still have a decision to make
+                else if (pState == PlayerStates.Airborne)
+                {
+                    if (aState == AirStates.Rising)
+                    {
+                        //if (AI.pos.y < Opp.pos.y && distance < threshold) // About close enough to aim for an uppercut
+                    }
+                    else if (aState == AirStates.Falling)
+                    {
+                        //if (AI.pos.y > Opp.pos.y && distance < threshold) // About close enough to recover with a rough dive kick
+                    }
                 }
             }
             else
