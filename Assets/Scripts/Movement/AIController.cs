@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -20,7 +21,9 @@ public class AIController : MonoBehaviour
     public enum Side { Left, Right };
     public Side currentSide;
 
-    public GameObject opponent;
+    public GameObject opponent; // Used for AI tracking of opponent
+    public float   reach;       // Check for punching range
+    public float   dashReach;   // Check for approach range
 
     private SetControls controls;
     private PlayerPhysics physics;
@@ -138,6 +141,26 @@ public class AIController : MonoBehaviour
         }
     }
 
+    // Check the range between the fighters
+    private bool CheckInRange(bool armsReach, bool vertical = false)
+    {
+        Vector3 pos = transform.position;
+        Vector3 oppPos = opponent.transform.position;
+        float reachDistance = armsReach ? reach : dashReach;
+
+        if (!vertical)
+        {
+            float posX = Math.Abs(transform.position.x);
+            float oppX = Math.Abs(opponent.transform.position.x);
+
+            if (Math.Abs(posX - oppX) < reach)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void DecisionMaker()
     {
         PlayerController opponentController = opponent.GetComponent<PlayerController>();
@@ -146,9 +169,9 @@ public class AIController : MonoBehaviour
 
         if (playStyle == Playstyle.Rushdown)
         {
-            // attackRange = CheckIfInAttackRange();
+            /// attackRange = CheckInRange(true);
             // Regardless of attack range, we're going to need some sort of movement
-            // Being rushdown, movement will be approach, so we're going to assume we dash here
+            // Being rushdown, movement will be approach, but we need to be grounded first, we'll deal with that later
             if (!attackRange)
             {
                 // The important part though is that we're not within attack range, so below is what we do from that dash
@@ -157,19 +180,23 @@ public class AIController : MonoBehaviour
                 // To determine this we're gonna need information on the state of either fighter
                 if (pState == PlayerStates.Grounded)
                 {
-                    // If they're grounded and you're grounded, we can just gauge distance
+                    // Some projected code, we're gonna need to dash if we're not already dashing and then we can make another decision
+                    /// if (gState != GroundedStates.Dash)
+                    /// {
+                            // Just a note that the SendMovementSignal function might need overloads for different enum types
+                    ///     SendMovementSignal(GroundStates.Dash);
+                    ///     return;
+                    /// }
+                    // If they're grounded and you're grounded and have begun approaching, we can just gauge distance
                     if (opponentController.pState == PlayerController.PlayerStates.Grounded)
                     {
-                        // The following are dummy variables for the if statement below
-                        int distance = 0;  // So first we find their range from us
-                        int threshold = 0; // This will determine if they want to swap to sprint or not
-
                         // We've aready started our approach, lets pretend they are too far away and we need to sprint instead
-                        if (distance > threshold)
-                        {
-                            // This is where we'd send the signal to start the sprint
-                        }
-                        // Otherwise continue with the dash decision Until we're within attack range
+                        /// if (CheckInRange(false))
+                        /// {
+                                // Considering we're out of dash range, we can kick up a sprint here
+                        ///     SendMovementSignal(GroundStates.Sprint);
+                        /// }
+                        // Otherwise let the dash ride, we can still make it
                     }
                     // On the other hand if they're in the air this is gonna get a little complicated
                     else if (opponentController.pState == PlayerController.PlayerStates.Airborne)
