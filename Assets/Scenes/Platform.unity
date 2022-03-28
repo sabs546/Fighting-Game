@@ -1973,14 +1973,12 @@ GameObject:
   m_Component:
   - component: {fileID: 429183490}
   - component: {fileID: 429183489}
-  - component: {fileID: 429183488}
+  - component: {fileID: 429183486}
   - component: {fileID: 429183496}
   - component: {fileID: 429183487}
-  - component: {fileID: 429183486}
-  - component: {fileID: 429183491}
   - component: {fileID: 429183499}
   - component: {fileID: 429183500}
-  - component: {fileID: 429183495}
+  - component: {fileID: 429183488}
   - component: {fileID: 429183492}
   - component: {fileID: 429183493}
   - component: {fileID: 429183494}
@@ -2002,16 +2000,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 429183485}
   m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7e621b0140f7a04da8245bb9374556a, type: 3}
+  m_Script: {fileID: 11500000, guid: 41e33b5d4735fcd47a092df964dc0a67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprint: 0.2
-  dashDistance: 0.4
-  jumpPower: 0.4
-  pState: 0
-  gState: 0
-  aState: 0
-  currentSide: 0
+  launch: 0
+  travel: 0
+  enableSprint: 0
+  enableCrouch: 0
+  startSprint: 0
+  airLock: 0
+  opponent: {fileID: 353790518}
 --- !u!114 &429183487
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2041,16 +2039,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 429183485}
   m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7ae9c1af033be14c8806f7d05bf756d, type: 3}
+  m_Script: {fileID: 11500000, guid: cb5b204275cc479439b5a7753585bf56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  launch: 0
-  travel: 0
-  enableSprint: 0
-  enableCrouch: 0
-  startSprint: 0
-  airLock: 0
-  opponent: {fileID: 353790518}
 --- !u!212 &429183489
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2116,22 +2107,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &429183491
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 429183485}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47b10881a1404e24c993c09e3ed74ff8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  state: 0
-  hitSpark: {fileID: 151701392}
-  stunLimit: 0
-  enableLowAttacks: 0
 --- !u!50 &429183492
 Rigidbody2D:
   serializedVersion: 4
@@ -2198,18 +2173,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &429183495
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 429183485}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8b266ffb9e18564699c617f25963b0e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &429183496
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2360,6 +2323,8 @@ MonoBehaviour:
   playStyle: 0
   currentSide: 0
   opponent: {fileID: 353790518}
+  reach: 0
+  dashReach: 0
 --- !u!114 &429183500
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2373,7 +2338,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   state: 0
-  hitSpark: {fileID: 0}
+  hitSpark: {fileID: 1320201745}
   stunLimit: 0
   enableLowAttacks: 0
 --- !u!1 &462804186

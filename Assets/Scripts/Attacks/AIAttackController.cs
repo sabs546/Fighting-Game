@@ -12,12 +12,12 @@ public class AIAttackController : MonoBehaviour
     public AttackState state;                                     // And what will hold them
 
     // Player Values ========================================
-    private PlayerController controller;   // Player control
+    private AIController controller;   // Player control
     private SpriteRenderer sprite;         // Sprite control
     private SetControls controls;          // Attack controls
 
     // Attack Traits ====================================================
-    private PlayerPhysics physics;         // For your own knockback
+    private AIPhysics physics;         // For your own knockback
     private PlayerPhysics opponentPhysics; // For the opponents knockback
     private BoxCollider2D hitbox;          // The hitbox of the attack
     private int timer;                     // Frame counter
@@ -28,7 +28,7 @@ public class AIAttackController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        controller = GetComponent<PlayerController>();
+        controller = GetComponent<AIController>();
         controls = GetComponent<SetControls>();
         currentAttack = new BaseAttack();
         nextAttack = new BaseAttack();
@@ -37,7 +37,7 @@ public class AIAttackController : MonoBehaviour
         timer = 0;
         stunLimit = 0;
 
-        physics = GetComponent<PlayerPhysics>();
+        physics = GetComponent<AIPhysics>();
         opponentPhysics = physics.opponent.GetComponent<PlayerPhysics>();
         hitbox = gameObject.AddComponent<BoxCollider2D>();
         hitbox.isTrigger = true;
@@ -48,7 +48,7 @@ public class AIAttackController : MonoBehaviour
     void FixedUpdate()
     {
         // First attack
-        if (state == AttackState.Empty && controller.gState != PlayerController.GroundStates.Stun)
+        if (state == AttackState.Empty && controller.gState != AIController.GroundStates.Stun)
         {
             if (Input.GetKeyDown(controls.Punch))
             {
@@ -94,7 +94,7 @@ public class AIAttackController : MonoBehaviour
         // This one is an odd case, where an attack transitions into another attack automatically
         else if (state == AttackState.Active)
         {
-            if (currentAttack is FallingKick && controller.pState == PlayerController.PlayerStates.Grounded)
+            if (currentAttack is FallingKick && controller.pState == AIController.PlayerStates.Grounded)
             {
                 currentAttack = new SlideKick();
                 state = AttackState.Startup;
@@ -108,7 +108,7 @@ public class AIAttackController : MonoBehaviour
         {
             if (timer == 0)
             {
-                controller.gState = PlayerController.GroundStates.Stun;
+                controller.gState = AIController.GroundStates.Stun;
                 GetComponent<Animator>().SetBool("Stun", true);
             }
 
@@ -118,7 +118,7 @@ public class AIAttackController : MonoBehaviour
             }
             else
             {
-                controller.gState = PlayerController.GroundStates.Neutral;
+                controller.gState = AIController.GroundStates.Neutral;
                 GetComponent<Animator>().SetBool("Stun", false);
                 stunLimit = 0;
                 timer = 0;
@@ -167,7 +167,7 @@ public class AIAttackController : MonoBehaviour
             {
                 state = AttackState.Recovery;
                 hitbox.enabled = false;
-                if (controller.gState == PlayerController.GroundStates.Sprint) physics.startSprint = false;
+                if (controller.gState == AIController.GroundStates.Sprint) physics.startSprint = false;
             }
             else // After attack completes
             {
@@ -183,36 +183,36 @@ public class AIAttackController : MonoBehaviour
     {
         switch (controller.pState)
         {
-            case PlayerController.PlayerStates.Grounded:
+            case AIController.PlayerStates.Grounded:
                 switch (controller.gState)
                 {
-                    case PlayerController.GroundStates.Neutral:
+                    case AIController.GroundStates.Neutral:
                         break;
 
-                    case PlayerController.GroundStates.Dash:
+                    case AIController.GroundStates.Dash:
                         if (attackType == controls.Punch) { return new DashPunch(); }
                         if (attackType == controls.Kick) { return new DashKick(); }
                         break;
 
-                    case PlayerController.GroundStates.Sprint:
+                    case AIController.GroundStates.Sprint:
                         if (attackType == controls.Punch) { return new SprintPunch(); }
                         break;
                 }
                 break;
 
-            case PlayerController.PlayerStates.Airborne:
+            case AIController.PlayerStates.Airborne:
                 switch (controller.aState)
                 {
-                    case PlayerController.AirStates.Rising:
+                    case AIController.AirStates.Rising:
                         if (attackType == controls.Punch) { return new RisingPunch(); }
                         break;
-                    case PlayerController.AirStates.Falling:
+                    case AIController.AirStates.Falling:
                         if (attackType == controls.Kick) { return new FallingKick(); }
                         break;
                 }
                 break;
 
-            case PlayerController.PlayerStates.Crouching:
+            case AIController.PlayerStates.Crouching:
                 if (attackType == controls.Kick) { return new SlideKick(); }
                 break;
         }

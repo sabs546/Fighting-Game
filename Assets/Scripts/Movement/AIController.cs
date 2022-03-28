@@ -26,119 +26,21 @@ public class AIController : MonoBehaviour
     public float   dashReach;   // Check for approach range
 
     private SetControls controls;
-    private PlayerPhysics physics;
+    private AIPhysics physics;
     private AIAttackController attackController;
 
     // Start is called before the first frame update
     void Start()
     {
         controls = GetComponent<SetControls>();
-        physics = GetComponent<PlayerPhysics>();
+        physics = GetComponent<AIPhysics>();
         attackController = GetComponent<AIAttackController>();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        // --------------------------------------------------------
-        // - Movement Inputs -
-        // -------
-        // You shouldn't be able to move while attacking
-        if (attackController.state != AIAttackController.AttackState.Empty || gState == GroundStates.Stun)
-        {
-            if (attackController.state == AIAttackController.AttackState.Startup)
-            {
-                
-            }
-            else if (attackController.state == AIAttackController.AttackState.Active)
-            {
-                
-            }
-            else if (attackController.state == AIAttackController.AttackState.Recovery)
-            {
-
-            }
-
-            // Sprint attacks need to still cancel
-            if ((Input.GetKeyUp(controls.Left) || Input.GetKeyUp(controls.Right)) && gState != GroundStates.Neutral)
-            {
-                physics.startSprint = false;
-                physics.travel = 0.0f;
-            }
-        }
-        else if (pState == PlayerStates.Grounded && gState != GroundStates.Stun)
-        {
-            if (Input.GetKeyDown(controls.Up))
-            {
-                physics.launch += jumpPower;
-            }
-
-            if (Input.GetKeyDown(controls.Down))
-            {
-                if (gState == GroundStates.Dash)
-                {
-                    physics.enableCrouch = true;
-                }
-            }
-
-            if (Input.GetKeyDown(controls.Left) && gState == GroundStates.Neutral)
-            {
-                physics.travel -= dashDistance;
-            }
-            else if (Input.GetKeyDown(controls.Left) && gState != GroundStates.Neutral)
-            {
-                physics.startSprint = true;
-                physics.travel = -sprint;
-            }
-            else if (Input.GetKeyUp(controls.Left) && gState != GroundStates.Neutral)
-            {
-                physics.startSprint = false;
-                physics.travel = 0.0f;
-            }
-
-            if (Input.GetKeyDown(controls.Right) && gState == GroundStates.Neutral)
-            {
-                physics.travel += dashDistance;
-            }
-            else if (Input.GetKeyDown(controls.Right) && gState != GroundStates.Neutral)
-            {
-                physics.startSprint = true;
-                physics.travel = sprint;
-            }
-            else if (Input.GetKeyUp(controls.Right) && gState != GroundStates.Neutral)
-            {
-                physics.startSprint = false;
-                physics.travel = 0.0f;
-            }
-
-            // For missed input ups
-            if (gState == GroundStates.Sprint && !Input.GetKey(controls.Left) && !Input.GetKey(controls.Right))
-            {
-                physics.startSprint = false;
-            }
-        }
-        else if (pState == PlayerStates.Airborne)
-        {
-            if (gState == GroundStates.Sprint)
-            {
-                if (Input.GetKeyDown(controls.Left) && physics.airLock == -1)
-                {
-                    physics.startSprint = true;
-                    physics.travel = -sprint;
-                }
-                else if (Input.GetKeyDown(controls.Right) && physics.airLock == 1)
-                {
-                    physics.startSprint = true;
-                    physics.travel = sprint;
-                }
-
-                if (Input.GetKeyUp(controls.Left) || Input.GetKeyUp(controls.Right))
-                {
-                    physics.startSprint = false;
-                    physics.travel = 0.0f;
-                }
-            }
-        }
+        DecisionMaker();
     }
 
     // Check the range between the fighters
@@ -161,6 +63,24 @@ public class AIController : MonoBehaviour
         return false;
     }
 
+    private void SendMovementSignal(GroundStates state)
+    {
+        Vector3 pos = transform.position;
+        Vector3 oppPos = opponent.transform.position;
+        switch (state)
+        {
+            case GroundStates.Dash:
+                if (currentSide == Side.Left) physics.travel += dashDistance;
+                if (currentSide == Side.Right) physics.travel -= dashDistance;
+                break;
+            case GroundStates.Sprint:
+                physics.startSprint = true;
+                if (currentSide == Side.Left) physics.travel = sprint;
+                if (currentSide == Side.Right) physics.travel = -sprint;
+                break;
+        }
+    }
+
     private void DecisionMaker()
     {
         PlayerController opponentController = opponent.GetComponent<PlayerController>();
@@ -169,7 +89,7 @@ public class AIController : MonoBehaviour
 
         if (playStyle == Playstyle.Rushdown)
         {
-            /// attackRange = CheckInRange(true);
+            attackRange = CheckInRange(true);
             // Regardless of attack range, we're going to need some sort of movement
             // Being rushdown, movement will be approach, but we need to be grounded first, we'll deal with that later
             if (!attackRange)
@@ -181,21 +101,21 @@ public class AIController : MonoBehaviour
                 if (pState == PlayerStates.Grounded)
                 {
                     // Some projected code, we're gonna need to dash if we're not already dashing and then we can make another decision
-                    /// if (gState != GroundedStates.Dash)
-                    /// {
-                            // Just a note that the SendMovementSignal function might need overloads for different enum types
-                    ///     SendMovementSignal(GroundStates.Dash);
-                    ///     return;
-                    /// }
+                    if (gState != GroundStates.Dash)
+                    {
+                        // Just a note that the SendMovementSignal function might need overloads for different enum types
+                        SendMovementSignal(GroundStates.Dash);
+                        return;
+                    }
                     // If they're grounded and you're grounded and have begun approaching, we can just gauge distance
                     if (opponentController.pState == PlayerController.PlayerStates.Grounded)
                     {
                         // We've aready started our approach, lets pretend they are too far away and we need to sprint instead
-                        /// if (CheckInRange(false))
-                        /// {
-                                // Considering we're out of dash range, we can kick up a sprint here
-                        ///     SendMovementSignal(GroundStates.Sprint);
-                        /// }
+                        if (CheckInRange(false))
+                        {
+                            // Considering we're out of dash range, we can kick up a sprint here
+                            SendMovementSignal(GroundStates.Sprint);
+                        }
                         // Otherwise let the dash ride, we can still make it
                     }
                     // On the other hand if they're in the air this is gonna get a little complicated

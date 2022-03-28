@@ -85,9 +85,9 @@ public class CameraControl : MonoBehaviour
                     p1.GetComponent<PlayerPhysics>().enabled = true;
                     p1.GetComponent<PlayerController>().enabled = true;
                     p1.GetComponent<SpriteManager>().enabled = true;
-                    p2.GetComponent<PlayerPhysics>().enabled = true;
-                    p2.GetComponent<PlayerController>().enabled = true;
-                    p2.GetComponent<SpriteManager>().enabled = true;
+                    p2.GetComponent<AIPhysics>().enabled = true;
+                    p2.GetComponent<AIController>().enabled = true;
+                    p2.GetComponent<AISpriteManager>().enabled = true;
                 }
 
                 if (cam.transform.position.y > close.height)

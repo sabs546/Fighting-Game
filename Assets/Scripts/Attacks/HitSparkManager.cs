@@ -67,4 +67,36 @@ public class HitSparkManager : MonoBehaviour
             }
         }
     }
+
+    public void CreateHitSpark(SparkType sparkType, float xPos, float yPos, bool flipX, float moveSpeed, AIController.PlayerStates state = AIController.PlayerStates.Grounded)
+    {
+        sprite.flipX = flipX;
+        active = true;
+        speed = moveSpeed; // Movespeed is usually how fast the player is moving at the time of the hit
+        if (sparkType == SparkType.Mid)
+        {
+            animator.SetTrigger("Mid");
+            transform.position = new Vector3(xPos, yPos, 0.0f);
+        }
+
+        if (sparkType == SparkType.Launch)
+        {
+            animator.SetTrigger("Launch");
+            transform.position = new Vector3(xPos, yPos, 0.0f);
+        }
+
+        if (sparkType == SparkType.Low)
+        {
+            if (state == AIController.PlayerStates.Airborne)
+            {
+                animator.SetTrigger("Down");
+                transform.position = new Vector3(xPos, yPos, 0.0f);
+            }
+            else
+            {
+                animator.SetTrigger("Slide");
+                transform.position = new Vector3(xPos, yPos, 0.0f);
+            }
+        }
+    }
 }

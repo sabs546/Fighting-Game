@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerPhysics : MonoBehaviour
+public class AIPhysics : MonoBehaviour
 {
     // Positional Values ===============================================
     private Vector3 pos;              // Character height from the floor
@@ -32,13 +32,13 @@ public class PlayerPhysics : MonoBehaviour
     private float effectiveMaxLeft;   // The maxWidth after adding the half the player
     private float effectiveMaxRight;  // The maxWidth after removing the half the player
 
-    private PlayerController controller;
+    private AIController controller;
     public  GameObject       opponent;
 
     // Start is called before the first frame update
     void Start()
     {
-        controller = GetComponent<PlayerController>();
+        controller = GetComponent<AIController>();
         launch = 0.0f;
         travel = 0.0f;
         airLock = 0;
@@ -60,19 +60,19 @@ public class PlayerPhysics : MonoBehaviour
     {
         pos = transform.position;                                                                                                  // We can apply all the forces to this first
         effectiveGravity += fTimeGravity;                                                                                          // Gravity is always applied
-        if (controller.gState == PlayerController.GroundStates.Dash ||
-            controller.gState == PlayerController.GroundStates.Backdash) launch *= 0.75f;
+        if (controller.gState == AIController.GroundStates.Dash ||
+            controller.gState == AIController.GroundStates.Backdash) launch *= 0.75f;
         effectiveGravity -= launch;                                                                                                // Launch applies next for no real reason
         launch = 0.0f;                                                                                                             // External forces like jumping are nullified
         
-        controller.aState = effectiveGravity < 0.0f ? PlayerController.AirStates.Rising : PlayerController.AirStates.Falling;      // Check if you're rising or falling
+        controller.aState = effectiveGravity < 0.0f ? AIController.AirStates.Rising : AIController.AirStates.Falling;      // Check if you're rising or falling
 
         // --------------------------------------------------------
         // - Vertical Movement -
         // -------
         if (effectiveGravity != 0.0f)
         {
-            controller.pState = PlayerController.PlayerStates.Airborne;
+            controller.pState = AIController.PlayerStates.Airborne;
         }
 
         pos.y -= effectiveGravity;                                                                                                 // Gravity acting
@@ -81,13 +81,13 @@ public class PlayerPhysics : MonoBehaviour
         {
             pos.y = effectiveMinHeight;
             effectiveGravity = 0.0f;
-            controller.pState = PlayerController.PlayerStates.Grounded;
+            controller.pState = AIController.PlayerStates.Grounded;
         }
 
         // --------------------------------------------------------
         // - Horizontal Movement -
         // -------
-        if (controller.pState == PlayerController.PlayerStates.Grounded)
+        if (controller.pState == AIController.PlayerStates.Grounded)
         {
             // Moving left
             if (effectiveMovement < 0.0f)
@@ -102,7 +102,7 @@ public class PlayerPhysics : MonoBehaviour
                 airLock = 1;
             }
         }
-        else if (controller.pState == PlayerController.PlayerStates.Airborne)
+        else if (controller.pState == AIController.PlayerStates.Airborne)
         {
             // Moving left
             if (effectiveMovement < 0.0f)
@@ -123,28 +123,28 @@ public class PlayerPhysics : MonoBehaviour
         // -------
         if (enableSprint && startSprint)
         {
-            controller.gState = PlayerController.GroundStates.Sprint;
+            controller.gState = AIController.GroundStates.Sprint;
             effectiveMovement = travel;
         }
 
         // --------------------------------------------------------
         // - Dashing -
         // -------
-        if (controller.gState != PlayerController.GroundStates.Sprint)
+        if (controller.gState != AIController.GroundStates.Sprint)
         {
             effectiveMovement += travel;
             travel = 0.0f;
         }
 
-        if (controller.gState != PlayerController.GroundStates.Stun)
+        if (controller.gState != AIController.GroundStates.Stun)
         {
             // If you're moving away from the opponent
             if ((opponent.transform.position.x > pos.x && effectiveMovement < 0.0f) ||
                 (opponent.transform.position.x < pos.x && effectiveMovement > 0.0f))
             {
-                if (controller.gState != PlayerController.GroundStates.Sprint)
+                if (controller.gState != AIController.GroundStates.Sprint)
                 {
-                    controller.gState = PlayerController.GroundStates.Backdash;
+                    controller.gState = AIController.GroundStates.Backdash;
                 }
                 enableSprint = true;
             }
@@ -153,10 +153,10 @@ public class PlayerPhysics : MonoBehaviour
             if ((opponent.transform.position.x > pos.x && effectiveMovement > 0.0f) ||
                 (opponent.transform.position.x < pos.x && effectiveMovement < 0.0f))
             {
-                if (controller.gState != PlayerController.GroundStates.Sprint)
+                if (controller.gState != AIController.GroundStates.Sprint)
                 {
-                    controller.gState = PlayerController.GroundStates.Dash;
-                    if (enableCrouch) controller.pState = PlayerController.PlayerStates.Crouching;
+                    controller.gState = AIController.GroundStates.Dash;
+                    if (enableCrouch) controller.pState = AIController.PlayerStates.Crouching;
                 }
                 enableSprint = true;
             }
@@ -164,9 +164,9 @@ public class PlayerPhysics : MonoBehaviour
             // Come to a stop
             if (effectiveMovement < 0.01f && effectiveMovement > -0.01f)
             {
-                if (controller.gState != PlayerController.GroundStates.Stun)
+                if (controller.gState != AIController.GroundStates.Stun)
                 {
-                    controller.gState = PlayerController.GroundStates.Neutral;
+                    controller.gState = AIController.GroundStates.Neutral;
                 }
                 effectiveMovement = 0.0f;
                 enableSprint = false;
@@ -197,20 +197,20 @@ public class PlayerPhysics : MonoBehaviour
         }
 
         transform.position = pos;
-        if (controller.gState != PlayerController.GroundStates.Sprint)
+        if (controller.gState != AIController.GroundStates.Sprint)
         {
-            controller.currentSide = pos.x < opponent.transform.position.x ? PlayerController.Side.Left : PlayerController.Side.Right;
+            controller.currentSide = pos.x < opponent.transform.position.x ? AIController.Side.Left : AIController.Side.Right;
         }
         else
         {
-                 if (effectiveMovement < 0) { controller.currentSide = PlayerController.Side.Right; }
-            else if (effectiveMovement > 0) { controller.currentSide = PlayerController.Side.Left; }
+                 if (effectiveMovement < 0) { controller.currentSide = AIController.Side.Right; }
+            else if (effectiveMovement > 0) { controller.currentSide = AIController.Side.Left; }
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        opponent.GetComponent<AIPhysics>().travel += effectiveMovement;
+        opponent.GetComponent<PlayerPhysics>().travel += effectiveMovement;
         startSprint = false;
     }
 

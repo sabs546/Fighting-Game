@@ -18,7 +18,7 @@ public class PlayerAttackController : MonoBehaviour
 
     // Attack Traits ====================================================
     private PlayerPhysics physics;         // For your own knockback
-    private PlayerPhysics opponentPhysics; // For the opponents knockback
+    private AIPhysics opponentPhysics; // For the opponents knockback
     private BoxCollider2D hitbox;          // The hitbox of the attack
     private int timer;                     // Frame counter
     public  HitSparkManager hitSpark;      // The hit sparks
@@ -38,7 +38,7 @@ public class PlayerAttackController : MonoBehaviour
         stunLimit = 0;
 
         physics = GetComponent<PlayerPhysics>();
-        opponentPhysics = physics.opponent.GetComponent<PlayerPhysics>();
+        opponentPhysics = physics.opponent.GetComponent<AIPhysics>();
         hitbox = gameObject.AddComponent<BoxCollider2D>();
         hitbox.isTrigger = true;
         hitbox.enabled = false;
@@ -239,9 +239,9 @@ public class PlayerAttackController : MonoBehaviour
         }
         
         // Hitspark stuff
-        if (opponentPhysics.GetComponent<PlayerController>().pState == PlayerController.PlayerStates.Grounded)
+        if (opponentPhysics.GetComponent<AIController>().pState == AIController.PlayerStates.Grounded)
         {
-            opponentPhysics.GetComponent<PlayerAttackController>().stunLimit = currentAttack.Stun;
+            opponentPhysics.GetComponent<AIAttackController>().stunLimit = currentAttack.Stun;
         }
 
         Vector2 sparkPos = new Vector2(transform.position.x + (!sprite.flipX ? transform.lossyScale.x : -transform.lossyScale.x), transform.position.y);
