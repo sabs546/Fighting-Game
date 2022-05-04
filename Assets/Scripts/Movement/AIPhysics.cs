@@ -58,12 +58,12 @@ public class AIPhysics : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        pos = transform.position;                                                                                                  // We can apply all the forces to this first
-        effectiveGravity += fTimeGravity;                                                                                          // Gravity is always applied
+        pos = transform.position;                                                                                          // We can apply all the forces to this first
+        effectiveGravity += fTimeGravity;                                                                                  // Gravity is always applied
         if (controller.gState == AIController.GroundStates.Dash ||
             controller.gState == AIController.GroundStates.Backdash) launch *= 0.75f;
-        effectiveGravity -= launch;                                                                                                // Launch applies next for no real reason
-        launch = 0.0f;                                                                                                             // External forces like jumping are nullified
+        effectiveGravity -= launch;                                                                                        // Launch applies next for no real reason
+        launch = 0.0f;                                                                                                     // External forces like jumping are nullified
         
         controller.aState = effectiveGravity < 0.0f ? AIController.AirStates.Rising : AIController.AirStates.Falling;      // Check if you're rising or falling
 
@@ -75,7 +75,7 @@ public class AIPhysics : MonoBehaviour
             controller.pState = AIController.PlayerStates.Airborne;
         }
 
-        pos.y -= effectiveGravity;                                                                                                 // Gravity acting
+        pos.y -= effectiveGravity;                                                                                         // Gravity acting
         // Hitting the floor
         if (pos.y - effectiveGravity < effectiveMinHeight)
         {

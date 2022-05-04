@@ -28,6 +28,8 @@ public class AIController : MonoBehaviour
     private SetControls controls;
     private AIPhysics physics;
     private AIAttackController attackController;
+    private int fatigue; // Decision fatigue is how high to set the timer before making another decision
+    private int ticker;  // Countdown for aggression
 
     // Start is called before the first frame update
     void Start()
@@ -35,12 +37,19 @@ public class AIController : MonoBehaviour
         controls = GetComponent<SetControls>();
         physics = GetComponent<AIPhysics>();
         attackController = GetComponent<AIAttackController>();
+        fatigue = 20;
+        ticker = 0;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        DecisionMaker();
+        if (ticker <= 0)
+        {
+            DecisionMaker();
+            ticker = fatigue;
+        }
+        ticker--;
     }
 
     // Check the range between the fighters
@@ -52,10 +61,7 @@ public class AIController : MonoBehaviour
 
         if (!vertical)
         {
-            float posX = Math.Abs(transform.position.x);
-            float oppX = Math.Abs(opponent.transform.position.x);
-
-            if (Math.Abs(posX - oppX) < reach)
+            if (Math.Abs(pos.x - oppPos.x) < reachDistance)
             {
                 return true;
             }
@@ -81,6 +87,27 @@ public class AIController : MonoBehaviour
         }
     }
 
+    private void SendAttackSignal()
+    {
+
+        switch (pState)
+        {
+            case PlayerStates.Grounded:
+                switch (gState)
+                {
+                    case GroundStates.Dash:
+                        attackController.currentAttack = attackController.FindAttack(BaseAttack.AttackType.Punch);
+                        fatigue += attackController.currentAttack.Speed.z;
+                        break;
+                    case GroundStates.Sprint:
+                        break;
+                }
+                break;
+            case PlayerStates.Airborne:
+                break;
+        }
+    }
+
     private void DecisionMaker()
     {
         PlayerController opponentController = opponent.GetComponent<PlayerController>();
@@ -101,7 +128,7 @@ public class AIController : MonoBehaviour
                 if (pState == PlayerStates.Grounded)
                 {
                     // Some projected code, we're gonna need to dash if we're not already dashing and then we can make another decision
-                    if (gState != GroundStates.Dash)
+                    if (gState != GroundStates.Dash && gState != GroundStates.Sprint)
                     {
                         // Just a note that the SendMovementSignal function might need overloads for different enum types
                         SendMovementSignal(GroundStates.Dash);
@@ -111,7 +138,7 @@ public class AIController : MonoBehaviour
                     if (opponentController.pState == PlayerController.PlayerStates.Grounded)
                     {
                         // We've aready started our approach, lets pretend they are too far away and we need to sprint instead
-                        if (CheckInRange(false))
+                        if (!CheckInRange(false))
                         {
                             // Considering we're out of dash range, we can kick up a sprint here
                             SendMovementSignal(GroundStates.Sprint);
@@ -162,6 +189,20 @@ public class AIController : MonoBehaviour
             {
                 // We're within range, we should probably throw out some kinda attack
                 // Lets deal with that in another script at another time, we're just focusing on movement right now
+
+                // That being said, first we need to stop moving towards the player, and if that movement is a sprint, it needs to be stopped manually
+                physics.startSprint = false;
+                if (pState == PlayerStates.Grounded)
+                {
+                    if (gState == GroundStates.Neutral)
+                    {
+                        SendMovementSignal(GroundStates.Dash);
+                    }
+                    else
+                    {
+                        SendAttackSignal();
+                    }
+                }
             }
         }
     }

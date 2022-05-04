@@ -30,8 +30,8 @@ public class AIAttackController : MonoBehaviour
     {
         controller = GetComponent<AIController>();
         controls = GetComponent<SetControls>();
-        currentAttack = new BaseAttack();
-        nextAttack = new BaseAttack();
+        currentAttack = null;
+        nextAttack = null;
         sprite = GetComponent<SpriteRenderer>();
         state = AttackState.Empty;
         timer = 0;
@@ -50,19 +50,15 @@ public class AIAttackController : MonoBehaviour
         // First attack
         if (state == AttackState.Empty && controller.gState != AIController.GroundStates.Stun)
         {
-            if (Input.GetKeyDown(controls.Punch))
+            if (currentAttack != null)
             {
-                currentAttack = FindAttack(controls.Punch);
-                if (currentAttack != null)
-                {
-                    if (sprite.flipX) { currentAttack.SideSwap(); }
-                    state = AttackState.Startup;
-                    nextAttack = currentAttack.Followup;
-                }
+                if (sprite.flipX) { currentAttack.SideSwap(); }
+                state = AttackState.Startup;
+                nextAttack = currentAttack.Followup;
             }
             else if (Input.GetKeyDown(controls.Kick))
             {
-                currentAttack = FindAttack(controls.Kick);
+                currentAttack = FindAttack(BaseAttack.AttackType.Kick);
                 if (currentAttack != null)
                 {
                     if (sprite.flipX) { currentAttack.SideSwap(); }
@@ -78,7 +74,7 @@ public class AIAttackController : MonoBehaviour
                                        (Input.GetKeyDown(controls.Kick)  && nextAttack.attackType == BaseAttack.AttackType.Kick)))
             {
                 currentAttack = nextAttack;
-                GetComponent<SpriteManager>().EnableFollowup(true);
+                GetComponent<AISpriteManager>().EnableFollowup(true);
                 if (currentAttack != null)
                 {
                     if (sprite.flipX) { currentAttack.SideSwap(); }
@@ -174,12 +170,12 @@ public class AIAttackController : MonoBehaviour
                 state = AttackState.Empty;
                 timer = 0;
                 stunLimit = 0;
-                GetComponent<SpriteManager>().EnableFollowup(false);
+                GetComponent<AISpriteManager>().EnableFollowup(false);
             }
         }
     }
 
-    BaseAttack FindAttack(KeyCode attackType)
+    public BaseAttack FindAttack(BaseAttack.AttackType attackType)
     {
         switch (controller.pState)
         {
@@ -190,12 +186,12 @@ public class AIAttackController : MonoBehaviour
                         break;
 
                     case AIController.GroundStates.Dash:
-                        if (attackType == controls.Punch) { return new DashPunch(); }
-                        if (attackType == controls.Kick) { return new DashKick(); }
+                        if (attackType == BaseAttack.AttackType.Punch) { return new DashPunch(); }
+                        if (attackType == BaseAttack.AttackType.Kick) { return new DashKick(); }
                         break;
 
                     case AIController.GroundStates.Sprint:
-                        if (attackType == controls.Punch) { return new SprintPunch(); }
+                        if (attackType == BaseAttack.AttackType.Punch) { return new SprintPunch(); }
                         break;
                 }
                 break;
@@ -204,16 +200,16 @@ public class AIAttackController : MonoBehaviour
                 switch (controller.aState)
                 {
                     case AIController.AirStates.Rising:
-                        if (attackType == controls.Punch) { return new RisingPunch(); }
+                        if (attackType == BaseAttack.AttackType.Punch) { return new RisingPunch(); }
                         break;
                     case AIController.AirStates.Falling:
-                        if (attackType == controls.Kick) { return new FallingKick(); }
+                        if (attackType == BaseAttack.AttackType.Kick) { return new FallingKick(); }
                         break;
                 }
                 break;
 
             case AIController.PlayerStates.Crouching:
-                if (attackType == controls.Kick) { return new SlideKick(); }
+                if (attackType == BaseAttack.AttackType.Kick) { return new SlideKick(); }
                 break;
         }
         return null;
@@ -221,6 +217,7 @@ public class AIAttackController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        // todo Player attacks seem to trigger this, unsure why
         // Weight stuff
         physics.launch -= currentAttack.Recoil.y / WorldRules.physicsRate;
         opponentPhysics.travel += currentAttack.Knockback.x / WorldRules.physicsRate;

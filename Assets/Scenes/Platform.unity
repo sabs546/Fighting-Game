@@ -2323,8 +2323,8 @@ MonoBehaviour:
   playStyle: 0
   currentSide: 0
   opponent: {fileID: 353790518}
-  reach: 0
-  dashReach: 0
+  reach: 4
+  dashReach: 8
 --- !u!114 &429183500
 MonoBehaviour:
   m_ObjectHideFlags: 0
