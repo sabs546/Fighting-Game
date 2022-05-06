@@ -171,6 +171,7 @@ public class AIAttackController : MonoBehaviour
                 timer = 0;
                 stunLimit = 0;
                 GetComponent<AISpriteManager>().EnableFollowup(false);
+                currentAttack = null;
             }
         }
     }
@@ -218,6 +219,11 @@ public class AIAttackController : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // todo Player attacks seem to trigger this, unsure why
+        if (currentAttack == null)
+        {
+            //Debug.Log(hitbox.name + " " + hitbox.enabled);
+            return;
+        }
         // Weight stuff
         physics.launch -= currentAttack.Recoil.y / WorldRules.physicsRate;
         opponentPhysics.travel += currentAttack.Knockback.x / WorldRules.physicsRate;

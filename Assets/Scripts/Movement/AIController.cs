@@ -89,7 +89,6 @@ public class AIController : MonoBehaviour
 
     private void SendAttackSignal()
     {
-
         switch (pState)
         {
             case PlayerStates.Grounded:
@@ -97,9 +96,11 @@ public class AIController : MonoBehaviour
                 {
                     case GroundStates.Dash:
                         attackController.currentAttack = attackController.FindAttack(BaseAttack.AttackType.Punch);
-                        fatigue += attackController.currentAttack.Speed.z;
+                        ticker += attackController.currentAttack.Speed.z;
                         break;
                     case GroundStates.Sprint:
+                        attackController.currentAttack = attackController.FindAttack(BaseAttack.AttackType.Punch);
+                        ticker += attackController.currentAttack.Speed.z;
                         break;
                 }
                 break;
@@ -196,10 +197,12 @@ public class AIController : MonoBehaviour
                 {
                     if (gState == GroundStates.Neutral)
                     {
+                        //Debug.Log("In range");
                         SendMovementSignal(GroundStates.Dash);
                     }
                     else
                     {
+                        //Debug.Log(attackController.currentAttack);
                         SendAttackSignal();
                     }
                 }

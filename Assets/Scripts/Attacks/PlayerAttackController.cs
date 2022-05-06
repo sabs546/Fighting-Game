@@ -221,6 +221,12 @@ public class PlayerAttackController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        // todo This should never trigger, but triggers are always active I guess, which is odd because it doesn't trigger anyway
+        if (currentAttack == null)
+        {
+            //Debug.Log(hitbox.name + " " + hitbox.enabled);
+            return;
+        }
         // Weight stuff
         physics.launch -= currentAttack.Recoil.y / WorldRules.physicsRate;
         opponentPhysics.travel += currentAttack.Knockback.x / WorldRules.physicsRate;
