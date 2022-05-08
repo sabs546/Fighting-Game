@@ -10,7 +10,7 @@ public class DashPunch : BaseAttack
         Stun = 30;
         Followup = new DPKick();
 
-        Range = new Vector2(0.25f, 0.0f);
+        Range = new Vector2(0.5f, 0.0f);
         Size = new Vector2(0.5f, 1.0f);
         Recoil = new Vector2(-4.0f, 0.0f);
         Knockback = new Vector2(16.0f, 0.0f);

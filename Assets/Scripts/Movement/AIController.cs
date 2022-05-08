@@ -10,7 +10,7 @@ public class AIController : MonoBehaviour
     public float jumpPower;
 
     public enum PlayerStates { Crouching, Grounded, Airborne };
-    public enum GroundStates { Neutral, Dash, Backdash, Sprint, Stun };
+    public enum GroundStates { Neutral, Dash, Backdash, Sprint, Stun, Jump };
     public enum AirStates    { Rising, Falling };
     public PlayerStates pState;
     public GroundStates gState;
@@ -21,9 +21,9 @@ public class AIController : MonoBehaviour
     public enum Side { Left, Right };
     public Side currentSide;
 
-    public GameObject opponent; // Used for AI tracking of opponent
-    public float   reach;       // Check for punching range
-    public float   dashReach;   // Check for approach range
+    public GameObject opponent;  // Used for AI tracking of opponent
+    public float      reach;     // Check for punching range
+    public float      dashReach; // Check for approach range
 
     private SetControls controls;
     private AIPhysics physics;
@@ -52,19 +52,37 @@ public class AIController : MonoBehaviour
         ticker--;
     }
 
+    // When you're almost inside each other and can no longer land anything
+    private bool TooCloseForComfort()
+    {
+        // todo repeat declarations
+        Vector3 pos = transform.position;
+        Vector3 oppPos = opponent.transform.position;
+
+        // todo Might need this to be a variable or something
+        if (Math.Abs(pos.x - oppPos.x) < 2)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     // Check the range between the fighters
     private bool CheckInRange(bool armsReach, bool vertical = false)
     {
         Vector3 pos = transform.position;
         Vector3 oppPos = opponent.transform.position;
+
         float reachDistance = armsReach ? reach : dashReach;
 
         if (!vertical)
         {
-            if (Math.Abs(pos.x - oppPos.x) < reachDistance)
-            {
-                return true;
-            }
+            if (Math.Abs(pos.x - oppPos.x) < reachDistance) return true;
+        }
+        else
+        {
+            if (Math.Abs(pos.y - oppPos.y) == 0.0f) return true;
         }
         return false;
     }
@@ -79,16 +97,26 @@ public class AIController : MonoBehaviour
                 if (currentSide == Side.Left) physics.travel += dashDistance;
                 if (currentSide == Side.Right) physics.travel -= dashDistance;
                 break;
+            case GroundStates.Backdash:
+                if (currentSide == Side.Left) physics.travel -= dashDistance;
+                if (currentSide == Side.Right) physics.travel += dashDistance;
+                break;
             case GroundStates.Sprint:
                 physics.startSprint = true;
                 if (currentSide == Side.Left) physics.travel = sprint;
                 if (currentSide == Side.Right) physics.travel = -sprint;
+                break;
+            case GroundStates.Jump:
+                physics.launch += jumpPower;
                 break;
         }
     }
 
     private void SendAttackSignal()
     {
+        Vector3 pos = transform.position;
+        Vector3 oppPos = opponent.transform.position;
+
         switch (pState)
         {
             case PlayerStates.Grounded:
@@ -105,6 +133,23 @@ public class AIController : MonoBehaviour
                 }
                 break;
             case PlayerStates.Airborne:
+                switch (aState)
+                {
+                    case AirStates.Rising:
+                        if (oppPos.y > pos.y)
+                        {
+                            attackController.currentAttack = attackController.FindAttack(BaseAttack.AttackType.Punch);
+                            ticker += attackController.currentAttack.Speed.z;
+                        }
+                        break;
+                    case AirStates.Falling:
+                        if (oppPos.y < pos.y)
+                        {
+                            attackController.currentAttack = attackController.FindAttack(BaseAttack.AttackType.Kick);
+                            ticker += attackController.currentAttack.Speed.z;
+                        }
+                        break;
+                }
                 break;
         }
     }
@@ -113,44 +158,40 @@ public class AIController : MonoBehaviour
     {
         PlayerController opponentController = opponent.GetComponent<PlayerController>();
         PlayerAttackController opponentAtkController = opponent.GetComponent<PlayerAttackController>();
-        bool attackRange = false; // This will tell you if you're in attack range
 
+        // todo This seems inefficient once rushdown, always rushdown right? Might need to come back to this one
         if (playStyle == Playstyle.Rushdown)
         {
-            attackRange = CheckInRange(true);
-            // Regardless of attack range, we're going to need some sort of movement
-            // Being rushdown, movement will be approach, but we need to be grounded first, we'll deal with that later
-            if (!attackRange)
+            // First we check if we're within hitting range or not
+            if (!CheckInRange(true))
             {
-                // The important part though is that we're not within attack range, so below is what we do from that dash
-                // Being aggressive, we've decided already that they're going to approach
-                // The question is how?
-                // To determine this we're gonna need information on the state of either fighter
+                // So we're not within attack range, that means we need to advance
                 if (pState == PlayerStates.Grounded)
                 {
-                    // Some projected code, we're gonna need to dash if we're not already dashing and then we can make another decision
+                    // That means we need to dash
                     if (gState != GroundStates.Dash && gState != GroundStates.Sprint)
                     {
-                        // Just a note that the SendMovementSignal function might need overloads for different enum types
                         SendMovementSignal(GroundStates.Dash);
                         return;
                     }
-                    // If they're grounded and you're grounded and have begun approaching, we can just gauge distance
+
+                    // If we are already dashing, it's a good time to check on the opponent
                     if (opponentController.pState == PlayerController.PlayerStates.Grounded)
                     {
-                        // We've aready started our approach, lets pretend they are too far away and we need to sprint instead
                         if (!CheckInRange(false))
                         {
-                            // Considering we're out of dash range, we can kick up a sprint here
+                            // We're approaching, but they're far enough that one dash isn't enough, we can kick up a sprint here
                             SendMovementSignal(GroundStates.Sprint);
                         }
                         // Otherwise let the dash ride, we can still make it
                     }
                     // On the other hand if they're in the air this is gonna get a little complicated
+                    // todo approaching airborne?
                     else if (opponentController.pState == PlayerController.PlayerStates.Airborne)
                     {
                         int distance = 0;
                         int threshold = 0;
+
                         // Depending on if the opponent is going to hit the ground or not, we can have different responses
                         if (opponentController.aState == PlayerController.AirStates.Rising)
                         {
@@ -193,18 +234,32 @@ public class AIController : MonoBehaviour
 
                 // That being said, first we need to stop moving towards the player, and if that movement is a sprint, it needs to be stopped manually
                 physics.startSprint = false;
+
                 if (pState == PlayerStates.Grounded)
                 {
+                    if (!CheckInRange(false, true))
+                    {
+                        // We're within range, but they're too high up
+                        SendMovementSignal(GroundStates.Jump);
+                        return;
+                    }
+
+                    // Otherwise continue as normal
                     if (gState == GroundStates.Neutral)
                     {
-                        //Debug.Log("In range");
-                        SendMovementSignal(GroundStates.Dash);
+                        // Getting within comfortable physical violence range
+                        SendMovementSignal(TooCloseForComfort() ? GroundStates.Backdash : GroundStates.Dash);
                     }
                     else
                     {
                         //Debug.Log(attackController.currentAttack);
                         SendAttackSignal();
                     }
+                }
+                else if (pState == PlayerStates.Airborne)
+                {
+                    // So we're within attack range, and we're in the air, we can throw something out
+                    SendAttackSignal();
                 }
             }
         }
