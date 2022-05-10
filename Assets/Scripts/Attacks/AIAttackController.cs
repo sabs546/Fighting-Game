@@ -5,25 +5,26 @@ using UnityEngine;
 public class AIAttackController : MonoBehaviour
 {
     // Attack Values =======================================================================================
-    public BaseAttack currentAttack;                              // Attack currently playing
+    public  BaseAttack currentAttack;                             // Attack currently playing
+    public  bool       allowFollowup;                             // Does the CPU want to follow up
     private BaseAttack nextAttack;                                // The next available attack in the string
     
     public enum AttackState { Empty, Startup, Active, Recovery }; // Attack phases
     public AttackState state;                                     // And what will hold them
 
     // Player Values ========================================
-    private AIController controller;   // Player control
+    private AIController controller;       // Player control
     private SpriteRenderer sprite;         // Sprite control
     private SetControls controls;          // Attack controls
 
     // Attack Traits ====================================================
-    private AIPhysics physics;         // For your own knockback
+    private AIPhysics physics;             // For your own knockback
     private PlayerPhysics opponentPhysics; // For the opponents knockback
     private BoxCollider2D hitbox;          // The hitbox of the attack
     private int timer;                     // Frame counter
     public  HitSparkManager hitSpark;      // The hit sparks
-    public int  stunLimit;                 // How long the stun lasts
-    public bool enableLowAttacks;          // Unlock crouch attacks
+    public  int  stunLimit;                // How long the stun lasts
+    public  bool enableLowAttacks;         // Unlock crouch attacks
 
     // Start is called before the first frame update
     void Start()
@@ -56,25 +57,15 @@ public class AIAttackController : MonoBehaviour
                 state = AttackState.Startup;
                 nextAttack = currentAttack.Followup;
             }
-            else if (Input.GetKeyDown(controls.Kick))
-            {
-                currentAttack = FindAttack(BaseAttack.AttackType.Kick);
-                if (currentAttack != null)
-                {
-                    if (sprite.flipX) { currentAttack.SideSwap(); }
-                    state = AttackState.Startup;
-                    nextAttack = currentAttack.Followup;
-                }
-            }
         }
         // The next part of the string
         else if (state == AttackState.Recovery)
         {
-            if (nextAttack != null && ((Input.GetKeyDown(controls.Punch) && nextAttack.attackType == BaseAttack.AttackType.Punch) ||
-                                       (Input.GetKeyDown(controls.Kick)  && nextAttack.attackType == BaseAttack.AttackType.Kick)))
+            if (nextAttack != null && allowFollowup)
             {
                 currentAttack = nextAttack;
                 GetComponent<AISpriteManager>().EnableFollowup(true);
+                allowFollowup = false;
                 if (currentAttack != null)
                 {
                     if (sprite.flipX) { currentAttack.SideSwap(); }
@@ -224,6 +215,7 @@ public class AIAttackController : MonoBehaviour
             //Debug.Log(hitbox.name + " " + hitbox.enabled);
             return;
         }
+
         // Weight stuff
         physics.launch -= currentAttack.Recoil.y / WorldRules.physicsRate;
         opponentPhysics.travel += currentAttack.Knockback.x / WorldRules.physicsRate;
@@ -241,12 +233,12 @@ public class AIAttackController : MonoBehaviour
             }
         }
         
-        // Hitspark stuff
         if (opponentPhysics.GetComponent<PlayerController>().pState == PlayerController.PlayerStates.Grounded)
         {
             opponentPhysics.GetComponent<PlayerAttackController>().stunLimit = currentAttack.Stun;
         }
 
+        // Hitspark stuff
         Vector2 sparkPos = new Vector2(transform.position.x + (!sprite.flipX ? transform.lossyScale.x : -transform.lossyScale.x), transform.position.y);
         if (currentAttack.SparkType == HitSparkManager.SparkType.Launch)
         {
@@ -258,5 +250,7 @@ public class AIAttackController : MonoBehaviour
         opponentPhysics.GetComponent<HealthManager>().SendDamage(currentAttack.Damage);
         GetComponent<AttackAudioManager>().PlaySound(currentAttack.SoundName);
         timer = currentAttack.Speed.y;
+
+        hitbox.enabled = false;
     }
 }

@@ -12,18 +12,18 @@ public class PlayerAttackController : MonoBehaviour
     public AttackState state;                                     // And what will hold them
 
     // Player Values ========================================
-    private PlayerController controller;   // Player control
-    private SpriteRenderer sprite;         // Sprite control
-    private SetControls controls;          // Attack controls
+    private PlayerController controller; // Player control
+    private SpriteRenderer sprite;       // Sprite control
+    private SetControls controls;        // Attack controls
 
     // Attack Traits ====================================================
-    private PlayerPhysics physics;         // For your own knockback
+    private PlayerPhysics physics;     // For your own knockback
     private AIPhysics opponentPhysics; // For the opponents knockback
-    private BoxCollider2D hitbox;          // The hitbox of the attack
-    private int timer;                     // Frame counter
-    public  HitSparkManager hitSpark;      // The hit sparks
-    public int  stunLimit;                 // How long the stun lasts
-    public bool enableLowAttacks;          // Unlock crouch attacks
+    private BoxCollider2D hitbox;      // The hitbox of the attack
+    private int timer;                 // Frame counter
+    public  HitSparkManager hitSpark;  // The hit sparks
+    public  int  stunLimit;            // How long the stun lasts
+    public  bool enableLowAttacks;     // Unlock crouch attacks
 
     // Start is called before the first frame update
     void Start()
@@ -227,6 +227,7 @@ public class PlayerAttackController : MonoBehaviour
             //Debug.Log(hitbox.name + " " + hitbox.enabled);
             return;
         }
+
         // Weight stuff
         physics.launch -= currentAttack.Recoil.y / WorldRules.physicsRate;
         opponentPhysics.travel += currentAttack.Knockback.x / WorldRules.physicsRate;
@@ -244,12 +245,12 @@ public class PlayerAttackController : MonoBehaviour
             }
         }
         
-        // Hitspark stuff
         if (opponentPhysics.GetComponent<AIController>().pState == AIController.PlayerStates.Grounded)
         {
             opponentPhysics.GetComponent<AIAttackController>().stunLimit = currentAttack.Stun;
         }
 
+        // Hitspark stuff
         Vector2 sparkPos = new Vector2(transform.position.x + (!sprite.flipX ? transform.lossyScale.x : -transform.lossyScale.x), transform.position.y);
         if (currentAttack.SparkType == HitSparkManager.SparkType.Launch)
         {
@@ -261,5 +262,7 @@ public class PlayerAttackController : MonoBehaviour
         opponentPhysics.GetComponent<HealthManager>().SendDamage(currentAttack.Damage);
         GetComponent<AttackAudioManager>().PlaySound(currentAttack.SoundName);
         timer = currentAttack.Speed.y;
+
+        hitbox.enabled = false;
     }
 }

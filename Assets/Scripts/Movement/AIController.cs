@@ -44,6 +44,10 @@ public class AIController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (attackController.stunLimit > 0)
+        {
+            ticker = attackController.stunLimit;
+        }
         if (ticker <= 0)
         {
             DecisionMaker();
@@ -117,18 +121,22 @@ public class AIController : MonoBehaviour
         Vector3 pos = transform.position;
         Vector3 oppPos = opponent.transform.position;
 
+        if (attackController.allowFollowup)
+        {
+            attackController.currentAttack = attackController.currentAttack.Followup;
+            return;
+        }
+
         switch (pState)
         {
             case PlayerStates.Grounded:
                 switch (gState)
                 {
                     case GroundStates.Dash:
-                        attackController.currentAttack = attackController.FindAttack(BaseAttack.AttackType.Punch);
-                        ticker += attackController.currentAttack.Speed.z;
+                        attackController.currentAttack = attackController.FindAttack((BaseAttack.AttackType)UnityEngine.Random.Range(1, 3));
                         break;
                     case GroundStates.Sprint:
                         attackController.currentAttack = attackController.FindAttack(BaseAttack.AttackType.Punch);
-                        ticker += attackController.currentAttack.Speed.z;
                         break;
                 }
                 break;
@@ -136,21 +144,25 @@ public class AIController : MonoBehaviour
                 switch (aState)
                 {
                     case AirStates.Rising:
-                        if (oppPos.y > pos.y)
-                        {
-                            attackController.currentAttack = attackController.FindAttack(BaseAttack.AttackType.Punch);
-                            ticker += attackController.currentAttack.Speed.z;
-                        }
+                        if (oppPos.y > pos.y) attackController.currentAttack = attackController.FindAttack(BaseAttack.AttackType.Punch);
                         break;
                     case AirStates.Falling:
-                        if (oppPos.y < pos.y)
-                        {
-                            attackController.currentAttack = attackController.FindAttack(BaseAttack.AttackType.Kick);
-                            ticker += attackController.currentAttack.Speed.z;
-                        }
+                        if (oppPos.y < pos.y) attackController.currentAttack = attackController.FindAttack(BaseAttack.AttackType.Kick);
                         break;
                 }
                 break;
+        }
+
+        if (attackController.currentAttack == null) return;
+
+        if (attackController.currentAttack.Followup == null)
+        {
+            ticker += attackController.currentAttack.Speed.z;
+        }
+        else
+        {
+            ticker += UnityEngine.Random.Range(attackController.currentAttack.Speed.y, attackController.currentAttack.Speed.z);
+            attackController.allowFollowup = true;
         }
     }
 
