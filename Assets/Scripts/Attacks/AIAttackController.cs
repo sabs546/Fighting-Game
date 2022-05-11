@@ -250,7 +250,5 @@ public class AIAttackController : MonoBehaviour
         opponentPhysics.GetComponent<HealthManager>().SendDamage(currentAttack.Damage);
         GetComponent<AttackAudioManager>().PlaySound(currentAttack.SoundName);
         timer = currentAttack.Speed.y;
-
-        hitbox.enabled = false;
     }
 }

@@ -175,6 +175,7 @@ public class PlayerAttackController : MonoBehaviour
                 timer = 0;
                 stunLimit = 0;
                 GetComponent<SpriteManager>().EnableFollowup(false);
+                currentAttack = null;
             }
         }
     }
@@ -262,7 +263,5 @@ public class PlayerAttackController : MonoBehaviour
         opponentPhysics.GetComponent<HealthManager>().SendDamage(currentAttack.Damage);
         GetComponent<AttackAudioManager>().PlaySound(currentAttack.SoundName);
         timer = currentAttack.Speed.y;
-
-        hitbox.enabled = false;
     }
 }
