@@ -133,10 +133,8 @@ public class AIController : MonoBehaviour
                 switch (gState)
                 {
                     case GroundStates.Dash:
-                        attackController.currentAttack = attackController.FindAttack((BaseAttack.AttackType)UnityEngine.Random.Range(1, 3));
-                        break;
                     case GroundStates.Sprint:
-                        attackController.currentAttack = attackController.FindAttack(BaseAttack.AttackType.Punch);
+                        attackController.currentAttack = attackController.FindAttack((BaseAttack.AttackType)UnityEngine.Random.Range(1, 3));
                         break;
                 }
                 break;
