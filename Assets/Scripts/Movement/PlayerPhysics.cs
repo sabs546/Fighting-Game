@@ -210,12 +210,18 @@ public class PlayerPhysics : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        opponent.GetComponent<AIPhysics>().travel += effectiveMovement;
+        if (!WorldRules.PvP) opponent.GetComponent<AIPhysics>().travel += effectiveMovement;
+        else                 opponent.GetComponent<PlayerPhysics>().travel += effectiveMovement;
         startSprint = false;
     }
 
     public void Brake()
     {
         effectiveMovement = 0.0f;
+    }
+
+    public void SetOpponentType(GameObject type)
+    {
+        opponent = type;
     }
 }

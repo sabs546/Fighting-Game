@@ -175,6 +175,7 @@ public class AIController : MonoBehaviour
             // First we check if we're within hitting range or not
             if (!CheckInRange(true))
             {
+                attackController.allowFollowup = false;
                 // So we're not within attack range, that means we need to advance
                 if (pState == PlayerStates.Grounded)
                 {

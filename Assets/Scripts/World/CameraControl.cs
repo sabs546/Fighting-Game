@@ -10,6 +10,7 @@ public class CameraControl : MonoBehaviour
     // Positioning ====================================================================
     public GameObject p1;      // Needed to calculate distance
     public GameObject p2;
+    public GameObject cpu;
     private Vector2 p1Pos;     // Saves time when getting position
     private Vector2 p2Pos;
     private Vector3 cameraPos; // Alter these values then apply them to the camera once
@@ -43,7 +44,7 @@ public class CameraControl : MonoBehaviour
     void FixedUpdate()
     {
         p1Pos = p1.transform.position;
-        p2Pos = p2.transform.position;
+        p2Pos = WorldRules.PvP ? p2.transform.position : cpu.transform.position;
 
         centreDistanceX = p1Pos.x + p2Pos.x;
         xDistance = Math.Abs(p1Pos.x - p2Pos.x);
@@ -85,9 +86,18 @@ public class CameraControl : MonoBehaviour
                     p1.GetComponent<PlayerPhysics>().enabled = true;
                     p1.GetComponent<PlayerController>().enabled = true;
                     p1.GetComponent<SpriteManager>().enabled = true;
-                    p2.GetComponent<AIPhysics>().enabled = true;
-                    p2.GetComponent<AIController>().enabled = true;
-                    p2.GetComponent<AISpriteManager>().enabled = true;
+                    if (WorldRules.PvP)
+                    {
+                        p2.GetComponent<PlayerPhysics>().enabled = true;
+                        p2.GetComponent<PlayerController>().enabled = true;
+                        p2.GetComponent<SpriteManager>().enabled = true;
+                    }
+                    else
+                    {
+                        cpu.GetComponent<AIPhysics>().enabled = true;
+                        cpu.GetComponent<AIController>().enabled = true;
+                        cpu.GetComponent<AISpriteManager>().enabled = true;
+                    }
                 }
 
                 if (cam.transform.position.y > close.height)

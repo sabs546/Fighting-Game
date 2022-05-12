@@ -17,8 +17,9 @@ public class PlayerAttackController : MonoBehaviour
     private SetControls controls;        // Attack controls
 
     // Attack Traits ====================================================
-    private PlayerPhysics physics;     // For your own knockback
-    private AIPhysics opponentPhysics; // For the opponents knockback
+    public  PlayerPhysics physics;     // For your own knockback
+    public  PlayerPhysics p2Physics;   // For the second player's knockback (if there is one)
+    public  AIPhysics opponentPhysics; // For the opponents knockback
     private BoxCollider2D hitbox;      // The hitbox of the attack
     private int timer;                 // Frame counter
     public  HitSparkManager hitSpark;  // The hit sparks
@@ -39,6 +40,7 @@ public class PlayerAttackController : MonoBehaviour
 
         physics = GetComponent<PlayerPhysics>();
         opponentPhysics = physics.opponent.GetComponent<AIPhysics>();
+        p2Physics = physics.opponent.GetComponent<PlayerPhysics>();
         hitbox = gameObject.AddComponent<BoxCollider2D>();
         hitbox.isTrigger = true;
         hitbox.enabled = false;
@@ -232,8 +234,17 @@ public class PlayerAttackController : MonoBehaviour
 
         // Weight stuff
         physics.launch -= currentAttack.Recoil.y / WorldRules.physicsRate;
-        opponentPhysics.travel += currentAttack.Knockback.x / WorldRules.physicsRate;
-        opponentPhysics.launch += currentAttack.Knockback.y / WorldRules.physicsRate;
+        if (p2Physics == null)
+        {
+            opponentPhysics.travel += currentAttack.Knockback.x / WorldRules.physicsRate;
+            opponentPhysics.launch += currentAttack.Knockback.y / WorldRules.physicsRate;
+        }
+        else
+        {
+            p2Physics.travel += currentAttack.Knockback.x / WorldRules.physicsRate;
+            p2Physics.launch += currentAttack.Knockback.y / WorldRules.physicsRate;
+        }
+
         if (!currentAttack.AlwaysRecoil)
         {
             if (currentAttack.Recoil != Vector2.zero)
@@ -243,13 +254,18 @@ public class PlayerAttackController : MonoBehaviour
             else
             {
                 physics.Brake();
-                opponentPhysics.Brake();
+                if (p2Physics == null) opponentPhysics.Brake();
+                else                         p2Physics.Brake();
             }
         }
         
-        if (opponentPhysics.GetComponent<AIController>().pState == AIController.PlayerStates.Grounded)
+        if (!WorldRules.PvP && opponentPhysics.GetComponent<AIController>().pState == AIController.PlayerStates.Grounded)
         {
             opponentPhysics.GetComponent<AIAttackController>().stunLimit = currentAttack.Stun;
+        }
+        else if (p2Physics.GetComponent<PlayerController>().pState == PlayerController.PlayerStates.Grounded)
+        {
+            p2Physics.GetComponent<PlayerAttackController>().stunLimit = currentAttack.Stun;
         }
 
         // Hitspark stuff
@@ -261,8 +277,23 @@ public class PlayerAttackController : MonoBehaviour
         hitSpark.CreateHitSpark(currentAttack.SparkType, sparkPos.x, sparkPos.y, !sprite.flipX, physics.travel, controller.pState);
 
         // Other stuff
-        opponentPhysics.GetComponent<HealthManager>().SendDamage(currentAttack.Damage);
+        if (p2Physics == null) opponentPhysics.GetComponent<HealthManager>().SendDamage(currentAttack.Damage);
+        else                         p2Physics.GetComponent<HealthManager>().SendDamage(currentAttack.Damage);
         GetComponent<AttackAudioManager>().PlaySound(currentAttack.SoundName);
         timer = currentAttack.Speed.y;
+    }
+
+    public void SwapOpponentType()
+    {
+        if (!WorldRules.PvP)
+        {
+            opponentPhysics = physics.opponent.GetComponent<AIPhysics>();
+            p2Physics = null;
+        }
+        else
+        {
+            p2Physics = physics.opponent.GetComponent<PlayerPhysics>();
+            opponentPhysics = null;
+        }
     }
 }
