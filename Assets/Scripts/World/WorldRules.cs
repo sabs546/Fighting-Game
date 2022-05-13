@@ -10,6 +10,7 @@ public class WorldRules : MonoBehaviour
     public static float maxWidth    = 30.0f; // Walls
     public static int   physicsRate = 60;    // The FPS that the logic should flow at
     public static bool  PvP         = false; // Is 2 players enabled
+    public static float volume      = 1.0f;  // For the volume slider
 
     private void Start()
     {

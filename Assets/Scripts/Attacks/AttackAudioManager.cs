@@ -10,12 +10,18 @@ public class AttackAudioManager : MonoBehaviour
     void Start()
     {
         source = GetComponent<AudioSource>();
+        WorldRules.volume = PlayerPrefs.GetFloat("Volume");
+        source.volume = WorldRules.volume;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (source.volume != WorldRules.volume)
+        {
+            source.volume = WorldRules.volume / 100.0f;
+            PlayerPrefs.SetFloat("Volume", WorldRules.volume);
+        }
     }
 
     public void PlaySound(string soundName)
