@@ -19,6 +19,7 @@ public class CameraControl : MonoBehaviour
     public enum CameraState { Menu, Close, Normal, Far };
     public CameraState state; // Keeps track of where the camera is going
     private Camera cam;       // To access orthographicSize
+    private GameStateControl gameStateControl;
 
     // State Value Storage ===================================
     public CameraSetting menu;   // Store menu screen values
@@ -37,6 +38,7 @@ public class CameraControl : MonoBehaviour
     void Start()
     {
         cam = GetComponent<Camera>();
+        gameStateControl = GetComponent<GameStateControl>();
         cameraPos = transform.position;
     }
 
@@ -52,7 +54,7 @@ public class CameraControl : MonoBehaviour
 
         cameraPos.x = centreDistanceX / 2;
 
-        if (state != CameraState.Menu)
+        if (state != CameraState.Menu && gameStateControl.gameState != GameStateControl.GameState.GameOver)
         {
             if (xDistance < close.distance)
             {
@@ -166,6 +168,7 @@ public class CameraControl : MonoBehaviour
     {
         state = CameraState.Normal;
         fightUI.SetActive(true);
+        gameStateControl.SetGameState(GameStateControl.GameState.Fighting);
     }
 }
 

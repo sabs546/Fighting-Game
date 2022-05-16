@@ -16,9 +16,4 @@ public class WorldRules : MonoBehaviour
     {
         Application.targetFrameRate = physicsRate;
     }
-
-    public void SetPvP(bool setActive)
-    {
-        PvP = setActive;
-    }
 }

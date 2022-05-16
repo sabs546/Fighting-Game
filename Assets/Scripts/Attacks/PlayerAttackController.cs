@@ -259,9 +259,13 @@ public class PlayerAttackController : MonoBehaviour
             }
         }
         
-        if (!WorldRules.PvP && opponentPhysics.GetComponent<AIController>().pState == AIController.PlayerStates.Grounded)
+        if (!WorldRules.PvP)
         {
-            opponentPhysics.GetComponent<AIAttackController>().stunLimit = currentAttack.Stun;
+            // I'm gonna nest it, sue me
+            if (opponentPhysics.GetComponent<AIController>().pState == AIController.PlayerStates.Grounded)
+            {
+                opponentPhysics.GetComponent<AIAttackController>().stunLimit = currentAttack.Stun;
+            }
         }
         else if (p2Physics.GetComponent<PlayerController>().pState == PlayerController.PlayerStates.Grounded)
         {

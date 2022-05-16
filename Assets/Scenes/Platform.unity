@@ -2081,6 +2081,7 @@ GameObject:
   - component: {fileID: 519420029}
   - component: {fileID: 519420030}
   - component: {fileID: 519420033}
+  - component: {fileID: 519420034}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -2204,6 +2205,21 @@ MonoBehaviour:
     zoom: 11
   growSpeed: 1
   zoomSpeed: 0.1
+--- !u!114 &519420034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b836cfa332cd232428c0b3aeb82d916c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  P1: {fileID: 353790518}
+  P2: {fileID: 1108586755}
+  CPU: {fileID: 429183485}
 --- !u!1 &519768766
 GameObject:
   m_ObjectHideFlags: 0
@@ -6955,6 +6971,11 @@ PrefabInstance:
       propertyPath: healthBar
       value: 
       objectReference: {fileID: 1247583649}
+    - target: {fileID: 3446603169683583358, guid: 6434817484d6de149b311f7a3b81cea1,
+        type: 3}
+      propertyPath: gameStateControl
+      value: 
+      objectReference: {fileID: 519420034}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6434817484d6de149b311f7a3b81cea1, type: 3}
 --- !u!1 &1320201743
@@ -7909,7 +7930,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1493662102
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8095,7 +8116,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -8154,7 +8175,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1648239657
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9910,6 +9931,11 @@ PrefabInstance:
       propertyPath: healthBar
       value: 
       objectReference: {fileID: 1390313278}
+    - target: {fileID: 3446603169683583358, guid: 501d13d989524664884280d2b151037e,
+        type: 3}
+      propertyPath: gameStateControl
+      value: 
+      objectReference: {fileID: 519420034}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 501d13d989524664884280d2b151037e, type: 3}
 --- !u!1001 &6362332988570049765
@@ -9994,6 +10020,11 @@ PrefabInstance:
       propertyPath: healthBar
       value: 
       objectReference: {fileID: 1247583649}
+    - target: {fileID: 6362332988191231725, guid: 5baf6e6c8e4c4cc47aeeb0a9c272ce56,
+        type: 3}
+      propertyPath: gameStateControl
+      value: 
+      objectReference: {fileID: 519420034}
     - target: {fileID: 6362332988191231726, guid: 5baf6e6c8e4c4cc47aeeb0a9c272ce56,
         type: 3}
       propertyPath: opponent
