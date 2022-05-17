@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HealthManager : MonoBehaviour
 {
-    public int maxHealth;
+    public int maxHealth { get; private set; }
     public int currentHealth { get; private set; }
     public TMPro.TextMeshProUGUI nameTag;
     public RectTransform healthBar;
@@ -25,7 +26,7 @@ public class HealthManager : MonoBehaviour
     public void SendDamage(int damage)
     {
         currentHealth -= damage;
-        healthBar.localScale = new Vector3(currentHealth / 100.0f, 1.0f, 1.0f);
+        healthBar.localScale = new Vector3(currentHealth / maxHealth, 1.0f, 1.0f);
 
         if (currentHealth <= 0)
         {
@@ -33,5 +34,16 @@ public class HealthManager : MonoBehaviour
             GetComponent<Animator>().SetTrigger("Die");
             gameStateControl.GetComponent<GameStateControl>().SetGameState(GameStateControl.GameState.GameOver);
         }
+    }
+
+    public void SetMaxHealth(Slider slider)
+    {
+        maxHealth = (int)slider.value;
+    }
+
+    public void ResetHealth()
+    {
+        currentHealth = maxHealth;
+        healthBar.localScale = new Vector3(currentHealth / maxHealth, 1.0f, 1.0f);
     }
 }

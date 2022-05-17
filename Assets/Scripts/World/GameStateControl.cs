@@ -43,9 +43,26 @@ public class GameStateControl : MonoBehaviour
             case GameState.Menu:
                 gameState = GameState.Menu;
                 GetComponent<CameraControl>().state = CameraControl.CameraState.Menu;
+                gameOverUI.SetActive(false);
+                menuUI.SetActive(true);
                 p1.transform.position = p1StartPos;
-                p2.transform.position = p2StartPos;
-                CPU.transform.position = p2StartPos;
+                p1.GetComponent<HealthManager>().ResetHealth();
+                p1.GetComponent<Animator>().SetTrigger("Revive");
+                p1.GetComponent<PlayerPhysics>().enabled = false;
+                if (WorldRules.PvP)
+                {
+                    p2.transform.position = p2StartPos;
+                    p2.GetComponent<HealthManager>().ResetHealth();
+                    p2.GetComponent<Animator>().SetTrigger("Revive");
+                    p2.GetComponent<PlayerPhysics>().enabled = false;
+                }
+                else
+                {
+                    CPU.transform.position = p2StartPos;
+                    CPU.GetComponent<HealthManager>().ResetHealth();
+                    CPU.GetComponent<Animator>().SetTrigger("Revive");
+                    CPU.GetComponent<AIPhysics>().enabled = false;
+                }
                 break;
             case GameState.Fighting:
                 gameState = GameState.Fighting;
@@ -86,5 +103,10 @@ public class GameStateControl : MonoBehaviour
         }
         winnerName = healthManager.nameTag.text;
         return false;
+    }
+
+    public void TriggerMenu()
+    {
+        SetGameState(GameState.Menu);
     }
 }

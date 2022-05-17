@@ -160,6 +160,27 @@ public class CameraControl : MonoBehaviour
                     break;
             }
         }
+        else if (gameStateControl.gameState == GameStateControl.GameState.Menu)
+        {
+            if (cam.orthographicSize > menu.zoom)
+            {
+                cam.orthographicSize -= growSpeed / WorldRules.physicsRate;
+                cam.transform.localScale -= new Vector3(zoomSpeed / WorldRules.physicsRate, zoomSpeed / WorldRules.physicsRate, 0.0f);
+            }
+            else if (cam.orthographicSize < menu.zoom)
+            {
+                cam.orthographicSize += growSpeed / WorldRules.physicsRate;
+                cam.transform.localScale += new Vector3(zoomSpeed / WorldRules.physicsRate, zoomSpeed / WorldRules.physicsRate, 0.0f);
+            }
+
+            if (cam.transform.position.y < menu.height)
+            {
+                cameraPos.y += growSpeed / WorldRules.physicsRate;
+            }
+
+            if (cameraPos.y > menu.height - 0.01f && cameraPos.y < menu.height + 0.01f) cameraPos.y = menu.height;
+            if (cam.orthographicSize > menu.zoom - 0.01f && cam.orthographicSize < menu.zoom + 0.01f) cam.orthographicSize = menu.zoom;
+        }
         transform.position = cameraPos;
     }
 
@@ -167,6 +188,11 @@ public class CameraControl : MonoBehaviour
     {
         state = CameraState.Normal;
         gameStateControl.SetGameState(GameStateControl.GameState.Fighting);
+    }
+
+    public void ResetToMenu()
+    {
+        state = CameraState.Menu;
     }
 }
 
