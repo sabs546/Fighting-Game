@@ -80,7 +80,6 @@ public class CameraControl : MonoBehaviour
                 {
                     cam.orthographicSize += growSpeed / WorldRules.physicsRate;
                     cam.transform.localScale += new Vector3(zoomSpeed / WorldRules.physicsRate, zoomSpeed / WorldRules.physicsRate, 0.0f);
-                    menuScreen.SetActive(false);
                 }
                 else if (!p1.GetComponent<PlayerController>().enabled)
                 {
@@ -167,7 +166,6 @@ public class CameraControl : MonoBehaviour
     public void StartGame()
     {
         state = CameraState.Normal;
-        fightUI.SetActive(true);
         gameStateControl.SetGameState(GameStateControl.GameState.Fighting);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class GameStateControl : MonoBehaviour
@@ -7,19 +8,26 @@ public class GameStateControl : MonoBehaviour
     public enum GameState { Menu, Fighting, GameOver };
     public GameState gameState { get; private set; }
 
-    public GameObject P1;
-    public GameObject P2;
+    public GameObject p1;
+    public GameObject p2;
     public GameObject CPU;
 
-    private Vector2 P1StartPos;
-    private Vector2 P2StartPos;
+    private Vector2 p1StartPos;
+    private Vector2 p2StartPos;
+
+    public GameObject menuUI;
+    public GameObject fightUI;
+    public GameObject gameOverUI;
+
+    public TextMeshProUGUI winnerTag;
+    private string winnerName;
 
     // Start is called before the first frame update
     void Start()
     {
         gameState = GameState.Menu;
-        P1StartPos = P1.transform.position;
-        P2StartPos = CPU.transform.position;
+        p1StartPos = p1.transform.position;
+        p2StartPos = CPU.transform.position;
     }
 
     // Update is called once per frame
@@ -35,19 +43,48 @@ public class GameStateControl : MonoBehaviour
             case GameState.Menu:
                 gameState = GameState.Menu;
                 GetComponent<CameraControl>().state = CameraControl.CameraState.Menu;
-                P1.transform.position = P1StartPos;
-                P2.transform.position = P2StartPos;
-                CPU.transform.position = P2StartPos;
+                p1.transform.position = p1StartPos;
+                p2.transform.position = p2StartPos;
+                CPU.transform.position = p2StartPos;
                 break;
             case GameState.Fighting:
                 gameState = GameState.Fighting;
+                menuUI.SetActive(false);
+                fightUI.SetActive(true);
                 break;
             case GameState.GameOver:
                 gameState = GameState.GameOver;
-                P1.GetComponent<PlayerController>().enabled = false;
-                P2.GetComponent<PlayerController>().enabled = false;
-                CPU.GetComponent<AIController>().enabled = false;
+                fightUI.SetActive(false);
+                gameOverUI.SetActive(true);
+
+                if (CheckDead(p1))
+                {
+                    if (WorldRules.PvP)
+                    {
+                        winnerName = p2.GetComponent<HealthManager>().nameTag.text;
+                        p2.GetComponent<PlayerController>().enabled = false;
+                    }
+                    else
+                    {
+                        winnerName = CPU.GetComponent<HealthManager>().nameTag.text;
+                        CPU.GetComponent<AIController>().enabled = false;
+                    }
+                }
+                winnerTag.SetText(winnerName);
+
+                p1.GetComponent<PlayerController>().enabled = false;
                 break;
         }
+    }
+
+    private bool CheckDead(GameObject fighter)
+    {
+        HealthManager healthManager = fighter.GetComponent<HealthManager>();
+        if (healthManager.currentHealth == 0)
+        {
+            return true;
+        }
+        winnerName = healthManager.nameTag.text;
+        return false;
     }
 }

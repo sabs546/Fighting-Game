@@ -184,7 +184,7 @@ public class AIAttackController : MonoBehaviour
 
                     case AIController.GroundStates.Sprint:
                         if (attackType == BaseAttack.AttackType.Punch) { return new SprintPunch(); }
-                        if (attackType == BaseAttack.AttackType.Punch) { return new SprintKick(); }
+                        if (attackType == BaseAttack.AttackType.Kick) { return new SprintKick(); }
                         break;
                 }
                 break;

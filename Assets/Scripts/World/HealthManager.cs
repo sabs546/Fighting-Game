@@ -5,7 +5,8 @@ using UnityEngine;
 public class HealthManager : MonoBehaviour
 {
     public int maxHealth;
-    private int currentHealth;
+    public int currentHealth { get; private set; }
+    public TMPro.TextMeshProUGUI nameTag;
     public RectTransform healthBar;
     public GameStateControl gameStateControl;
 
