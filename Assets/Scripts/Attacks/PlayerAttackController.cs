@@ -189,9 +189,6 @@ public class PlayerAttackController : MonoBehaviour
             case PlayerController.PlayerStates.Grounded:
                 switch (controller.gState)
                 {
-                    case PlayerController.GroundStates.Neutral:
-                        break;
-
                     case PlayerController.GroundStates.Dash:
                         if (attackType == controls.Punch) { return new DashPunch(); }
                         if (attackType == controls.Kick) { return new DashKick(); }

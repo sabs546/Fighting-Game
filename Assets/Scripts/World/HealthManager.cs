@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class HealthManager : MonoBehaviour
 {
-    public int maxHealth { get; private set; }
+    public int maxHealth;
     public int currentHealth { get; private set; }
     public TMPro.TextMeshProUGUI nameTag;
     public RectTransform healthBar;
@@ -26,19 +26,19 @@ public class HealthManager : MonoBehaviour
     public void SendDamage(int damage)
     {
         currentHealth -= damage;
-        healthBar.localScale = new Vector3(currentHealth / maxHealth, 1.0f, 1.0f);
-
         if (currentHealth <= 0)
         {
             currentHealth = 0;
             GetComponent<Animator>().SetTrigger("Die");
             gameStateControl.GetComponent<GameStateControl>().SetGameState(GameStateControl.GameState.GameOver);
         }
+        healthBar.localScale = new Vector3(currentHealth / (float)maxHealth, 1.0f, 1.0f);
     }
 
     public void SetMaxHealth(Slider slider)
     {
         maxHealth = (int)slider.value;
+        currentHealth = maxHealth;
     }
 
     public void ResetHealth()

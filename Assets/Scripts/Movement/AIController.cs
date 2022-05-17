@@ -169,6 +169,11 @@ public class AIController : MonoBehaviour
         PlayerController opponentController = opponent.GetComponent<PlayerController>();
         PlayerAttackController opponentAtkController = opponent.GetComponent<PlayerAttackController>();
 
+        if (GetComponent<HealthManager>().currentHealth <= 0)
+        {
+            return;
+        }
+
         // todo This seems inefficient once rushdown, always rushdown right? Might need to come back to this one
         if (playStyle == Playstyle.Rushdown)
         {
