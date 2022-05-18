@@ -5,7 +5,7 @@ public class DashPunch : BaseAttack
     public DashPunch()
     {
         attackType = AttackType.Punch;
-        Damage = 2;
+        Damage = 5;
         Speed = new Vector3Int(15, 17, 27);
         Stun = 30;
         Followup = new DPKick();

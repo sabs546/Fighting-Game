@@ -28,7 +28,9 @@ public class AIController : MonoBehaviour
     private SetControls controls;
     private AIPhysics physics;
     private AIAttackController attackController;
-    private int fatigue; // Decision fatigue is how high to set the timer before making another decision
+    private int aFatigue; // Attack fatigue
+    private int mFatigue; // Movement fatigue
+    private int fatigue;  // Decision fatigue is how high to set the timer before making another decision
     private int ticker;  // Countdown for aggression
 
     // Start is called before the first frame update
@@ -37,7 +39,9 @@ public class AIController : MonoBehaviour
         controls = GetComponent<SetControls>();
         physics = GetComponent<AIPhysics>();
         attackController = GetComponent<AIAttackController>();
-        fatigue = 20;
+        aFatigue = 20;
+        mFatigue = 10;
+        fatigue = mFatigue;
         ticker = 0;
     }
 
@@ -129,10 +133,15 @@ public class AIController : MonoBehaviour
 
         switch (pState)
         {
+            case PlayerStates.Crouching:
+                attackController.currentAttack = attackController.FindAttack(BaseAttack.AttackType.Kick);
+                break;
             case PlayerStates.Grounded:
                 switch (gState)
                 {
                     case GroundStates.Dash:
+                        attackController.currentAttack = attackController.FindAttack((BaseAttack.AttackType)UnityEngine.Random.Range(1, 3));
+                        break;
                     case GroundStates.Sprint:
                         attackController.currentAttack = attackController.FindAttack((BaseAttack.AttackType)UnityEngine.Random.Range(1, 3));
                         break;
@@ -188,6 +197,7 @@ public class AIController : MonoBehaviour
                     if (gState != GroundStates.Dash && gState != GroundStates.Sprint)
                     {
                         SendMovementSignal(GroundStates.Dash);
+                        fatigue = mFatigue;
                         return;
                     }
 
@@ -251,12 +261,24 @@ public class AIController : MonoBehaviour
                 // That being said, first we need to stop moving towards the player, and if that movement is a sprint, it needs to be stopped manually
                 physics.startSprint = false;
 
-                if (pState == PlayerStates.Grounded)
+                if (gState == GroundStates.Dash && pState != PlayerStates.Crouching)
+                {
+                    // I just made it 1 in 3 since it means it has an equal chance as standard punch or kick
+                    if (UnityEngine.Random.Range(0, 3) == 0)
+                    {
+                        physics.enableCrouch = true;
+                        ticker = mFatigue;
+                        return;
+                    }
+                }
+
+                if (pState == PlayerStates.Grounded || pState == PlayerStates.Crouching)
                 {
                     if (!CheckInRange(false, true))
                     {
                         // We're within range, but they're too high up
                         SendMovementSignal(GroundStates.Jump);
+                        fatigue = mFatigue;
                         return;
                     }
 
@@ -265,17 +287,19 @@ public class AIController : MonoBehaviour
                     {
                         // Getting within comfortable physical violence range
                         SendMovementSignal(TooCloseForComfort() ? GroundStates.Backdash : GroundStates.Dash);
+                        fatigue = mFatigue;
                     }
                     else
                     {
-                        //Debug.Log(attackController.currentAttack);
                         SendAttackSignal();
+                        fatigue = aFatigue;
                     }
                 }
                 else if (pState == PlayerStates.Airborne)
                 {
                     // So we're within attack range, and we're in the air, we can throw something out
                     SendAttackSignal();
+                    fatigue = aFatigue;
                 }
             }
         }

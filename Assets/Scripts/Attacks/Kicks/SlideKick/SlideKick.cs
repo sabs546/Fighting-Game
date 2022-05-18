@@ -5,8 +5,8 @@ public class SlideKick : BaseAttack
     public SlideKick()
     {
         attackType = AttackType.Kick;
-        Damage = 4;
-        Speed = new Vector3Int(10, 20, 22);
+        Damage = 10;
+        Speed = new Vector3Int(10, 20, 32);
         Stun = 30;
         Followup = null;
 
@@ -22,7 +22,7 @@ public class SlideKick : BaseAttack
 
     public override void SideSwap()
     {
-        Range = new Vector2(Range.x * -1.0f, 0.0f);
-        Knockback = new Vector2(Knockback.x * -1.0f, 0.0f);
+        Range = new Vector2(Range.x * -1.0f, Range.y);
+        Knockback = new Vector2(Knockback.x * -1.0f, Knockback.y);
     }
 }

@@ -174,9 +174,6 @@ public class AIAttackController : MonoBehaviour
             case AIController.PlayerStates.Grounded:
                 switch (controller.gState)
                 {
-                    case AIController.GroundStates.Neutral:
-                        break;
-
                     case AIController.GroundStates.Dash:
                         if (attackType == BaseAttack.AttackType.Punch) { return new DashPunch(); }
                         if (attackType == BaseAttack.AttackType.Kick) { return new DashKick(); }

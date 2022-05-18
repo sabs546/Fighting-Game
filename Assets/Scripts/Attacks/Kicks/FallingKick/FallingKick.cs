@@ -5,7 +5,7 @@ public class FallingKick : BaseAttack
     public FallingKick()
     {
         attackType = AttackType.Kick;
-        Damage = 8;
+        Damage = 15;
         Speed = new Vector3Int(15, 30, 32);
         Stun = 30;
         Followup = null;

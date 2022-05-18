@@ -67,6 +67,18 @@ public class AIPhysics : MonoBehaviour
         
         controller.aState = effectiveGravity < 0.0f ? AIController.AirStates.Rising : AIController.AirStates.Falling;      // Check if you're rising or falling
 
+        pos.y -= effectiveGravity;                                                                                         // Gravity acting
+        // Hitting the floor
+        if (pos.y - effectiveGravity < effectiveMinHeight)
+        {
+            pos.y = effectiveMinHeight;
+            effectiveGravity = 0.0f;
+            if (controller.pState != AIController.PlayerStates.Crouching)
+            {
+                controller.pState = AIController.PlayerStates.Grounded;
+            }
+        }
+
         // --------------------------------------------------------
         // - Vertical Movement -
         // -------
@@ -75,19 +87,10 @@ public class AIPhysics : MonoBehaviour
             controller.pState = AIController.PlayerStates.Airborne;
         }
 
-        pos.y -= effectiveGravity;                                                                                         // Gravity acting
-        // Hitting the floor
-        if (pos.y - effectiveGravity < effectiveMinHeight)
-        {
-            pos.y = effectiveMinHeight;
-            effectiveGravity = 0.0f;
-            controller.pState = AIController.PlayerStates.Grounded;
-        }
-
         // --------------------------------------------------------
         // - Horizontal Movement -
         // -------
-        if (controller.pState == AIController.PlayerStates.Grounded)
+        if (controller.pState == AIController.PlayerStates.Grounded || controller.pState == AIController.PlayerStates.Crouching)
         {
             // Moving left
             if (effectiveMovement < 0.0f)
@@ -173,6 +176,12 @@ public class AIPhysics : MonoBehaviour
                 enableCrouch = false;
                 airLock = 0;
             }
+        }
+
+        // To stop crouching from locking the AI up
+        if (controller.gState == AIController.GroundStates.Neutral && controller.pState == AIController.PlayerStates.Crouching)
+        {
+            controller.pState = AIController.PlayerStates.Grounded;
         }
 
         // --------------------------------------------------------

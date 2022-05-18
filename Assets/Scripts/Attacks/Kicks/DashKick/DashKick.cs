@@ -5,7 +5,7 @@ public class DashKick : BaseAttack
     public DashKick()
     {
         attackType = AttackType.Kick;
-        Damage = 4;
+        Damage = 5;
         Speed = new Vector3Int(5, 9, 37);
         Stun = 30;
         Followup = new DKStomp();

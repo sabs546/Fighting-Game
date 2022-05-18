@@ -5,9 +5,9 @@ public class DKSUppercut : BaseAttack
     public DKSUppercut()
     {
         attackType = AttackType.Punch;
-        Damage = 4;
+        Damage = 20;
         Speed = new Vector3Int(10, 12, 37);
-        Stun = 30;
+        Stun = 20;
         Followup = null;
 
         Range = new Vector2(0.5f, 0.25f);
