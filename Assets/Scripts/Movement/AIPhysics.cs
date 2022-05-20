@@ -36,7 +36,7 @@ public class AIPhysics : MonoBehaviour
     public  GameObject       opponent;
 
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
         controller = GetComponent<AIController>();
         launch = 0.0f;

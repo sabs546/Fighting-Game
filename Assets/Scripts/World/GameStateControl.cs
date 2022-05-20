@@ -48,24 +48,30 @@ public class GameStateControl : MonoBehaviour
 
                 p1.transform.position = p1StartPos;
                 p1.GetComponent<HealthManager>().ResetHealth();
-                p1.GetComponent<Animator>().SetTrigger("Revive");
-                p1.GetComponent<PlayerPhysics>().enabled = false;
                 p1.GetComponent<PlayerController>().currentSide = PlayerController.Side.Left;
+                p1.GetComponent<PlayerPhysics>().enabled = false;
+                p1.GetComponent<Animator>().SetTrigger("Revive");
+                p1.SetActive(false);
+                p1.SetActive(true);
                 if (WorldRules.PvP)
                 {
                     p2.transform.position = p2StartPos;
                     p2.GetComponent<HealthManager>().ResetHealth();
-                    p2.GetComponent<Animator>().SetTrigger("Revive");
+                    p2.GetComponent<PlayerController>().currentSide = PlayerController.Side.Right;
                     p2.GetComponent<PlayerPhysics>().enabled = false;
-                    p2.GetComponent<AIController>().currentSide = AIController.Side.Right;
+                    p2.GetComponent<Animator>().SetTrigger("Revive");
+                    p2.SetActive(false);
+                    p2.SetActive(true);
                 }
                 else
                 {
                     CPU.transform.position = p2StartPos;
                     CPU.GetComponent<HealthManager>().ResetHealth();
-                    CPU.GetComponent<Animator>().SetTrigger("Revive");
-                    CPU.GetComponent<AIPhysics>().enabled = false;
                     CPU.GetComponent<AIController>().currentSide = AIController.Side.Right;
+                    CPU.GetComponent<AIPhysics>().enabled = false;
+                    CPU.GetComponent<Animator>().SetTrigger("Revive");
+                    CPU.SetActive(false);
+                    CPU.SetActive(true);
                 }
                 break;
             case GameState.Fighting:

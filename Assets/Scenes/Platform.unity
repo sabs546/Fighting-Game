@@ -2784,7 +2784,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   p1: {fileID: 353790518}
-  p2: {fileID: 0}
+  p2: {fileID: 1108586755}
   CPU: {fileID: 429183485}
   menuUI: {fileID: 1879994021}
   fightUI: {fileID: 599836054}

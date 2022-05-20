@@ -36,7 +36,7 @@ public class PlayerPhysics : MonoBehaviour
     public  GameObject       opponent;
 
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
         controller = GetComponent<PlayerController>();
         launch = 0.0f;

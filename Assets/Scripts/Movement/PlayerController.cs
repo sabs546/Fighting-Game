@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
     private PlayerAttackController attackController;
 
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
         controls = GetComponent<SetControls>();
         physics = GetComponent<PlayerPhysics>();
