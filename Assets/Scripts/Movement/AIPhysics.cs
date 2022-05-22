@@ -159,7 +159,7 @@ public class AIPhysics : MonoBehaviour
                 if (controller.gState != AIController.GroundStates.Sprint)
                 {
                     controller.gState = AIController.GroundStates.Dash;
-                    if (enableCrouch) controller.pState = AIController.PlayerStates.Crouching;
+                    if (enableCrouch && controller.pState != AIController.PlayerStates.Airborne) controller.pState = AIController.PlayerStates.Crouching;
                 }
                 enableSprint = true;
             }

@@ -72,6 +72,16 @@ public class PlayerAttackController : MonoBehaviour
                     nextAttack = currentAttack.Followup;
                 }
             }
+            else if (Input.GetKeyDown(controls.Throw))
+            {
+                currentAttack = FindAttack(controls.Throw);
+                if (currentAttack != null)
+                {
+                    if (sprite.flipX) { currentAttack.SideSwap(); }
+                    state = AttackState.Startup;
+                    nextAttack = currentAttack.Followup;
+                }
+            }
         }
         // The next part of the string
         else if (state == AttackState.Recovery)
@@ -140,8 +150,9 @@ public class PlayerAttackController : MonoBehaviour
                     physics.launch += currentAttack.Recoil.y / WorldRules.physicsRate;
                     currentAttack.RemoveRecoil();
                 }
+
                 if (timer == 1)
-                {
+                { // Changing the sounds to the whiffed versions
                     if (currentAttack.SparkType == HitSparkManager.SparkType.Launch)
                     {
                         GetComponent<AttackAudioManager>().PlaySound("Whiff_Heavy_01");
@@ -158,7 +169,7 @@ public class PlayerAttackController : MonoBehaviour
                 hitbox.enabled = true;
                 hitbox.offset = currentAttack.Range;
                 hitbox.size = currentAttack.Size;
-                if (currentAttack.DelayRecoil)
+                if (currentAttack.DelayRecoil && currentAttack.attackType != BaseAttack.AttackType.Throw)
                 {
                     physics.travel += sprite.flipX ? currentAttack.Recoil.x / WorldRules.physicsRate : -currentAttack.Recoil.x / WorldRules.physicsRate;
                     physics.launch += currentAttack.Recoil.y / WorldRules.physicsRate;
@@ -167,12 +178,13 @@ public class PlayerAttackController : MonoBehaviour
             }
             else if (timer < currentAttack.Speed.z) // During attack recovery
             {
+                if (currentAttack.attackType != BaseAttack.AttackType.Throw) hitbox.enabled = false;
                 state = AttackState.Recovery;
-                hitbox.enabled = false;
                 if (controller.gState == PlayerController.GroundStates.Sprint) physics.startSprint = false;
             }
             else // After attack completes
             {
+                hitbox.enabled = false;
                 state = AttackState.Empty;
                 timer = 0;
                 stunLimit = 0;
@@ -192,8 +204,8 @@ public class PlayerAttackController : MonoBehaviour
                     case PlayerController.GroundStates.Dash:
                         if (attackType == controls.Punch) { return new DashPunch(); }
                         if (attackType == controls.Kick) { return new DashKick(); }
+                        if (attackType == controls.Throw) { return new DashThrow(); }
                         break;
-
                     case PlayerController.GroundStates.Sprint:
                         if (attackType == controls.Punch) { return new SprintPunch(); }
                         if (attackType == controls.Kick) { return new SprintKick(); }
@@ -226,6 +238,37 @@ public class PlayerAttackController : MonoBehaviour
         if (currentAttack == null)
         {
             //Debug.Log(hitbox.name + " " + hitbox.enabled);
+            return;
+        }
+
+        if (currentAttack.attackType == BaseAttack.AttackType.Throw)
+        { /// todo for a smoother throw transition
+            if (timer < currentAttack.Speed.z)
+            {
+                if (p2Physics == null)
+                {
+                    opponentPhysics.travel = currentAttack.Knockback.x / WorldRules.physicsRate;
+                    opponentPhysics.launch = currentAttack.Knockback.y / WorldRules.physicsRate;
+                }
+                else
+                {
+                    p2Physics.travel = currentAttack.Knockback.x / WorldRules.physicsRate;
+                    p2Physics.launch = currentAttack.Knockback.y / WorldRules.physicsRate;
+                }
+                currentAttack.RemoveKnockback();
+            }
+            //physics.travel += (sprite.flipX ? timer - currentAttack.Speed.y / WorldRules.physicsRate : -(timer - currentAttack.Speed.y) / WorldRules.physicsRate) / 10.0f;
+            //physics.launch += (timer - currentAttack.Recoil.x / WorldRules.physicsRate) / 10.0f;
+            //if (p2Physics == null)
+            //{
+            //    opponentPhysics.travel += (sprite.flipX ? timer - currentAttack.Speed.y / WorldRules.physicsRate : -(timer - currentAttack.Speed.y) / WorldRules.physicsRate) / 10.0f;
+            //    opponentPhysics.launch += (timer - currentAttack.Speed.y / WorldRules.physicsRate) / 10.0f;
+            //}
+            //else
+            //{
+            //    p2Physics.travel += (sprite.flipX ? timer - currentAttack.Speed.y / WorldRules.physicsRate : -(timer - currentAttack.Speed.y) / WorldRules.physicsRate) / 10.0f;
+            //    p2Physics.launch += (timer - currentAttack.Speed.y / WorldRules.physicsRate) / 10.0f;
+            //}
             return;
         }
 

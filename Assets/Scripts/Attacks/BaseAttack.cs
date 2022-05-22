@@ -2,7 +2,7 @@
 
 public class BaseAttack
 {
-    public enum AttackType { Null, Punch, Kick };
+    public enum AttackType { Null, Punch, Kick, Throw };
     public AttackType attackType;
 
     public int Damage { get; protected set; }
@@ -24,5 +24,9 @@ public class BaseAttack
     {
         AlwaysRecoil = false;
         DelayRecoil = false;
+    }
+    public void RemoveKnockback()
+    {
+        Knockback = Vector2.zero;
     }
 }
