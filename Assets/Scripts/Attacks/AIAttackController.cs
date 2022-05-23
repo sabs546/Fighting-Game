@@ -205,7 +205,7 @@ public class AIAttackController : MonoBehaviour
         return null;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
         // todo Player attacks seem to trigger this, unsure why
         if (currentAttack == null)
@@ -248,5 +248,13 @@ public class AIAttackController : MonoBehaviour
         opponentPhysics.GetComponent<HealthManager>().SendDamage(currentAttack.Damage);
         GetComponent<AttackAudioManager>().PlaySound(currentAttack.SoundName);
         timer = currentAttack.Speed.y;
+    }
+
+    public void CancelAttack()
+    {
+        currentAttack = null;
+        hitbox.enabled = false;
+        timer = 0;
+        state = AttackState.Empty;
     }
 }

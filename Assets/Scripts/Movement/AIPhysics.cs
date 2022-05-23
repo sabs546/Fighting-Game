@@ -33,7 +33,7 @@ public class AIPhysics : MonoBehaviour
     private float effectiveMaxRight;  // The maxWidth after removing the half the player
 
     private AIController controller;
-    public  GameObject       opponent;
+    public  GameObject   opponent;
 
     // Start is called before the first frame update
     void OnEnable()

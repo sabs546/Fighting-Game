@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerAttackController : MonoBehaviour
 {
     // Attack Values =======================================================================================
-    public BaseAttack currentAttack;                              // Attack currently playing
+    public  BaseAttack currentAttack;                             // Attack currently playing
     private BaseAttack nextAttack;                                // The next available attack in the string
     
     public enum AttackState { Empty, Startup, Active, Recovery }; // Attack phases
@@ -235,40 +235,9 @@ public class PlayerAttackController : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // todo This should never trigger, but triggers are always active I guess, which is odd because it doesn't trigger anyway
-        if (currentAttack == null)
+        if (currentAttack == null || currentAttack.attackType == BaseAttack.AttackType.Throw)
         {
             //Debug.Log(hitbox.name + " " + hitbox.enabled);
-            return;
-        }
-
-        if (currentAttack.attackType == BaseAttack.AttackType.Throw)
-        { /// todo for a smoother throw transition
-            if (timer < currentAttack.Speed.z)
-            {
-                if (p2Physics == null)
-                {
-                    opponentPhysics.travel = currentAttack.Knockback.x / WorldRules.physicsRate;
-                    opponentPhysics.launch = currentAttack.Knockback.y / WorldRules.physicsRate;
-                }
-                else
-                {
-                    p2Physics.travel = currentAttack.Knockback.x / WorldRules.physicsRate;
-                    p2Physics.launch = currentAttack.Knockback.y / WorldRules.physicsRate;
-                }
-                currentAttack.RemoveKnockback();
-            }
-            //physics.travel += (sprite.flipX ? timer - currentAttack.Speed.y / WorldRules.physicsRate : -(timer - currentAttack.Speed.y) / WorldRules.physicsRate) / 10.0f;
-            //physics.launch += (timer - currentAttack.Recoil.x / WorldRules.physicsRate) / 10.0f;
-            //if (p2Physics == null)
-            //{
-            //    opponentPhysics.travel += (sprite.flipX ? timer - currentAttack.Speed.y / WorldRules.physicsRate : -(timer - currentAttack.Speed.y) / WorldRules.physicsRate) / 10.0f;
-            //    opponentPhysics.launch += (timer - currentAttack.Speed.y / WorldRules.physicsRate) / 10.0f;
-            //}
-            //else
-            //{
-            //    p2Physics.travel += (sprite.flipX ? timer - currentAttack.Speed.y / WorldRules.physicsRate : -(timer - currentAttack.Speed.y) / WorldRules.physicsRate) / 10.0f;
-            //    p2Physics.launch += (timer - currentAttack.Speed.y / WorldRules.physicsRate) / 10.0f;
-            //}
             return;
         }
 
@@ -327,6 +296,54 @@ public class PlayerAttackController : MonoBehaviour
         timer = currentAttack.Speed.y;
     }
 
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (currentAttack == null || currentAttack.attackType != BaseAttack.AttackType.Throw)
+        {
+            return;
+        }
+
+        /// todo for a smoother throw transition
+        //physics.travel += (sprite.flipX ? timer - currentAttack.Speed.y / WorldRules.physicsRate : -(timer - currentAttack.Speed.y) / WorldRules.physicsRate) / 10.0f;
+        //physics.launch += (timer - currentAttack.Recoil.x / WorldRules.physicsRate) / 10.0f;
+        //if (p2Physics == null)
+        //{
+        //    opponentPhysics.travel += (sprite.flipX ? timer - currentAttack.Speed.y / WorldRules.physicsRate : -(timer - currentAttack.Speed.y) / WorldRules.physicsRate) / 10.0f;
+        //    opponentPhysics.launch += (timer - currentAttack.Speed.y / WorldRules.physicsRate) / 10.0f;
+        //}
+        //else
+        //{
+        //    p2Physics.travel += (sprite.flipX ? timer - currentAttack.Speed.y / WorldRules.physicsRate : -(timer - currentAttack.Speed.y) / WorldRules.physicsRate) / 10.0f;
+        //    p2Physics.launch += (timer - currentAttack.Speed.y / WorldRules.physicsRate) / 10.0f;
+        //}
+
+        if (timer < currentAttack.Speed.y)
+        {
+            if (p2Physics == null)
+            {
+                opponentPhysics.GetComponent<AIAttackController>().CancelAttack();
+            }
+            else
+            {
+                p2Physics.GetComponent<PlayerAttackController>().CancelAttack();
+            }
+        }
+        else if (timer < currentAttack.Speed.z)
+        {
+            if (p2Physics == null)
+            {
+                opponentPhysics.travel = currentAttack.Knockback.x / WorldRules.physicsRate;
+                opponentPhysics.launch = currentAttack.Knockback.y / WorldRules.physicsRate;
+            }
+            else
+            {
+                p2Physics.travel = currentAttack.Knockback.x / WorldRules.physicsRate;
+                p2Physics.launch = currentAttack.Knockback.y / WorldRules.physicsRate;
+            }
+            currentAttack.RemoveKnockback();
+        }
+    }
+
     public void SwapOpponentType()
     {
         if (!WorldRules.PvP)
@@ -339,5 +356,13 @@ public class PlayerAttackController : MonoBehaviour
             p2Physics = physics.opponent.GetComponent<PlayerPhysics>();
             opponentPhysics = null;
         }
+    }
+
+    public void CancelAttack()
+    {
+        currentAttack = null;
+        hitbox.enabled = false;
+        timer = 0;
+        state = AttackState.Empty;
     }
 }
