@@ -31,7 +31,7 @@ public class PlayerController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         // --------------------------------------------------------
         // - Movement Inputs -
@@ -131,6 +131,19 @@ public class PlayerController : MonoBehaviour
                     physics.travel = 0.0f;
                 }
             }
+        }
+
+        if (Input.GetKeyUp(controls.Punch))
+        {
+            attackController.sendPunch = true;
+        }
+        else if (Input.GetKeyUp(controls.Kick))
+        {
+            attackController.sendKick = true;
+        }
+        else if (Input.GetKeyUp(controls.Throw))
+        {
+            attackController.sendThrow = true;
         }
     }
 }

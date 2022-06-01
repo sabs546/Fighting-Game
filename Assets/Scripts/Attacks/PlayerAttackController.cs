@@ -26,6 +26,14 @@ public class PlayerAttackController : MonoBehaviour
     public  int  stunLimit;            // How long the stun lasts
     public  bool enableLowAttacks;     // Unlock crouch attacks
 
+    // Input registering
+    [HideInInspector]
+    public  bool sendPunch;
+    [HideInInspector]
+    public  bool sendKick;
+    [HideInInspector]
+    public  bool sendThrow;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -44,6 +52,10 @@ public class PlayerAttackController : MonoBehaviour
         hitbox = gameObject.AddComponent<BoxCollider2D>();
         hitbox.isTrigger = true;
         hitbox.enabled = false;
+
+        sendPunch = false;
+        sendKick = false;
+        sendThrow = false;
     }
 
     // Update is called once per frame
@@ -52,8 +64,9 @@ public class PlayerAttackController : MonoBehaviour
         // First attack
         if (state == AttackState.Empty && controller.gState != PlayerController.GroundStates.Stun)
         {
-            if (Input.GetKeyDown(controls.Punch))
+            if (sendPunch)
             {
+                sendPunch = false;
                 currentAttack = FindAttack(controls.Punch);
                 if (currentAttack != null)
                 {
@@ -62,8 +75,9 @@ public class PlayerAttackController : MonoBehaviour
                     nextAttack = currentAttack.Followup;
                 }
             }
-            else if (Input.GetKeyDown(controls.Kick))
+            else if (sendKick)
             {
+                sendKick = false;
                 currentAttack = FindAttack(controls.Kick);
                 if (currentAttack != null)
                 {
@@ -72,8 +86,9 @@ public class PlayerAttackController : MonoBehaviour
                     nextAttack = currentAttack.Followup;
                 }
             }
-            else if (Input.GetKeyDown(controls.Throw))
+            else if (sendThrow)
             {
+                sendThrow = false;
                 currentAttack = FindAttack(controls.Throw);
                 if (currentAttack != null)
                 {
@@ -86,9 +101,11 @@ public class PlayerAttackController : MonoBehaviour
         // The next part of the string
         else if (state == AttackState.Recovery)
         {
-            if (nextAttack != null && ((Input.GetKeyDown(controls.Punch) && nextAttack.attackType == BaseAttack.AttackType.Punch) ||
-                                       (Input.GetKeyDown(controls.Kick)  && nextAttack.attackType == BaseAttack.AttackType.Kick)))
+            if (nextAttack != null && ((sendPunch && nextAttack.attackType == BaseAttack.AttackType.Punch) ||
+                                       (sendKick  && nextAttack.attackType == BaseAttack.AttackType.Kick)))
             {
+                sendPunch = false;
+                sendKick = false;
                 currentAttack = nextAttack;
                 GetComponent<SpriteManager>().EnableFollowup(true);
                 if (currentAttack != null)
@@ -178,8 +195,8 @@ public class PlayerAttackController : MonoBehaviour
             }
             else if (timer < currentAttack.Speed.z) // During attack recovery
             {
-                if (currentAttack.attackType != BaseAttack.AttackType.Throw) hitbox.enabled = false;
                 state = AttackState.Recovery;
+                if (currentAttack.attackType != BaseAttack.AttackType.Throw) hitbox.enabled = false;
                 if (controller.gState == PlayerController.GroundStates.Sprint) physics.startSprint = false;
             }
             else // After attack completes
@@ -237,7 +254,6 @@ public class PlayerAttackController : MonoBehaviour
         // todo This should never trigger, but triggers are always active I guess, which is odd because it doesn't trigger anyway
         if (currentAttack == null || currentAttack.attackType == BaseAttack.AttackType.Throw)
         {
-            //Debug.Log(hitbox.name + " " + hitbox.enabled);
             return;
         }
 

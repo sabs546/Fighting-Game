@@ -127,8 +127,11 @@ public class AIController : MonoBehaviour
 
         if (attackController.allowFollowup)
         {
-            Debug.Assert(attackController.currentAttack == null, "Something wrong with the current attack?");
-            Debug.Assert(attackController.currentAttack.Followup == null, "Something wrong with the current attack?");
+            if (attackController.currentAttack == null || attackController.currentAttack.Followup == null)
+            {
+                Debug.Log("Something wrong with the current attack?");
+                return;
+            }
             attackController.currentAttack = attackController.currentAttack.Followup;
             return;
         }

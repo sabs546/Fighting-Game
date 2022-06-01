@@ -32,6 +32,14 @@ public class HealthManager : MonoBehaviour
             GetComponent<Animator>().SetTrigger("Die");
             gameStateControl.GetComponent<GameStateControl>().SetGameState(GameStateControl.GameState.GameOver);
         }
+        if (TryGetComponent(out PlayerAttackController pAttackController))
+        {
+            pAttackController.CancelAttack();
+        }
+        else if (TryGetComponent(out AIAttackController AIAttackController))
+        {
+            AIAttackController.CancelAttack();
+        }
         healthBar.localScale = new Vector3(currentHealth / (float)maxHealth, 1.0f, 1.0f);
     }
 
