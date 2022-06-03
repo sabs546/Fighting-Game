@@ -31,17 +31,26 @@ public class SpriteManager : MonoBehaviour
             {
                 animator.SetBool("Punch", true);
                 animator.SetBool("Kick", false);
+                animator.SetBool("Throw", false);
             }
             else if (atkController.currentAttack.attackType == BaseAttack.AttackType.Kick)
             {
                 animator.SetBool("Kick", true);
                 animator.SetBool("Punch", false);
+                animator.SetBool("Throw", false);
+            }
+            else if (atkController.currentAttack.attackType == BaseAttack.AttackType.Throw)
+            {
+                animator.SetBool("Kick", false);
+                animator.SetBool("Punch", false);
+                animator.SetBool("Throw", true);
             }
         }
         else
         {
             animator.SetBool("Punch", false);
             animator.SetBool("Kick", false);
+            animator.SetBool("Throw", false);
         }
 
         if (controller.pState == PlayerController.PlayerStates.Grounded || controller.pState == PlayerController.PlayerStates.Crouching)
