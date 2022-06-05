@@ -6,7 +6,7 @@ public class DPKick : BaseAttack
     {
         attackType = AttackType.Kick;
         Damage = 15;
-        Speed = new Vector3Int(23, 25, 40);
+        Speed = new Vector3Int(13, 15, 40);
         Stun = 30;
         Followup = null;
 
