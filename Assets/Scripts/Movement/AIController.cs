@@ -178,6 +178,21 @@ public class AIController : MonoBehaviour
         }
     }
 
+    private void SendThrowSignal()
+    {
+        switch (pState)
+        {
+            case PlayerStates.Grounded:
+                switch (gState)
+                {
+                    case GroundStates.Dash:
+                        attackController.currentAttack = attackController.FindAttack(BaseAttack.AttackType.Throw);
+                        break;
+                }
+                break;
+        }
+    }
+
     private void DecisionMaker()
     {
         PlayerController opponentController = opponent.GetComponent<PlayerController>();
@@ -216,46 +231,6 @@ public class AIController : MonoBehaviour
                         }
                         // Otherwise let the dash ride, we can still make it
                     }
-                    // On the other hand if they're in the air this is gonna get a little complicated
-                    // todo approaching airborne?
-                    else if (opponentController.pState == PlayerController.PlayerStates.Airborne)
-                    {
-                        int distance = 0;
-                        int threshold = 0;
-
-                        // Depending on if the opponent is going to hit the ground or not, we can have different responses
-                        if (opponentController.aState == PlayerController.AirStates.Rising)
-                        {
-                            // My logic behind this is that if they're going up, they probably recently jumped and have some airborne time left
-                            // That means to reach them you probably might need a jump
-
-                            // You can't just jump though, they have to be within a range where jumping should actually catch them, for the most part
-                            if (distance > threshold)
-                            {
-                                // Also at this point we may trigger a sprint since that will increase the jump height
-                                // We would also jump because we're somewhere within the range of catching them
-                            }
-                        }
-                        else if (opponentController.aState == PlayerController.AirStates.Falling)
-                        {
-                            if (distance > threshold)
-                            {
-                                // We would trigger a sprint here to get closer for the attack
-                            }
-                        }
-                    }
-                }
-                // If you do jump for an attack, or jump with an attack and there's a whiff, you may still have a decision to make
-                else if (pState == PlayerStates.Airborne)
-                {
-                    if (aState == AirStates.Rising)
-                    {
-                        //if (AI.pos.y < Opp.pos.y && distance < threshold) // About close enough to aim for an uppercut
-                    }
-                    else if (aState == AirStates.Falling)
-                    {
-                        //if (AI.pos.y > Opp.pos.y && distance < threshold) // About close enough to recover with a rough dive kick
-                    }
                 }
             }
             else
@@ -274,6 +249,10 @@ public class AIController : MonoBehaviour
                         physics.enableCrouch = true;
                         ticker = mFatigue;
                         return;
+                    }
+                    if (opponentAtkController.state == PlayerAttackController.AttackState.Startup)
+                    {
+                        SendThrowSignal();
                     }
                 }
 

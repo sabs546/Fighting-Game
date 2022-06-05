@@ -177,6 +177,7 @@ public class AIAttackController : MonoBehaviour
                     case AIController.GroundStates.Dash:
                         if (attackType == BaseAttack.AttackType.Punch) { return new DashPunch(); }
                         if (attackType == BaseAttack.AttackType.Kick) { return new DashKick(); }
+                        if (attackType == BaseAttack.AttackType.Throw) { return new DashThrow(); }
                         break;
 
                     case AIController.GroundStates.Sprint:
@@ -205,7 +206,7 @@ public class AIAttackController : MonoBehaviour
         return null;
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         // todo Player attacks seem to trigger this, unsure why
         if (currentAttack == null)
