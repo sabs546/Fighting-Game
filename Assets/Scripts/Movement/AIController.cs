@@ -31,7 +31,11 @@ public class AIController : MonoBehaviour
     private int aFatigue; // Attack fatigue
     private int mFatigue; // Movement fatigue
     private int fatigue;  // Decision fatigue is how high to set the timer before making another decision
-    private int ticker;  // Countdown for aggression
+    private int ticker;   // Countdown for aggression
+
+    public Queue<GenericAction> commandHistory; // This should help when the AI gets stuck in a loop
+    private GenericAction containerAction;      // Action will be reused to add to the command history
+    private bool forceAttack;
 
     // Start is called before the first frame update
     void OnEnable()
@@ -43,6 +47,15 @@ public class AIController : MonoBehaviour
         mFatigue = 10;
         fatigue = mFatigue;
         ticker = 0;
+
+        // Start off a list of actions, we're gonna keep the last 3
+        commandHistory = new Queue<GenericAction>();
+        containerAction = new GenericAction();
+        containerAction.SetActionType(0);
+        commandHistory.Enqueue(containerAction);
+        commandHistory.Enqueue(containerAction);
+        commandHistory.Enqueue(containerAction);
+        forceAttack = false;
     }
 
     // Update is called once per frame
@@ -193,6 +206,23 @@ public class AIController : MonoBehaviour
         }
     }
 
+    private bool CheckRepeatActions()
+    {
+        int[] typeList = { 0, 0, 0 };
+        int index = 0;
+        foreach (GenericAction command in commandHistory)
+        {
+            typeList[index] = command.GetActionType();
+            index++;
+        }
+        if (typeList[0] == typeList[1] && typeList[1] == typeList[2])
+        {
+            // Then we just repeated the same type of action 3 times
+            return true;
+        }
+        return false;
+    }
+
     private void DecisionMaker()
     {
         PlayerController opponentController = opponent.GetComponent<PlayerController>();
@@ -201,6 +231,13 @@ public class AIController : MonoBehaviour
         if (GetComponent<HealthManager>().currentHealth <= 0)
         {
             return;
+        }
+
+        if (forceAttack)
+        {
+            forceAttack = false;
+            attackController.allowFollowup = false; // todo there's an issue with allowfollowup being stuck on true, I'll fix it later
+            SendAttackSignal();
         }
 
         // todo This seems inefficient once rushdown, always rushdown right? Might need to come back to this one
@@ -218,6 +255,8 @@ public class AIController : MonoBehaviour
                     {
                         SendMovementSignal(GroundStates.Dash);
                         fatigue = mFatigue;
+                        commandHistory.Dequeue();
+                        commandHistory.Enqueue(containerAction.SetActionType(1));
                         return;
                     }
 
@@ -228,6 +267,8 @@ public class AIController : MonoBehaviour
                         {
                             // We're approaching, but they're far enough that one dash isn't enough, we can kick up a sprint here
                             SendMovementSignal(GroundStates.Sprint);
+                            commandHistory.Dequeue();
+                            commandHistory.Enqueue(containerAction.SetActionType(1));
                         }
                         // Otherwise let the dash ride, we can still make it
                     }
@@ -263,6 +304,8 @@ public class AIController : MonoBehaviour
                         // We're within range, but they're too high up
                         SendMovementSignal(GroundStates.Jump);
                         fatigue = mFatigue;
+                        commandHistory.Dequeue();
+                        commandHistory.Enqueue(containerAction.SetActionType(1));
                         return;
                     }
 
@@ -270,13 +313,25 @@ public class AIController : MonoBehaviour
                     if (gState == GroundStates.Neutral)
                     {
                         // Getting within comfortable physical violence range
-                        SendMovementSignal(TooCloseForComfort() ? GroundStates.Backdash : GroundStates.Dash);
+                        if (CheckRepeatActions())
+                        {
+                            SendMovementSignal(GroundStates.Dash);
+                            forceAttack = true;
+                        }
+                        else
+                        {
+                            SendMovementSignal(TooCloseForComfort() ? GroundStates.Backdash : GroundStates.Dash);
+                        }
                         fatigue = mFatigue;
+                        commandHistory.Dequeue();
+                        commandHistory.Enqueue(containerAction.SetActionType(1));
                     }
                     else
                     {
                         SendAttackSignal();
                         fatigue = aFatigue;
+                        commandHistory.Dequeue();
+                        commandHistory.Enqueue(containerAction.SetActionType(2));
                     }
                 }
                 else if (pState == PlayerStates.Airborne)
@@ -284,8 +339,27 @@ public class AIController : MonoBehaviour
                     // So we're within attack range, and we're in the air, we can throw something out
                     SendAttackSignal();
                     fatigue = aFatigue;
+                    commandHistory.Dequeue();
+                    commandHistory.Enqueue(containerAction.SetActionType(2));
                 }
             }
         }
+    }
+}
+
+public class GenericAction
+{
+    private enum ActionType { Empty, Movement, Attack };
+    private ActionType action;
+
+    public GenericAction SetActionType(int type)
+    {
+        action = (ActionType)type;
+        return this;
+    }
+
+    public int GetActionType()
+    {
+        return (int)action;
     }
 }
