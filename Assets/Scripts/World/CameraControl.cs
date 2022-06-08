@@ -14,6 +14,7 @@ public class CameraControl : MonoBehaviour
     private Vector2 p1Pos;     // Saves time when getting position
     private Vector2 p2Pos;
     private Vector3 cameraPos; // Alter these values then apply them to the camera once
+    private Vector3 shakePos;  // When the camera shakes it should hold a temp value so it can go back to normal
 
     // States ===========================================================
     public enum CameraState { Menu, Close, Normal, Far };
@@ -33,6 +34,7 @@ public class CameraControl : MonoBehaviour
     private float centreDistanceX; // To follow left/right
     private float xDistance;       // Player to player X distance
     private float yDistance;       // Player to player Y distance
+    private uint  ticker;          // Timer used to count frames for the camera shake
 
     // Start is called before the first frame update
     void Start()
@@ -40,6 +42,7 @@ public class CameraControl : MonoBehaviour
         cam = GetComponent<Camera>();
         gameStateControl = GetComponent<GameStateControl>();
         cameraPos = transform.position;
+        ticker = 0;
     }
 
     // Update is called once per frame
@@ -177,6 +180,18 @@ public class CameraControl : MonoBehaviour
             if (cam.orthographicSize > menu.zoom - 0.01f && cam.orthographicSize < menu.zoom + 0.01f) cam.orthographicSize = menu.zoom;
         }
         transform.position = cameraPos;
+
+        if (ticker > 0)
+        {
+            ticker--;
+            if (ticker % 2 != 0)
+            {
+                shakePos = cameraPos;
+                shakePos.x = UnityEngine.Random.Range(cameraPos.x - 0.5f, cameraPos.x + 0.5f);
+                shakePos.y = UnityEngine.Random.Range(cameraPos.y - 0.5f, cameraPos.y + 0.5f);
+                transform.position = shakePos;
+            }
+        }
     }
 
     public void StartGame()
@@ -188,6 +203,11 @@ public class CameraControl : MonoBehaviour
     public void ResetToMenu()
     {
         state = CameraState.Menu;
+    }
+
+    public void IncreaseTicker(uint number)
+    {
+        ticker = number;
     }
 }
 

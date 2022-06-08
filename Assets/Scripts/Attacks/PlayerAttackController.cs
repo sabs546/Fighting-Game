@@ -310,6 +310,10 @@ public class PlayerAttackController : MonoBehaviour
         else                         p2Physics.GetComponent<HealthManager>().SendDamage(currentAttack.Damage);
         GetComponent<AttackAudioManager>().PlaySound(currentAttack.SoundName);
         timer = currentAttack.Speed.y;
+        if (currentAttack.SoundName == "Heavy_01")
+        {
+            Camera.main.GetComponent<CameraControl>().IncreaseTicker(16);
+        }
     }
 
     private void OnTriggerStay2D(Collider2D collision)

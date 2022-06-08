@@ -9,6 +9,7 @@ public class HealthManager : MonoBehaviour
     public int currentHealth { get; private set; }
     public TMPro.TextMeshProUGUI nameTag;
     public RectTransform healthBar;
+    public RectTransform backBar;
     public GameStateControl gameStateControl;
 
     // Start is called before the first frame update
@@ -20,7 +21,10 @@ public class HealthManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (backBar.localScale.x > healthBar.localScale.x)
+        {
+            backBar.localScale = new Vector3(backBar.localScale.x - (0.1f * Time.deltaTime), 1.0f, 1.0f);
+        }
     }
 
     public void SendDamage(int damage)
@@ -53,5 +57,6 @@ public class HealthManager : MonoBehaviour
     {
         currentHealth = maxHealth;
         healthBar.localScale = new Vector3(currentHealth / maxHealth, 1.0f, 1.0f);
+        backBar.localScale = healthBar.localScale;
     }
 }

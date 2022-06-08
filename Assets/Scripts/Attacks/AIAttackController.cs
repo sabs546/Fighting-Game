@@ -250,6 +250,10 @@ public class AIAttackController : MonoBehaviour
         opponentPhysics.GetComponent<HealthManager>().SendDamage(currentAttack.Damage);
         GetComponent<AttackAudioManager>().PlaySound(currentAttack.SoundName);
         timer = currentAttack.Speed.y;
+        if (currentAttack.SoundName == "Heavy_01")
+        {
+            Camera.main.GetComponent<CameraControl>().IncreaseTicker(16);
+        }
     }
 
     public void CancelAttack()
