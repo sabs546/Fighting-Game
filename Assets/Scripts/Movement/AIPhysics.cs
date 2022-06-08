@@ -145,7 +145,7 @@ public class AIPhysics : MonoBehaviour
             if ((opponent.transform.position.x > pos.x && effectiveMovement < 0.0f) ||
                 (opponent.transform.position.x < pos.x && effectiveMovement > 0.0f))
             {
-                if (controller.gState != AIController.GroundStates.Sprint)
+                if (controller.gState != AIController.GroundStates.Sprint && controller.gState != AIController.GroundStates.Dash)
                 {
                     controller.gState = AIController.GroundStates.Backdash;
                 }

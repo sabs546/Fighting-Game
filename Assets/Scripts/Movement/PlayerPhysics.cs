@@ -142,7 +142,7 @@ public class PlayerPhysics : MonoBehaviour
             if ((opponent.transform.position.x > pos.x && effectiveMovement < 0.0f) ||
                 (opponent.transform.position.x < pos.x && effectiveMovement > 0.0f))
             {
-                if (controller.gState != PlayerController.GroundStates.Sprint)
+                if (controller.gState != PlayerController.GroundStates.Sprint && controller.gState != PlayerController.GroundStates.Dash)
                 {
                     controller.gState = PlayerController.GroundStates.Backdash;
                 }

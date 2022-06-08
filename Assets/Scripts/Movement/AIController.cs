@@ -180,6 +180,8 @@ public class AIController : MonoBehaviour
 
         if (attackController.currentAttack == null) return;
 
+        fatigue = aFatigue + attackController.currentAttack.Speed.z;
+
         if (attackController.currentAttack.Followup == null)
         {
             ticker += attackController.currentAttack.Speed.z;
@@ -238,6 +240,7 @@ public class AIController : MonoBehaviour
             forceAttack = false;
             attackController.allowFollowup = false; // todo there's an issue with allowfollowup being stuck on true, I'll fix it later
             SendAttackSignal();
+            return;
         }
 
         // todo This seems inefficient once rushdown, always rushdown right? Might need to come back to this one
@@ -317,6 +320,7 @@ public class AIController : MonoBehaviour
                         {
                             SendMovementSignal(GroundStates.Dash);
                             forceAttack = true;
+                            fatigue = mFatigue;
                         }
                         else
                         {
@@ -329,7 +333,6 @@ public class AIController : MonoBehaviour
                     else
                     {
                         SendAttackSignal();
-                        fatigue = aFatigue;
                         commandHistory.Dequeue();
                         commandHistory.Enqueue(containerAction.SetActionType(2));
                     }
@@ -338,7 +341,6 @@ public class AIController : MonoBehaviour
                 {
                     // So we're within attack range, and we're in the air, we can throw something out
                     SendAttackSignal();
-                    fatigue = aFatigue;
                     commandHistory.Dequeue();
                     commandHistory.Enqueue(containerAction.SetActionType(2));
                 }

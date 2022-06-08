@@ -163,6 +163,7 @@ public class AIAttackController : MonoBehaviour
                 stunLimit = 0;
                 GetComponent<AISpriteManager>().EnableFollowup(false);
                 currentAttack = null;
+                allowFollowup = false;
             }
         }
     }
