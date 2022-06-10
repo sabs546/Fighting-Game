@@ -34,6 +34,9 @@ public class HealthManager : MonoBehaviour
         {
             currentHealth = 0;
             GetComponent<Animator>().SetTrigger("Die");
+            WorldRules.gameSpeed = 0.5f;
+            Camera.main.GetComponent<CameraControl>().StartShake(64, 8, 1.0f);
+            GetComponent<Animator>().speed = WorldRules.gameSpeed;
             gameStateControl.GetComponent<GameStateControl>().SetGameState(GameStateControl.GameState.GameOver);
         }
         if (TryGetComponent(out PlayerAttackController pAttackController))
@@ -56,6 +59,8 @@ public class HealthManager : MonoBehaviour
     public void ResetHealth()
     {
         currentHealth = maxHealth;
+        WorldRules.gameSpeed = 1.0f;
+        GetComponent<Animator>().speed = WorldRules.gameSpeed;
         healthBar.localScale = new Vector3(currentHealth / maxHealth, 1.0f, 1.0f);
         backBar.localScale = healthBar.localScale;
     }

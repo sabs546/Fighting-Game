@@ -67,7 +67,7 @@ public class AIPhysics : MonoBehaviour
         
         controller.aState = effectiveGravity < 0.0f ? AIController.AirStates.Rising : AIController.AirStates.Falling;      // Check if you're rising or falling
 
-        pos.y -= effectiveGravity;                                                                                         // Gravity acting
+        pos.y -= effectiveGravity * WorldRules.gameSpeed;                                                                  // Gravity acting
         // Hitting the floor
         if (pos.y - effectiveGravity < effectiveMinHeight)
         {
@@ -187,7 +187,7 @@ public class AIPhysics : MonoBehaviour
         // --------------------------------------------------------
         // - Collision -
         // -------
-        pos.x += effectiveMovement;
+        pos.x += effectiveMovement * WorldRules.gameSpeed;
 
         // --------------------------------------------------------
         // - Walls -

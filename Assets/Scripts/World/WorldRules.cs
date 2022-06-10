@@ -11,6 +11,7 @@ public class WorldRules : MonoBehaviour
     public static int   physicsRate = 60;    // The FPS that the logic should flow at
     public static bool  PvP         = false; // Is 2 players enabled
     public static float volume      = 1.0f;  // For the volume slider
+    public static float gameSpeed   = 1.0f;  // Changes the speed of the game
 
     private void Start()
     {

@@ -75,7 +75,7 @@ public class PlayerPhysics : MonoBehaviour
             controller.pState = PlayerController.PlayerStates.Airborne;
         }
 
-        pos.y -= effectiveGravity;                                                                                                 // Gravity acting
+        pos.y -= effectiveGravity * WorldRules.gameSpeed;                                                                          // Gravity acting
         // Hitting the floor
         if (pos.y - effectiveGravity < effectiveMinHeight)
         {
@@ -178,7 +178,7 @@ public class PlayerPhysics : MonoBehaviour
         // --------------------------------------------------------
         // - Collision -
         // -------
-        pos.x += effectiveMovement;
+        pos.x += effectiveMovement * WorldRules.gameSpeed;
 
         // --------------------------------------------------------
         // - Walls -

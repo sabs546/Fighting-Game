@@ -252,7 +252,7 @@ public class AIAttackController : MonoBehaviour
         timer = currentAttack.Speed.y;
         if (currentAttack.SoundName == "Heavy_01")
         {
-            Camera.main.GetComponent<CameraControl>().IncreaseTicker(16);
+            Camera.main.GetComponent<CameraControl>().StartShake(16, 2, 0.5f);
         }
     }
 

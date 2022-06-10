@@ -35,6 +35,8 @@ public class CameraControl : MonoBehaviour
     private float xDistance;       // Player to player X distance
     private float yDistance;       // Player to player Y distance
     private uint  ticker;          // Timer used to count frames for the camera shake
+    private uint  shakeSpeed;      // How fast the camera shakes (Less is faster)
+    private float shakePower;      // How far the camera shakes
 
     // Start is called before the first frame update
     void Start()
@@ -184,11 +186,12 @@ public class CameraControl : MonoBehaviour
         if (ticker > 0)
         {
             ticker--;
-            if (ticker % 2 != 0)
+            if (ticker % shakeSpeed != 0)
             {
                 shakePos = cameraPos;
-                shakePos.x = UnityEngine.Random.Range(cameraPos.x - 0.5f, cameraPos.x + 0.5f);
-                shakePos.y = UnityEngine.Random.Range(cameraPos.y - 0.5f, cameraPos.y + 0.5f);
+                shakePos.x = UnityEngine.Random.Range(cameraPos.x - shakePower, cameraPos.x + shakePower);
+                shakePos.y = UnityEngine.Random.Range(cameraPos.y - shakePower, cameraPos.y + shakePower);
+                shakePower *= 0.9f; // Slowly null it down to the centre
                 transform.position = shakePos;
             }
         }
@@ -205,9 +208,11 @@ public class CameraControl : MonoBehaviour
         state = CameraState.Menu;
     }
 
-    public void IncreaseTicker(uint number)
+    public void StartShake(uint length, uint speed, float power)
     {
-        ticker = number;
+        ticker = length;
+        shakeSpeed = speed;
+        shakePower = power;
     }
 }
 
