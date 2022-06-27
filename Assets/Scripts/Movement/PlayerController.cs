@@ -53,15 +53,15 @@ public class PlayerController : MonoBehaviour
 
         if (controls.type == SetControls.ControllerType.Keyboard)
         {
-            up = Input.GetKeyDown(controls.Up) != up;
-            down = Input.GetKeyDown(controls.Down) != down;
-            left = Input.GetKeyDown(controls.Left) != left;
-            right = Input.GetKeyDown(controls.Right) != right;
+            up = Input.GetKeyDown(controls.keyboardControls.Up) != up;
+            down = Input.GetKeyDown(controls.keyboardControls.Down) != down;
+            left = Input.GetKeyDown(controls.keyboardControls.Left) != left;
+            right = Input.GetKeyDown(controls.keyboardControls.Right) != right;
 
-            rUp = Input.GetKeyUp(controls.Up) != rUp;
-            rDown = Input.GetKeyUp(controls.Down) != rDown;
-            rLeft = Input.GetKeyUp(controls.Left) != rLeft;
-            rRight = Input.GetKeyUp(controls.Right) != rRight;
+            rUp = Input.GetKeyUp(controls.keyboardControls.Up) != rUp;
+            rDown = Input.GetKeyUp(controls.keyboardControls.Down) != rDown;
+            rLeft = Input.GetKeyUp(controls.keyboardControls.Left) != rLeft;
+            rRight = Input.GetKeyUp(controls.keyboardControls.Right) != rRight;
         }
         else if (controls.type == SetControls.ControllerType.Controller)
         {
@@ -195,17 +195,35 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyUp(controls.Punch))
+        if (controls.type == SetControls.ControllerType.Keyboard)
         {
-            attackController.sendPunch = true;
+            if (Input.GetKeyUp(controls.keyboardControls.Punch))
+            {
+                attackController.sendPunch = true;
+            }
+            else if (Input.GetKeyUp(controls.keyboardControls.Kick))
+            {
+                attackController.sendKick = true;
+            }
+            else if (Input.GetKeyUp(controls.keyboardControls.Throw))
+            {
+                attackController.sendThrow = true;
+            }
         }
-        else if (Input.GetKeyUp(controls.Kick))
+        else
         {
-            attackController.sendKick = true;
-        }
-        else if (Input.GetKeyUp(controls.Throw))
-        {
-            attackController.sendThrow = true;
+            if (Input.GetKeyUp(controls.gamepadControls.Punch))
+            {
+                attackController.sendPunch = true;
+            }
+            else if (Input.GetKeyUp(controls.gamepadControls.Kick))
+            {
+                attackController.sendKick = true;
+            }
+            else if (Input.GetKeyUp(controls.gamepadControls.Throw))
+            {
+                attackController.sendThrow = true;
+            }
         }
     }
 }

@@ -26,6 +26,10 @@ public class PlayerAttackController : MonoBehaviour
     public  int  stunLimit;            // How long the stun lasts
     public  bool enableLowAttacks;     // Unlock crouch attacks
 
+    private bool rp;
+    private bool rk;
+    private bool rt;
+
     // Input registering
     [HideInInspector]
     public  bool sendPunch;
@@ -67,7 +71,7 @@ public class PlayerAttackController : MonoBehaviour
             if (sendPunch)
             {
                 sendPunch = false;
-                currentAttack = FindAttack(controls.Punch);
+                currentAttack = FindAttack(controls.keyboardControls.Punch);
                 if (currentAttack != null)
                 {
                     if (sprite.flipX) { currentAttack.SideSwap(); }
@@ -78,7 +82,7 @@ public class PlayerAttackController : MonoBehaviour
             else if (sendKick)
             {
                 sendKick = false;
-                currentAttack = FindAttack(controls.Kick);
+                currentAttack = FindAttack(controls.keyboardControls.Kick);
                 if (currentAttack != null)
                 {
                     if (sprite.flipX) { currentAttack.SideSwap(); }
@@ -89,7 +93,7 @@ public class PlayerAttackController : MonoBehaviour
             else if (sendThrow)
             {
                 sendThrow = false;
-                currentAttack = FindAttack(controls.Throw);
+                currentAttack = FindAttack(controls.keyboardControls.Throw);
                 if (currentAttack != null)
                 {
                     if (sprite.flipX) { currentAttack.SideSwap(); }
@@ -219,13 +223,13 @@ public class PlayerAttackController : MonoBehaviour
                 switch (controller.gState)
                 {
                     case PlayerController.GroundStates.Dash:
-                        if (attackType == controls.Punch) { return new DashPunch(); }
-                        if (attackType == controls.Kick) { return new DashKick(); }
-                        if (attackType == controls.Throw) { return new DashThrow(); }
+                        if (attackType == controls.keyboardControls.Punch) { return new DashPunch(); }
+                        if (attackType == controls.keyboardControls.Kick) { return new DashKick(); }
+                        if (attackType == controls.keyboardControls.Throw) { return new DashThrow(); }
                         break;
                     case PlayerController.GroundStates.Sprint:
-                        if (attackType == controls.Punch) { return new SprintPunch(); }
-                        if (attackType == controls.Kick) { return new SprintKick(); }
+                        if (attackType == controls.keyboardControls.Punch) { return new SprintPunch(); }
+                        if (attackType == controls.keyboardControls.Kick) { return new SprintKick(); }
                         break;
                 }
                 break;
@@ -234,16 +238,16 @@ public class PlayerAttackController : MonoBehaviour
                 switch (controller.aState)
                 {
                     case PlayerController.AirStates.Rising:
-                        if (attackType == controls.Punch) { return new RisingPunch(); }
+                        if (attackType == controls.keyboardControls.Punch) { return new RisingPunch(); }
                         break;
                     case PlayerController.AirStates.Falling:
-                        if (attackType == controls.Kick) { return new FallingKick(); }
+                        if (attackType == controls.keyboardControls.Kick) { return new FallingKick(); }
                         break;
                 }
                 break;
 
             case PlayerController.PlayerStates.Crouching:
-                if (attackType == controls.Kick) { return new SlideKick(); }
+                if (attackType == controls.keyboardControls.Kick) { return new SlideKick(); }
                 break;
         }
         return null;

@@ -143,6 +143,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2917d09fb564a6142946d071cc6e4dc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentInput: 0
 --- !u!114 &3446603169683583236
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -156,6 +157,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
+  keyboardControls:
+    Up: 119
+    Down: 115
+    Left: 97
+    Right: 100
+    Punch: 117
+    Kick: 105
+    Throw: 111
+  gamepadControls:
+    Punch: 350
+    Kick: 352
+    Throw: 351
   Up: 119
   Down: 115
   Left: 97

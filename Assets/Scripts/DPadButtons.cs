@@ -5,12 +5,15 @@ using UnityEngine;
 public class DPadButtons : MonoBehaviour
 {
     public enum Inputs { None, Up, Down, Left, Right };
+    [HideInInspector]
     public Inputs currentInput;
 
     private float lastX;
     private float lastY;
     private float currentX;
     private float currentY;
+
+    private bool useController2;
 
     // Start is called before the first frame update
     void Start()
@@ -21,14 +24,25 @@ public class DPadButtons : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (useController2)
+        {
+            currentX = Input.GetAxisRaw("DPadX2");
+            currentY = Input.GetAxisRaw("DPadY2");
+        }
+        else
+        {
+            currentX = Input.GetAxisRaw("DPadX");
+            currentY = Input.GetAxisRaw("DPadY");
+        }
+    }
+
+    public void SwapControllerNumber(bool setting)
+    {
+        useController2 = setting;
     }
 
     public Inputs DPadDown()
     {
-        currentX = Input.GetAxisRaw("DPadX");
-        currentY = Input.GetAxisRaw("DPadY");
-
         if (currentY == 1.0f && lastY != 1.0f)
         {
             return Inputs.Up;
@@ -50,9 +64,6 @@ public class DPadButtons : MonoBehaviour
 
     public Inputs DPadUp()
     {
-        currentX = Input.GetAxisRaw("DPadX");
-        currentY = Input.GetAxisRaw("DPadY");
-
         if (currentY != 1.0f && lastY == 1.0f)
         {
             return Inputs.Up;
