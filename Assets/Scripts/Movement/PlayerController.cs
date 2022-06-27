@@ -4,13 +4,26 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Movement")]
     public float sprint;
     public float dashDistance;
     public float jumpPower;
 
+    [Header("Inputs")]
+    private bool up;
+    private bool down;
+    private bool left;
+    private bool right;
+    private bool rUp;
+    private bool rDown;
+    private bool rLeft;
+    private bool rRight;
+    private DPadButtons dpadInputs;
+
     public enum PlayerStates { Crouching, Grounded, Airborne };
     public enum GroundStates { Neutral, Dash, Backdash, Sprint, Stun };
     public enum AirStates    { Rising, Falling };
+    [Header("States")]
     public PlayerStates pState;
     public GroundStates gState;
     public AirStates    aState;
@@ -18,6 +31,7 @@ public class PlayerController : MonoBehaviour
     public enum Side { Left, Right };
     public Side currentSide;
 
+    [Header("Components")]
     private SetControls controls;
     private PlayerPhysics physics;
     private PlayerAttackController attackController;
@@ -28,11 +42,65 @@ public class PlayerController : MonoBehaviour
         controls = GetComponent<SetControls>();
         physics = GetComponent<PlayerPhysics>();
         attackController = GetComponent<PlayerAttackController>();
+        dpadInputs = GetComponent<DPadButtons>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        up = down = left = right = false;
+        rUp = rDown = rLeft = rRight = false;
+
+        if (controls.type == SetControls.ControllerType.Keyboard)
+        {
+            up = Input.GetKeyDown(controls.Up) != up;
+            down = Input.GetKeyDown(controls.Down) != down;
+            left = Input.GetKeyDown(controls.Left) != left;
+            right = Input.GetKeyDown(controls.Right) != right;
+
+            rUp = Input.GetKeyUp(controls.Up) != rUp;
+            rDown = Input.GetKeyUp(controls.Down) != rDown;
+            rLeft = Input.GetKeyUp(controls.Left) != rLeft;
+            rRight = Input.GetKeyUp(controls.Right) != rRight;
+        }
+        else if (controls.type == SetControls.ControllerType.Controller)
+        {
+            switch (dpadInputs.DPadDown())
+            {
+                case DPadButtons.Inputs.Up:
+                    up = true;
+                    break;
+                case DPadButtons.Inputs.Down:
+                    down = true;
+                    break;
+                case DPadButtons.Inputs.Left:
+                    left = true;
+                    break;
+                case DPadButtons.Inputs.Right:
+                    right = true;
+                    break;
+                case DPadButtons.Inputs.None:
+                    switch (dpadInputs.DPadUp())
+                    {
+                        case DPadButtons.Inputs.Up:
+                            rUp = true;
+                            break;
+                        case DPadButtons.Inputs.Down:
+                            rDown = true;
+                            break;
+                        case DPadButtons.Inputs.Left:
+                            rLeft = true;
+                            break;
+                        case DPadButtons.Inputs.Right:
+                            rRight = true;
+                            break;
+                    }
+                    break;
+            }
+
+            dpadInputs.ClearInputs();
+        }
+
         // --------------------------------------------------------
         // - Movement Inputs -
         // -------
@@ -53,7 +121,7 @@ public class PlayerController : MonoBehaviour
             }
 
             // Sprint attacks need to still cancel
-            if ((Input.GetKeyUp(controls.Left) || Input.GetKeyUp(controls.Right)) && gState != GroundStates.Neutral)
+            if ((left || right) && gState != GroundStates.Neutral)
             {
                 physics.startSprint = false;
                 physics.travel = 0.0f;
@@ -61,12 +129,12 @@ public class PlayerController : MonoBehaviour
         }
         else if (pState == PlayerStates.Grounded && gState != GroundStates.Stun)
         {
-            if (Input.GetKeyDown(controls.Up))
+            if (up)
             {
                 physics.launch += jumpPower;
             }
 
-            if (Input.GetKeyDown(controls.Down))
+            if (down)
             {
                 if (gState == GroundStates.Dash)
                 {
@@ -74,58 +142,52 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-            if (Input.GetKeyDown(controls.Left) && gState == GroundStates.Neutral)
+            if (left && gState == GroundStates.Neutral)
             {
                 physics.travel -= dashDistance;
             }
-            else if (Input.GetKeyDown(controls.Left) && gState != GroundStates.Neutral)
+            else if (left && gState != GroundStates.Neutral)
             {
                 physics.startSprint = true;
                 physics.travel = -sprint;
             }
-            else if (Input.GetKeyUp(controls.Left) && gState != GroundStates.Neutral)
+            else if (rLeft && gState != GroundStates.Neutral)
             {
                 physics.startSprint = false;
                 physics.travel = 0.0f;
             }
 
-            if (Input.GetKeyDown(controls.Right) && gState == GroundStates.Neutral)
+            if (right && gState == GroundStates.Neutral)
             {
                 physics.travel += dashDistance;
             }
-            else if (Input.GetKeyDown(controls.Right) && gState != GroundStates.Neutral)
+            else if (right && gState != GroundStates.Neutral)
             {
                 physics.startSprint = true;
                 physics.travel = sprint;
             }
-            else if (Input.GetKeyUp(controls.Right) && gState != GroundStates.Neutral)
+            else if (rRight && gState != GroundStates.Neutral)
             {
                 physics.startSprint = false;
                 physics.travel = 0.0f;
-            }
-
-            // For missed input ups
-            if (gState == GroundStates.Sprint && !Input.GetKey(controls.Left) && !Input.GetKey(controls.Right))
-            {
-                physics.startSprint = false;
             }
         }
         else if (pState == PlayerStates.Airborne)
         {
             if (gState == GroundStates.Sprint)
             {
-                if (Input.GetKeyDown(controls.Left) && physics.airLock == -1)
+                if (left && physics.airLock == -1)
                 {
                     physics.startSprint = true;
                     physics.travel = -sprint;
                 }
-                else if (Input.GetKeyDown(controls.Right) && physics.airLock == 1)
+                else if (right && physics.airLock == 1)
                 {
                     physics.startSprint = true;
                     physics.travel = sprint;
                 }
 
-                if (Input.GetKeyUp(controls.Left) || Input.GetKeyUp(controls.Right))
+                if (rLeft || rRight)
                 {
                     physics.startSprint = false;
                     physics.travel = 0.0f;

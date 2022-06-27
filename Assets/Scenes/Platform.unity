@@ -7901,6 +7901,46 @@ PrefabInstance:
       propertyPath: hitSpark
       value: 
       objectReference: {fileID: 1320201745}
+    - target: {fileID: 3446603169683583236, guid: 6434817484d6de149b311f7a3b81cea1,
+        type: 3}
+      propertyPath: Up
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3446603169683583236, guid: 6434817484d6de149b311f7a3b81cea1,
+        type: 3}
+      propertyPath: Down
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3446603169683583236, guid: 6434817484d6de149b311f7a3b81cea1,
+        type: 3}
+      propertyPath: Punch
+      value: 330
+      objectReference: {fileID: 0}
+    - target: {fileID: 3446603169683583236, guid: 6434817484d6de149b311f7a3b81cea1,
+        type: 3}
+      propertyPath: Kick
+      value: 332
+      objectReference: {fileID: 0}
+    - target: {fileID: 3446603169683583236, guid: 6434817484d6de149b311f7a3b81cea1,
+        type: 3}
+      propertyPath: Throw
+      value: 331
+      objectReference: {fileID: 0}
+    - target: {fileID: 3446603169683583236, guid: 6434817484d6de149b311f7a3b81cea1,
+        type: 3}
+      propertyPath: Left
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3446603169683583236, guid: 6434817484d6de149b311f7a3b81cea1,
+        type: 3}
+      propertyPath: Right
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3446603169683583236, guid: 6434817484d6de149b311f7a3b81cea1,
+        type: 3}
+      propertyPath: type
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3446603169683583238, guid: 6434817484d6de149b311f7a3b81cea1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -7996,6 +8036,11 @@ PrefabInstance:
       propertyPath: backBar
       value: 
       objectReference: {fileID: 1102039674}
+    - target: {fileID: 9091546037705337984, guid: 6434817484d6de149b311f7a3b81cea1,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6434817484d6de149b311f7a3b81cea1, type: 3}
 --- !u!114 &1313757047 stripped
@@ -11657,6 +11702,46 @@ PrefabInstance:
       propertyPath: hitSpark
       value: 
       objectReference: {fileID: 151701392}
+    - target: {fileID: 3446603169683583236, guid: 501d13d989524664884280d2b151037e,
+        type: 3}
+      propertyPath: keyboardInputs.Up
+      value: 119
+      objectReference: {fileID: 0}
+    - target: {fileID: 3446603169683583236, guid: 501d13d989524664884280d2b151037e,
+        type: 3}
+      propertyPath: keyboardInputs.Down
+      value: 115
+      objectReference: {fileID: 0}
+    - target: {fileID: 3446603169683583236, guid: 501d13d989524664884280d2b151037e,
+        type: 3}
+      propertyPath: keyboardInputs.Left
+      value: 97
+      objectReference: {fileID: 0}
+    - target: {fileID: 3446603169683583236, guid: 501d13d989524664884280d2b151037e,
+        type: 3}
+      propertyPath: keyboardInputs.Right
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 3446603169683583236, guid: 501d13d989524664884280d2b151037e,
+        type: 3}
+      propertyPath: keyboardInputs.Punch
+      value: 117
+      objectReference: {fileID: 0}
+    - target: {fileID: 3446603169683583236, guid: 501d13d989524664884280d2b151037e,
+        type: 3}
+      propertyPath: keyboardInputs.Kick
+      value: 105
+      objectReference: {fileID: 0}
+    - target: {fileID: 3446603169683583236, guid: 501d13d989524664884280d2b151037e,
+        type: 3}
+      propertyPath: keyboardInputs.Throw
+      value: 111
+      objectReference: {fileID: 0}
+    - target: {fileID: 3446603169683583236, guid: 501d13d989524664884280d2b151037e,
+        type: 3}
+      propertyPath: controllerTestButton
+      value: 330
+      objectReference: {fileID: 0}
     - target: {fileID: 3446603169683583238, guid: 501d13d989524664884280d2b151037e,
         type: 3}
       propertyPath: m_LocalPosition.x

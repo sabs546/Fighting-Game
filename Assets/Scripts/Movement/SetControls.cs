@@ -16,16 +16,4 @@ public class SetControls : MonoBehaviour
     public KeyCode Punch;
     public KeyCode Kick;
     public KeyCode Throw;
-
-    public void DisableKeyboard()
-    {
-        Up = KeyCode.None;
-        Down = KeyCode.None;
-        Left = KeyCode.None;
-        Right = KeyCode.None;
-
-        Punch = KeyCode.None;
-        Kick = KeyCode.None;
-        Throw = KeyCode.None;
-    }
 }

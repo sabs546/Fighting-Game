@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3446603169683583239}
   - component: {fileID: 3446603169683583240}
   - component: {fileID: 3446603169683583358}
+  - component: {fileID: 9091546037705337984}
   - component: {fileID: 3446603169683583236}
   - component: {fileID: 3446603169683583237}
   - component: {fileID: 3446603169683583235}
@@ -126,7 +127,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
+  nameTag: {fileID: 0}
   healthBar: {fileID: 0}
+  backBar: {fileID: 0}
+  gameStateControl: {fileID: 0}
+--- !u!114 &9091546037705337984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3446603169683583241}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2917d09fb564a6142946d071cc6e4dc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &3446603169683583236
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -185,6 +201,9 @@ MonoBehaviour:
   hitSpark: {fileID: 0}
   stunLimit: 0
   enableLowAttacks: 0
+  sendPunch: 0
+  sendKick: 0
+  sendThrow: 0
 --- !u!114 &3446603169683583232
 MonoBehaviour:
   m_ObjectHideFlags: 0
