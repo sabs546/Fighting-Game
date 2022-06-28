@@ -43,8 +43,8 @@ public class PlayerAttackController : MonoBehaviour
     {
         controller = GetComponent<PlayerController>();
         controls = GetComponent<SetControls>();
-        currentAttack = new BaseAttack();
-        nextAttack = new BaseAttack();
+        currentAttack = null;
+        nextAttack = null;
         sprite = GetComponent<SpriteRenderer>();
         state = AttackState.Empty;
         timer = 0;
@@ -230,6 +230,7 @@ public class PlayerAttackController : MonoBehaviour
                     case PlayerController.GroundStates.Sprint:
                         if (attackType == controls.keyboardControls.Punch) { return new SprintPunch(); }
                         if (attackType == controls.keyboardControls.Kick) { return new SprintKick(); }
+                        if (attackType == controls.keyboardControls.Throw) { return new SprintThrow(); }
                         break;
                 }
                 break;
