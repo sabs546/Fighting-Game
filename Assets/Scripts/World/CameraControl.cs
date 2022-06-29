@@ -167,19 +167,26 @@ public class CameraControl : MonoBehaviour
         }
         else if (gameStateControl.gameState == GameStateControl.GameState.Menu)
         {
-            if (cam.orthographicSize > menu.zoom)
+            if (cam.orthographicSize != menu.zoom || cameraPos.y != menu.height)
             {
-                cam.orthographicSize -= growSpeed / WorldRules.physicsRate;
-                cam.transform.localScale -= new Vector3(zoomSpeed / WorldRules.physicsRate, zoomSpeed / WorldRules.physicsRate, 0.0f);
-            }
-            else if (cam.orthographicSize < menu.zoom)
-            {
-                cam.orthographicSize += growSpeed / WorldRules.physicsRate;
-                cam.transform.localScale += new Vector3(zoomSpeed / WorldRules.physicsRate, zoomSpeed / WorldRules.physicsRate, 0.0f);
-            }
+                if (cam.orthographicSize > menu.zoom)
+                {
+                    cam.orthographicSize -= growSpeed / WorldRules.physicsRate;
+                    cam.transform.localScale -= new Vector3(zoomSpeed / WorldRules.physicsRate, zoomSpeed / WorldRules.physicsRate, 0.0f);
+                }
+                else if (cam.orthographicSize < menu.zoom)
+                {
+                    cam.orthographicSize += growSpeed / WorldRules.physicsRate;
+                    cam.transform.localScale += new Vector3(zoomSpeed / WorldRules.physicsRate, zoomSpeed / WorldRules.physicsRate, 0.0f);
+                }
 
-            cameraPos.y = menu.height;
-            if (cam.orthographicSize > menu.zoom - 0.01f && cam.orthographicSize < menu.zoom + 0.01f) cam.orthographicSize = menu.zoom;
+                cameraPos.y = menu.height;
+                if (cam.orthographicSize > menu.zoom - 0.01f && cam.orthographicSize < menu.zoom + 0.01f)
+                {
+                    menuScreen.GetComponent<MenuController>().menuBlock.interactable = true;
+                    cam.orthographicSize = menu.zoom;
+                }
+            }
         }
         transform.position = cameraPos;
 

@@ -127,11 +127,6 @@ public class AIController : MonoBehaviour
 
         if (attackController.allowFollowup)
         {
-            if (attackController.currentAttack == null || attackController.currentAttack.Followup == null)
-            {
-                Debug.Log("Something wrong with the current attack?");
-                return;
-            }
             attackController.currentAttack = attackController.currentAttack.Followup;
             return;
         }
@@ -203,6 +198,11 @@ public class AIController : MonoBehaviour
         if (GetComponent<HealthManager>().currentHealth <= 0)
         {
             return;
+        }
+
+        if (attackController.currentAttack == null)
+        {
+            attackController.allowFollowup = false;
         }
 
         // todo This seems inefficient once rushdown, always rushdown right? Might need to come back to this one

@@ -7,7 +7,7 @@ public class MenuController : MonoBehaviour
 {
     public GameObject originalText;
     public GameObject newText;
-    public GameObject menuBlock;
+    public Button menuBlock;
     private RectTransform rect;
     private Vector3 pos;
     public float[] pageHeight;
@@ -19,6 +19,7 @@ public class MenuController : MonoBehaviour
     void Start()
     {
         rect = menuBlock.GetComponent<RectTransform>();
+        GetComponent<AudioSource>().volume = WorldRules.volume / 100.0f;
     }
 
     // Update is called once per frame
@@ -51,6 +52,7 @@ public class MenuController : MonoBehaviour
                     pos.y = pageHeight[0];
                     changePage = false;
                     currentPage = 0;
+                    menuBlock.interactable = true;
                 }
             }
             rect.anchoredPosition = pos;
@@ -64,13 +66,17 @@ public class MenuController : MonoBehaviour
         {
             originalText.SetActive(false);
             newText.SetActive(true);
-            menuBlock.GetComponent<Button>().interactable = false;
+            menuBlock.interactable = false;
         }
         if (currentPage == 1)
         {
             originalText.SetActive(true);
             newText.SetActive(false);
-            menuBlock.GetComponent<Button>().interactable = true;
         }
+    }
+
+    public void ChangeVolume()
+    {
+        GetComponent<AudioSource>().volume = WorldRules.volume / 100.0f;
     }
 }
