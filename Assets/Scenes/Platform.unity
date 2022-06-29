@@ -1520,6 +1520,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 546bd09f6c7f1ce4db284659244cd816, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &353790530 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3446603169683583240, guid: 501d13d989524664884280d2b151037e,
+    type: 3}
+  m_PrefabInstance: {fileID: 3446603170035260223}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 353790518}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7ae9c1af033be14c8806f7d05bf756d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &353790532 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7360938161609387033, guid: 501d13d989524664884280d2b151037e,
@@ -1567,8 +1579,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 818.91, y: -597}
-  m_SizeDelta: {x: 222.8819, y: 44.02156}
+  m_AnchoredPosition: {x: 652.5, y: -597}
+  m_SizeDelta: {x: 135.54651, y: 44.02156}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &358759129
 MonoBehaviour:
@@ -3597,9 +3609,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 353790526}
-        m_MethodName: SwapOpponentType
-        m_Mode: 1
+      - m_Target: {fileID: 519420030}
+        m_MethodName: SetPvP
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -3608,12 +3620,12 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 353790526}
-        m_MethodName: SwapOpponentType
-        m_Mode: 1
+      - m_Target: {fileID: 353790530}
+        m_MethodName: SetOpponentType
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 429183485}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -3876,13 +3888,13 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 714057237}
-    characterCount: 8
+    characterCount: 0
     spriteCount: 0
     spaceCount: 0
-    wordCount: 1
+    wordCount: 0
     linkCount: 0
-    lineCount: 1
-    pageCount: 1
+    lineCount: 0
+    pageCount: 0
     materialCount: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
@@ -4197,8 +4209,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 129.53, y: -597}
-  m_SizeDelta: {x: 231.17773, y: 44.02156}
+  m_AnchoredPosition: {x: 105.6001, y: -597}
+  m_SizeDelta: {x: 183.38702, y: 44.02156}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &765932557
 MonoBehaviour:
@@ -6402,7 +6414,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -320.14, y: -92.56702}
+  m_AnchoredPosition: {x: -320.14, y: -92.566895}
   m_SizeDelta: {x: 549.28925, y: 32.09973}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1036918135
@@ -7078,7 +7090,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 1313757046}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1108586755}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2917d09fb564a6142946d071cc6e4dc3, type: 3}
   m_Name: 
@@ -7438,9 +7450,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 353790526}
-        m_MethodName: SwapOpponentType
-        m_Mode: 1
+      - m_Target: {fileID: 519420030}
+        m_MethodName: SetPvP
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -7449,12 +7461,12 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 353790526}
-        m_MethodName: SwapOpponentType
-        m_Mode: 1
+      - m_Target: {fileID: 353790530}
+        m_MethodName: SetOpponentType
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 1108586755}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -9015,7 +9027,7 @@ PrefabInstance:
     - target: {fileID: 9091546037705337984, guid: 6434817484d6de149b311f7a3b81cea1,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6434817484d6de149b311f7a3b81cea1, type: 3}
@@ -9181,8 +9193,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 591.88, y: -597}
-  m_SizeDelta: {x: 231.17773, y: 44.02156}
+  m_AnchoredPosition: {x: 469.3, y: -597}
+  m_SizeDelta: {x: 181.17773, y: 44.02156}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1376600206
 MonoBehaviour:
@@ -11784,8 +11796,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 360.7, y: -597}
-  m_SizeDelta: {x: 231.17773, y: 44.02156}
+  m_AnchoredPosition: {x: 288.4, y: -597}
+  m_SizeDelta: {x: 133.32062, y: 44.02156}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1851701429
 MonoBehaviour:
@@ -12920,7 +12932,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2080210610}
-  m_LocalRotation: {x: -0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: -1, y: 1, z: 1}
   m_Children: []
@@ -13021,13 +13033,13 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 2080210612}
-    characterCount: 6
+    characterCount: 0
     spriteCount: 0
     spaceCount: 0
-    wordCount: 1
+    wordCount: 0
     linkCount: 0
-    lineCount: 1
-    pageCount: 1
+    lineCount: 0
+    pageCount: 0
     materialCount: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
