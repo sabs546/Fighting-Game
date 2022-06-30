@@ -248,6 +248,7 @@ public class PlayerAttackController : MonoBehaviour
                 break;
 
             case PlayerController.PlayerStates.Crouching:
+                if (attackType == controls.keyboardControls.Punch) { return new CrouchPunch(); }
                 if (attackType == controls.keyboardControls.Kick) { return new SlideKick(); }
                 break;
         }

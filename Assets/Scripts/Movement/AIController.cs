@@ -134,7 +134,7 @@ public class AIController : MonoBehaviour
         switch (pState)
         {
             case PlayerStates.Crouching:
-                attackController.currentAttack = attackController.FindAttack(BaseAttack.AttackType.Kick);
+                attackController.currentAttack = attackController.FindAttack((BaseAttack.AttackType)UnityEngine.Random.Range(1, 3));
                 break;
             case PlayerStates.Grounded:
                 switch (gState)

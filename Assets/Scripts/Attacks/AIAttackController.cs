@@ -201,6 +201,7 @@ public class AIAttackController : MonoBehaviour
                 break;
 
             case AIController.PlayerStates.Crouching:
+                if (attackType == BaseAttack.AttackType.Punch) { return new CrouchPunch(); }
                 if (attackType == BaseAttack.AttackType.Kick) { return new SlideKick(); }
                 break;
         }
