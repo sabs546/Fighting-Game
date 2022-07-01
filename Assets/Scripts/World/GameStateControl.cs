@@ -119,4 +119,9 @@ public class GameStateControl : MonoBehaviour
     {
         SetGameState(GameState.Menu);
     }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
 }
