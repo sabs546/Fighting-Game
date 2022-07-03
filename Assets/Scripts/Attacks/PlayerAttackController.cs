@@ -270,6 +270,8 @@ public class PlayerAttackController : MonoBehaviour
             return;
         }
 
+        bool blocked = false;
+
         // Weight stuff
         physics.launch -= currentAttack.Recoil.y / WorldRules.physicsRate;
         if (p2Physics == null)
@@ -299,33 +301,59 @@ public class PlayerAttackController : MonoBehaviour
         
         if (!WorldRules.PvP)
         {
-            // I'm gonna nest it, sue me
-            if (opponentPhysics.GetComponent<AIController>().pState == AIController.PlayerStates.Grounded)
+            if (opponentPhysics.GetComponent<AIController>().gState == AIController.GroundStates.Backdash)
+            {
+                blocked = true;
+            }
+            else
             {
                 opponentPhysics.GetComponent<AIAttackController>().stunLimit = currentAttack.Stun;
             }
         }
-        else if (p2Physics.GetComponent<PlayerController>().pState == PlayerController.PlayerStates.Grounded)
+        else
         {
-            p2Physics.GetComponent<PlayerAttackController>().stunLimit = currentAttack.Stun;
+            if (p2Physics.GetComponent<PlayerController>().gState == PlayerController.GroundStates.Backdash)
+            {
+                blocked = true;
+            }
+            else
+            {
+                p2Physics.GetComponent<PlayerAttackController>().stunLimit = currentAttack.Stun;
+            }
         }
 
         // Hitspark stuff
-        Vector2 sparkPos = new Vector2(transform.position.x + (!sprite.flipX ? transform.lossyScale.x : -transform.lossyScale.x), transform.position.y);
-        if (currentAttack.SparkType == HitSparkManager.SparkType.Launch)
+        if (blocked)
         {
-            sparkPos.y += transform.lossyScale.y * 0.5f;
-        }
-        hitSpark.CreateHitSpark(currentAttack.SparkType, sparkPos.x, sparkPos.y, !sprite.flipX, physics.travel, controller.pState);
+            Vector2 sparkPos = new Vector2(transform.position.x + (!sprite.flipX ? transform.lossyScale.x : -transform.lossyScale.x), transform.position.y);
+            if (currentAttack.SparkType == HitSparkManager.SparkType.Launch)
+            {
+                sparkPos.y += transform.lossyScale.y * 0.5f;
+            }
+            hitSpark.CreateHitSpark(currentAttack.SparkType, sparkPos.x, sparkPos.y, !sprite.flipX, physics.travel, controller.pState);
 
-        // Other stuff
-        if (p2Physics == null) opponentPhysics.GetComponent<HealthManager>().SendDamage(currentAttack.Damage);
-        else                         p2Physics.GetComponent<HealthManager>().SendDamage(currentAttack.Damage);
-        GetComponent<AttackAudioManager>().PlaySound(currentAttack.SoundName);
-        timer = currentAttack.Speed.y;
-        if (currentAttack.SoundName == "Heavy_01")
+            // Other stuff
+            if (p2Physics == null) opponentPhysics.GetComponent<HealthManager>().SendDamage(currentAttack.Damage);
+            else p2Physics.GetComponent<HealthManager>().SendDamage(currentAttack.Damage);
+            GetComponent<AttackAudioManager>().PlaySound(currentAttack.SoundName);
+            timer = currentAttack.Speed.y;
+            if (currentAttack.SoundName == "Heavy_01")
+            {
+                Camera.main.GetComponent<CameraControl>().StartShake(16, 2, 0.5f);
+            }
+        }
+        else
         {
-            Camera.main.GetComponent<CameraControl>().StartShake(16, 2, 0.5f);
+            timer = currentAttack.Speed.y;
+            if (currentAttack.SoundName == "Heavy_01")
+            {
+                GetComponent<AttackAudioManager>().PlaySound("BlockHeavy");
+                Camera.main.GetComponent<CameraControl>().StartShake(4, 2, 1.0f);
+            }
+            else
+            {
+                GetComponent<AttackAudioManager>().PlaySound("BlockLight");
+            }
         }
     }
 

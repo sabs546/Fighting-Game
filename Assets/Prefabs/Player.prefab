@@ -169,13 +169,6 @@ MonoBehaviour:
     Punch: 350
     Kick: 352
     Throw: 351
-  Up: 119
-  Down: 115
-  Left: 97
-  Right: 100
-  Punch: 117
-  Kick: 105
-  Throw: 111
 --- !u!114 &3446603169683583237
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -314,6 +307,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 7cd7e6e6a52382b4eb23c60275f9ebd3, type: 3}
   - {fileID: 8300000, guid: c1ed61bf8bcd5b6499b62ec97b696fd5, type: 3}
   - {fileID: 8300000, guid: dfd8bd9e1bb89f44ca3e94204d1d930b, type: 3}
+  - {fileID: 8300000, guid: bdc318cf4d131034db14560b117bfff8, type: 3}
+  - {fileID: 8300000, guid: e8b52cae40167234bad5b4995eec8a2a, type: 3}
 --- !u!82 &3446603169683583356
 AudioSource:
   m_ObjectHideFlags: 0

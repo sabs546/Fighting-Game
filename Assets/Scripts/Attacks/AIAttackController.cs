@@ -217,6 +217,8 @@ public class AIAttackController : MonoBehaviour
             return;
         }
 
+        bool blocked = false;
+
         // Weight stuff
         physics.launch -= currentAttack.Recoil.y / WorldRules.physicsRate;
         opponentPhysics.travel += currentAttack.Knockback.x / WorldRules.physicsRate;
@@ -233,27 +235,47 @@ public class AIAttackController : MonoBehaviour
                 opponentPhysics.Brake();
             }
         }
-        
-        if (opponentPhysics.GetComponent<PlayerController>().pState == PlayerController.PlayerStates.Grounded)
+
+        if (opponentPhysics.GetComponent<PlayerController>().gState == PlayerController.GroundStates.Backdash)
+        {
+            blocked = true;
+        }
+        else
         {
             opponentPhysics.GetComponent<PlayerAttackController>().stunLimit = currentAttack.Stun;
         }
 
         // Hitspark stuff
-        Vector2 sparkPos = new Vector2(transform.position.x + (!sprite.flipX ? transform.lossyScale.x : -transform.lossyScale.x), transform.position.y);
-        if (currentAttack.SparkType == HitSparkManager.SparkType.Launch)
+        if (blocked)
         {
-            sparkPos.y += transform.lossyScale.y * 0.5f;
-        }
-        hitSpark.CreateHitSpark(currentAttack.SparkType, sparkPos.x, sparkPos.y, !sprite.flipX, physics.travel, controller.pState);
+            Vector2 sparkPos = new Vector2(transform.position.x + (!sprite.flipX ? transform.lossyScale.x : -transform.lossyScale.x), transform.position.y);
+            if (currentAttack.SparkType == HitSparkManager.SparkType.Launch)
+            {
+                sparkPos.y += transform.lossyScale.y * 0.5f;
+            }
+            hitSpark.CreateHitSpark(currentAttack.SparkType, sparkPos.x, sparkPos.y, !sprite.flipX, physics.travel, controller.pState);
 
-        // Other stuff
-        opponentPhysics.GetComponent<HealthManager>().SendDamage(currentAttack.Damage);
-        GetComponent<AttackAudioManager>().PlaySound(currentAttack.SoundName);
-        timer = currentAttack.Speed.y;
-        if (currentAttack.SoundName == "Heavy_01")
+            // Other stuff
+            opponentPhysics.GetComponent<HealthManager>().SendDamage(currentAttack.Damage);
+            GetComponent<AttackAudioManager>().PlaySound(currentAttack.SoundName);
+            timer = currentAttack.Speed.y;
+            if (currentAttack.SoundName == "Heavy_01")
+            {
+                Camera.main.GetComponent<CameraControl>().StartShake(16, 2, 0.5f);
+            }
+        }
+        else
         {
-            Camera.main.GetComponent<CameraControl>().StartShake(16, 2, 0.5f);
+            timer = currentAttack.Speed.y;
+            if (currentAttack.SoundName == "Heavy_01")
+            {
+                GetComponent<AttackAudioManager>().PlaySound("BlockHeavy");
+                Camera.main.GetComponent<CameraControl>().StartShake(4, 2, 1.0f);
+            }
+            else
+            {
+                GetComponent<AttackAudioManager>().PlaySound("BlockLight");
+            }
         }
     }
 

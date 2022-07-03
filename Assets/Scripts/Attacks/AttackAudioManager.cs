@@ -5,7 +5,8 @@ using UnityEngine;
 public class AttackAudioManager : MonoBehaviour
 {
     private AudioSource source;
-    public  AudioClip[] sounds;
+    [SerializeField]
+    private AudioClip[] sounds;
     // Start is called before the first frame update
     void Start()
     {
