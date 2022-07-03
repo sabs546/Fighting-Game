@@ -246,7 +246,7 @@ public class AIAttackController : MonoBehaviour
         }
 
         // Hitspark stuff
-        if (blocked)
+        if (!blocked)
         {
             Vector2 sparkPos = new Vector2(transform.position.x + (!sprite.flipX ? transform.lossyScale.x : -transform.lossyScale.x), transform.position.y);
             if (currentAttack.SparkType == HitSparkManager.SparkType.Launch)

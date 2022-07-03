@@ -298,32 +298,36 @@ public class PlayerAttackController : MonoBehaviour
                 else                         p2Physics.Brake();
             }
         }
-        
+
+        GameObject opponent;
+
         if (!WorldRules.PvP)
         {
-            if (opponentPhysics.GetComponent<AIController>().gState == AIController.GroundStates.Backdash)
+            opponent = opponentPhysics.gameObject;
+            if (opponent.GetComponent<AIController>().gState == AIController.GroundStates.Backdash)
             {
                 blocked = true;
             }
             else
             {
-                opponentPhysics.GetComponent<AIAttackController>().stunLimit = currentAttack.Stun;
+                opponent.GetComponent<AIAttackController>().stunLimit = currentAttack.Stun;
             }
         }
         else
         {
-            if (p2Physics.GetComponent<PlayerController>().gState == PlayerController.GroundStates.Backdash)
+            opponent = p2Physics.gameObject;
+            if (opponent.GetComponent<PlayerController>().gState == PlayerController.GroundStates.Backdash)
             {
                 blocked = true;
             }
             else
             {
-                p2Physics.GetComponent<PlayerAttackController>().stunLimit = currentAttack.Stun;
+                opponent.GetComponent<PlayerAttackController>().stunLimit = currentAttack.Stun;
             }
         }
 
         // Hitspark stuff
-        if (blocked)
+        if (!blocked)
         {
             Vector2 sparkPos = new Vector2(transform.position.x + (!sprite.flipX ? transform.lossyScale.x : -transform.lossyScale.x), transform.position.y);
             if (currentAttack.SparkType == HitSparkManager.SparkType.Launch)
@@ -333,8 +337,7 @@ public class PlayerAttackController : MonoBehaviour
             hitSpark.CreateHitSpark(currentAttack.SparkType, sparkPos.x, sparkPos.y, !sprite.flipX, physics.travel, controller.pState);
 
             // Other stuff
-            if (p2Physics == null) opponentPhysics.GetComponent<HealthManager>().SendDamage(currentAttack.Damage);
-            else p2Physics.GetComponent<HealthManager>().SendDamage(currentAttack.Damage);
+            opponent.GetComponent<HealthManager>().SendDamage(currentAttack.Damage);
             GetComponent<AttackAudioManager>().PlaySound(currentAttack.SoundName);
             timer = currentAttack.Speed.y;
             if (currentAttack.SoundName == "Heavy_01")
@@ -354,6 +357,7 @@ public class PlayerAttackController : MonoBehaviour
             {
                 GetComponent<AttackAudioManager>().PlaySound("BlockLight");
             }
+            opponent.GetComponent<Animator>().SetBool("Guard", true);
         }
     }
 
