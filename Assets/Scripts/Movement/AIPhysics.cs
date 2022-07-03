@@ -9,6 +9,8 @@ public class AIPhysics : MonoBehaviour
     private float   fTimeGravity;     // Gravity locked to 60fps
     private float   fTimeDrag;        // Drag locked to 60fps
     private float   fTimeFloorDrag;   // FloorDrag locked to 60fps
+    [SerializeField]
+    private Vector2 barrierToss;       // Barrier rejection power
 
     // Controlled Values ======================================================
     [HideInInspector]
@@ -195,13 +197,15 @@ public class AIPhysics : MonoBehaviour
         if (pos.x < effectiveMaxLeft)
         {
             pos.x = effectiveMaxLeft;
-            effectiveMovement = 0.0f;
+            effectiveMovement = -effectiveMovement;
+            effectiveGravity = -controller.jumpPower;
             //travel = travel * 0.5f * -1.0f;
         }
         else if (pos.x > effectiveMaxRight)
         {
             pos.x = effectiveMaxRight;
-            effectiveMovement = 0.0f;
+            effectiveMovement = -effectiveMovement;
+            effectiveGravity = -controller.jumpPower;
             //travel = travel * 0.5f * -1.0f;
         }
 

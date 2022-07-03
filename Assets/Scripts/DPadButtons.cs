@@ -39,6 +39,20 @@ public class DPadButtons : MonoBehaviour
     public void SwapControllerNumber(bool setting)
     {
         useController2 = setting;
+        if (useController2)
+        {
+            SetControls controls = GetComponent<SetControls>();
+            controls.gamepadControls.Punch = controls.gamepadControls.Punch + 20;
+            controls.gamepadControls.Kick = controls.gamepadControls.Kick + 20;
+            controls.gamepadControls.Throw = controls.gamepadControls.Throw + 20;
+        }
+        else
+        {
+            SetControls controls = GetComponent<SetControls>();
+            controls.gamepadControls.Punch = controls.gamepadControls.Punch - 20;
+            controls.gamepadControls.Kick = controls.gamepadControls.Kick - 20;
+            controls.gamepadControls.Throw = controls.gamepadControls.Throw - 20;
+        }
     }
 
     public Inputs DPadDown()

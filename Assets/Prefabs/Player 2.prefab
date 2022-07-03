@@ -166,9 +166,9 @@ MonoBehaviour:
     Kick: 264
     Throw: 265
   gamepadControls:
-    Punch: 370
-    Kick: 372
-    Throw: 371
+    Punch: 350
+    Kick: 352
+    Throw: 351
 --- !u!114 &3446603169683583237
 MonoBehaviour:
   m_ObjectHideFlags: 0

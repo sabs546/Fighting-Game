@@ -6,8 +6,8 @@ public class SprintThrow : BaseAttack
     {
         attackType = AttackType.Throw;
         Damage = 0;
-        Speed = new Vector3Int(2, 4, 30);
-        Stun = 30;
+        Speed = new Vector3Int(2, 4, 15);
+        Stun = 60;
         Followup = null;
 
         Range = new Vector2(0.25f, 0.0f);

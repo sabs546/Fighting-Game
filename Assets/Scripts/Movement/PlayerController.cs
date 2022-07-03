@@ -195,34 +195,37 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (controls.type == SetControls.ControllerType.Keyboard)
+        if (gState != GroundStates.Stun)
         {
-            if (Input.GetKeyUp(controls.keyboardControls.Punch))
+            if (controls.type == SetControls.ControllerType.Keyboard)
             {
-                attackController.sendPunch = true;
+                if (Input.GetKeyUp(controls.keyboardControls.Punch))
+                {
+                    attackController.sendPunch = true;
+                }
+                else if (Input.GetKeyUp(controls.keyboardControls.Kick))
+                {
+                    attackController.sendKick = true;
+                }
+                else if (Input.GetKeyUp(controls.keyboardControls.Throw))
+                {
+                    attackController.sendThrow = true;
+                }
             }
-            else if (Input.GetKeyUp(controls.keyboardControls.Kick))
+            else
             {
-                attackController.sendKick = true;
-            }
-            else if (Input.GetKeyUp(controls.keyboardControls.Throw))
-            {
-                attackController.sendThrow = true;
-            }
-        }
-        else
-        {
-            if (Input.GetKeyUp(controls.gamepadControls.Punch))
-            {
-                attackController.sendPunch = true;
-            }
-            else if (Input.GetKeyUp(controls.gamepadControls.Kick))
-            {
-                attackController.sendKick = true;
-            }
-            else if (Input.GetKeyUp(controls.gamepadControls.Throw))
-            {
-                attackController.sendThrow = true;
+                if (Input.GetKeyUp(controls.gamepadControls.Punch))
+                {
+                    attackController.sendPunch = true;
+                }
+                else if (Input.GetKeyUp(controls.gamepadControls.Kick))
+                {
+                    attackController.sendKick = true;
+                }
+                else if (Input.GetKeyUp(controls.gamepadControls.Throw))
+                {
+                    attackController.sendThrow = true;
+                }
             }
         }
     }

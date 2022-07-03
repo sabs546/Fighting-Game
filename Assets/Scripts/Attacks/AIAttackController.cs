@@ -211,7 +211,7 @@ public class AIAttackController : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // todo Player attacks seem to trigger this, unsure why
-        if (currentAttack == null)
+        if (currentAttack == null || currentAttack.attackType == BaseAttack.AttackType.Throw)
         {
             //Debug.Log(hitbox.name + " " + hitbox.enabled);
             return;
@@ -254,6 +254,27 @@ public class AIAttackController : MonoBehaviour
         if (currentAttack.SoundName == "Heavy_01")
         {
             Camera.main.GetComponent<CameraControl>().StartShake(16, 2, 0.5f);
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (currentAttack == null || currentAttack.attackType != BaseAttack.AttackType.Throw)
+        {
+            return;
+        }
+
+        opponentPhysics.GetComponent<AIAttackController>().stunLimit = currentAttack.Stun;
+
+        if (timer < currentAttack.Speed.y)
+        {
+            opponentPhysics.GetComponent<AIAttackController>().CancelAttack();
+        }
+        else if (timer < currentAttack.Speed.z)
+        {
+            opponentPhysics.travel = currentAttack.Knockback.x / WorldRules.physicsRate;
+            opponentPhysics.launch = currentAttack.Knockback.y / WorldRules.physicsRate;
+            currentAttack.RemoveKnockback();
         }
     }
 

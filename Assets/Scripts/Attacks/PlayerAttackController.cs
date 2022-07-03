@@ -103,7 +103,7 @@ public class PlayerAttackController : MonoBehaviour
             }
         }
         // The next part of the string
-        else if (state == AttackState.Recovery)
+        else if (state == AttackState.Recovery && currentAttack.Followup != null)
         {
             if (nextAttack != null && ((sendPunch && nextAttack.attackType == BaseAttack.AttackType.Punch) ||
                                        (sendKick  && nextAttack.attackType == BaseAttack.AttackType.Kick)))
@@ -156,6 +156,13 @@ public class PlayerAttackController : MonoBehaviour
                 stunLimit = 0;
                 timer = 0;
             }
+        }
+
+        // todo temp patch code, needs more testing
+        if (stunLimit == 0 && controller.gState == PlayerController.GroundStates.Stun)
+        {
+            controller.gState = PlayerController.GroundStates.Neutral;
+            GetComponent<Animator>().SetBool("Stun", false);
         }
 
         // What happens in the attack state
@@ -329,19 +336,14 @@ public class PlayerAttackController : MonoBehaviour
             return;
         }
 
-        /// todo for a smoother throw transition
-        //physics.travel += (sprite.flipX ? timer - currentAttack.Speed.y / WorldRules.physicsRate : -(timer - currentAttack.Speed.y) / WorldRules.physicsRate) / 10.0f;
-        //physics.launch += (timer - currentAttack.Recoil.x / WorldRules.physicsRate) / 10.0f;
-        //if (p2Physics == null)
-        //{
-        //    opponentPhysics.travel += (sprite.flipX ? timer - currentAttack.Speed.y / WorldRules.physicsRate : -(timer - currentAttack.Speed.y) / WorldRules.physicsRate) / 10.0f;
-        //    opponentPhysics.launch += (timer - currentAttack.Speed.y / WorldRules.physicsRate) / 10.0f;
-        //}
-        //else
-        //{
-        //    p2Physics.travel += (sprite.flipX ? timer - currentAttack.Speed.y / WorldRules.physicsRate : -(timer - currentAttack.Speed.y) / WorldRules.physicsRate) / 10.0f;
-        //    p2Physics.launch += (timer - currentAttack.Speed.y / WorldRules.physicsRate) / 10.0f;
-        //}
+        if (!WorldRules.PvP)
+        {
+            opponentPhysics.GetComponent<AIAttackController>().stunLimit = currentAttack.Stun;
+        }
+        else
+        {
+            p2Physics.GetComponent<PlayerAttackController>().stunLimit = currentAttack.Stun;
+        }
 
         if (timer < currentAttack.Speed.y)
         {

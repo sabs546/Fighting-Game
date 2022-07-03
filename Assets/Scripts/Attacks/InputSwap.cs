@@ -56,7 +56,7 @@ public class InputSwap : MonoBehaviour
             if (Input.anyKey == true && Input.inputString == string.Empty)
             {
                 //foreach (KeyCode kCode in System.Enum.GetValues(typeof(KeyCode)))
-                for (int key = (int)KeyCode.JoystickButton0; key < (int)KeyCode.JoystickButton19; key++)
+                for (int key = (int)KeyCode.Joystick1Button0; key < (int)KeyCode.Joystick2Button19; key++)
                 {
                     KeyCode kCode = (KeyCode)key;
                     if (!Input.GetKey(kCode)) continue;
@@ -102,17 +102,30 @@ public class InputSwap : MonoBehaviour
     {
         switch (kCode)
         {
-            case KeyCode.JoystickButton0:
+            case KeyCode.Joystick1Button0:
                 return "A";
-            case KeyCode.JoystickButton1:
+            case KeyCode.Joystick1Button1:
                 return "B";
-            case KeyCode.JoystickButton2:
+            case KeyCode.Joystick1Button2:
                 return "X";
-            case KeyCode.JoystickButton3:
+            case KeyCode.Joystick1Button3:
                 return "Y";
-            case KeyCode.JoystickButton4:
+            case KeyCode.Joystick1Button4:
                 return "LB";
-            case KeyCode.JoystickButton5:
+            case KeyCode.Joystick1Button5:
+                return "RB";
+
+            case KeyCode.Joystick2Button0:
+                return "A";
+            case KeyCode.Joystick2Button1:
+                return "B";
+            case KeyCode.Joystick2Button2:
+                return "X";
+            case KeyCode.Joystick2Button3:
+                return "Y";
+            case KeyCode.Joystick2Button4:
+                return "LB";
+            case KeyCode.Joystick2Button5:
                 return "RB";
         }
         return string.Empty;
