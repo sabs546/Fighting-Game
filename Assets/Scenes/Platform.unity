@@ -6881,8 +6881,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -460.97, y: -85.122986}
-  m_SizeDelta: {x: 921.94714, y: 170.24689}
+  m_AnchoredPosition: {x: -460.97, y: -239.91}
+  m_SizeDelta: {x: 921.94714, y: 479.8733}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &748939357
 MonoBehaviour:
@@ -6906,25 +6906,49 @@ MonoBehaviour:
   m_text: 'So movement in this game isn''t like a platform fighter so it might feel
     a little restrictive, think of it more like a traditional fighter with some modifications:
 
-    Dash
-    - Left and right will feed you a short burst of speed before you come to a stop,
-    holding will do nothing
-
-    Backdash - Similar to the above but without access
-    to the attacks, this is when you dash away from the opponent
-
-    Sprint - If
-    you want to move continuously, double tap and hold left or right (so dash again
-    while dashing)
-
-    Jump - The jump button jumps, this also works while sprinting
 
     Dash
-    hop - If you jump while dashing, you do a lower jump forward
+    -
 
-    Crouch - This
-    stance is kinda invisible, but if you press down while dashing you''ll have access
-    to crouch attacks'
+    Left and right will feed you a short burst of speed before you come to
+    a stop, holding will do nothing
+
+    Dashing towards the opponent allows you
+    to attack
+
+
+    Backdash -
+
+    As mentioned before you can also dash backward,
+    this however does not allow for attack, rather it allows your character to block
+
+
+    Sprint
+    -
+
+    If you want to move continuously, double tap and hold left or right (so
+    dash again while dashing)
+
+    Unlike the backdash, you can attack in either
+    direction while sprinting, it''s considered the same state
+
+
+    Jump -
+
+    You
+    can indeed do this from neutral, you cannot control yourself in midair outside
+    of altering your jump arc with attacks
+
+    From a standstill you will of course
+    go straight up, from a sprint you go in the given direction, from a dash however
+    you lose most of the height
+
+
+    Crouch -
+
+    This isn''t really what you''d
+    expect from a traditional crouch which is used to dodge high''s and block lows,
+    rather it''s used simply to access other attacks'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a50fd38a2661c8f4d8b0b39ef6383763, type: 2}
   m_sharedMaterial: {fileID: -6993522698956005608, guid: a50fd38a2661c8f4d8b0b39ef6383763,
@@ -6994,12 +7018,12 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 748939357}
-    characterCount: 733
+    characterCount: 1118
     spriteCount: 0
-    spaceCount: 136
-    wordCount: 137
+    spaceCount: 204
+    wordCount: 200
     linkCount: 0
-    lineCount: 8
+    lineCount: 22
     pageCount: 1
     materialCount: 1
   m_isUsingLegacyAnimationComponent: 0
