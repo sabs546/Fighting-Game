@@ -14,12 +14,18 @@ public class MenuController : MonoBehaviour
     public float scrollSpeed;
     private bool changePage;
     private int currentPage;
+    private AudioSource settingsVolume;
+    [SerializeField]
+    private AudioSource pauseVolume;
 
     // Start is called before the first frame update
     void Start()
     {
         rect = menuBlock.GetComponent<RectTransform>();
-        GetComponent<AudioSource>().volume = WorldRules.volume / 100.0f;
+        settingsVolume = GetComponent<AudioSource>();
+
+        settingsVolume.volume = WorldRules.volume / 100.0f;
+        pauseVolume.volume = WorldRules.volume / 100.0f;
     }
 
     // Update is called once per frame
@@ -77,6 +83,7 @@ public class MenuController : MonoBehaviour
 
     public void ChangeVolume()
     {
-        GetComponent<AudioSource>().volume = WorldRules.volume / 100.0f;
+        settingsVolume.volume = WorldRules.volume / 100.0f;
+        pauseVolume.volume = settingsVolume.volume;
     }
 }

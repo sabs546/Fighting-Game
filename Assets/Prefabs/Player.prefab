@@ -165,10 +165,12 @@ MonoBehaviour:
     Punch: 117
     Kick: 105
     Throw: 111
+    Pause: 27
   gamepadControls:
     Punch: 350
     Kick: 352
     Throw: 351
+    Pause: 337
 --- !u!114 &3446603169683583237
 MonoBehaviour:
   m_ObjectHideFlags: 0

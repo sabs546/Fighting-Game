@@ -28,6 +28,8 @@ public struct KeyboardControls
     public KeyCode Punch;
     public KeyCode Kick;
     public KeyCode Throw;
+
+    public KeyCode Pause;
 }
 
 [System.Serializable]
@@ -36,4 +38,6 @@ public struct GamepadControls
     public KeyCode Punch;
     public KeyCode Kick;
     public KeyCode Throw;
+
+    public KeyCode Pause;
 }

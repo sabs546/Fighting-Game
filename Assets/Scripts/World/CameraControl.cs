@@ -50,6 +50,11 @@ public class CameraControl : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (GameStateControl.gameState == GameStateControl.GameState.Pause)
+        {
+            return;
+        }
+
         p1Pos = p1.transform.position;
         p2Pos = WorldRules.PvP ? p2.transform.position : cpu.transform.position;
 
@@ -59,7 +64,7 @@ public class CameraControl : MonoBehaviour
 
         cameraPos.x = centreDistanceX / 2;
 
-        if (state != CameraState.Menu && gameStateControl.gameState != GameStateControl.GameState.GameOver)
+        if (state != CameraState.Menu && GameStateControl.gameState != GameStateControl.GameState.GameOver)
         {
             if (xDistance < close.distance)
             {
@@ -165,7 +170,7 @@ public class CameraControl : MonoBehaviour
                     break;
             }
         }
-        else if (gameStateControl.gameState == GameStateControl.GameState.Menu)
+        else if (GameStateControl.gameState == GameStateControl.GameState.Menu)
         {
             if (cam.orthographicSize != menu.zoom || cameraPos.y != menu.height)
             {

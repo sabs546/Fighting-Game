@@ -25,7 +25,7 @@ public class HealthManager : MonoBehaviour
         {
             backBar.localScale = new Vector3(backBar.localScale.x - (0.1f * Time.deltaTime), 1.0f, 1.0f);
         }
-        if (gameStateControl.gameState == GameStateControl.GameState.Fighting && currentHealth > healthBar.localScale.x * maxHealth)
+        if (GameStateControl.gameState == GameStateControl.GameState.Fighting && currentHealth > healthBar.localScale.x * maxHealth)
         {
             healthBar.localScale = new Vector3(healthBar.localScale.x + (0.5f * Time.deltaTime), 1.0f, 1.0f);
             if (healthBar.localScale.x > 1.0f)

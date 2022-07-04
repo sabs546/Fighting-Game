@@ -10,7 +10,7 @@ public class AISpriteManager : MonoBehaviour
     SpriteRenderer sprite;
 
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
         controller = GetComponent<AIController>();
         atkController = GetComponent<AIAttackController>();

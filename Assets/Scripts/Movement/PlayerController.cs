@@ -45,9 +45,33 @@ public class PlayerController : MonoBehaviour
         dpadInputs = GetComponent<DPadButtons>();
     }
 
+    private void OnDisable()
+    {
+        gState = GroundStates.Neutral;
+        pState = PlayerStates.Crouching;
+    }
+
     // Update is called once per frame
     void Update()
     {
+        if (GameStateControl.gameState == GameStateControl.GameState.Pause)
+        {
+            if (controls.type == SetControls.ControllerType.Keyboard && Input.GetKeyDown(controls.keyboardControls.Pause) ||
+                controls.type == SetControls.ControllerType.Controller && Input.GetKeyDown(controls.gamepadControls.Pause))
+            {
+                Camera.main.GetComponent<GameStateControl>().SetGameState(GameStateControl.GameState.Fighting);
+            }
+            return;
+        }
+        else
+        {
+            if (controls.type == SetControls.ControllerType.Keyboard && Input.GetKeyDown(controls.keyboardControls.Pause) ||
+                controls.type == SetControls.ControllerType.Controller && Input.GetKeyDown(controls.gamepadControls.Pause))
+            {
+                Camera.main.GetComponent<GameStateControl>().SetGameState(GameStateControl.GameState.Pause);
+            }
+        }
+
         up = down = left = right = false;
         rUp = rDown = rLeft = rRight = false;
 

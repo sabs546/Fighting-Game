@@ -36,23 +36,25 @@ public class PlayerPhysics : MonoBehaviour
     public  GameObject       opponent;
 
     // Start is called before the first frame update
-    void OnEnable()
+    private void Start()
     {
         controller = GetComponent<PlayerController>();
-        launch = 0.0f;
-        travel = 0.0f;
-        airLock = 0;
-
         fTimeGravity = WorldRules.gravity / WorldRules.physicsRate;
         fTimeDrag = WorldRules.drag / WorldRules.physicsRate;
         fTimeFloorDrag = WorldRules.floordrag / WorldRules.physicsRate;
 
         float halfHeight = transform.lossyScale.y * 0.5f;
         float halfWidth = transform.lossyScale.x * 0.5f;
+
         effectiveMinHeight = WorldRules.minHeight + halfHeight;
         effectiveMaxHeight = WorldRules.maxHeight - halfHeight;
         effectiveMaxLeft = -WorldRules.maxWidth + halfWidth;
         effectiveMaxRight = WorldRules.maxWidth - halfWidth;
+    }
+
+    void OnDisable()
+    {
+        startSprint = false;
     }
 
     // Update is called once per frame

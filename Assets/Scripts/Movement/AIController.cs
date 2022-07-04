@@ -45,9 +45,20 @@ public class AIController : MonoBehaviour
         ticker = 0;
     }
 
+    private void OnDisable()
+    {
+        gState = GroundStates.Neutral;
+        pState = PlayerStates.Crouching;
+    }
+
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (GameStateControl.gameState == GameStateControl.GameState.Pause)
+        {
+            return;
+        }
+
         if (attackController.stunLimit > 0)
         {
             ticker = attackController.stunLimit;
