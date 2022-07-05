@@ -7,7 +7,7 @@ public class DKStomp : BaseAttack
         attackType = AttackType.Kick;
         Damage = 5;
         Speed = new Vector3Int(15, 17, 40);
-        Stun = 40;
+        Stun = 30;
         Followup = new DKSUppercut();
 
         Range = new Vector2(0.25f, -0.25f);

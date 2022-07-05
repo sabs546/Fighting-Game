@@ -5,8 +5,8 @@ public class SprintPunch : BaseAttack
     public SprintPunch()
     {
         attackType = AttackType.Punch;
-        Damage = 5;
-        Speed = new Vector3Int(10, 12, 32);
+        Damage = 10;
+        Speed = new Vector3Int(10, 12, 25);
         Stun = 20;
         Followup = new SPKick();
 

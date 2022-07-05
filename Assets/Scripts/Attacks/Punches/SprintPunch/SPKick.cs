@@ -5,7 +5,7 @@ public class SPKick : BaseAttack
     public SPKick()
     {
         attackType = AttackType.Kick;
-        Damage = 15;
+        Damage = 20;
         Speed = new Vector3Int(3, 5, 35);
         Stun = 20;
         Followup = null;
