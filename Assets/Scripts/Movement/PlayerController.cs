@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour
     public float sprint;
     public float dashDistance;
     public float jumpPower;
+    [HideInInspector]
+    public bool blocking; // Prevents knockback auto-block
 
     [Header("Inputs")]
     private bool up;
@@ -169,6 +171,7 @@ public class PlayerController : MonoBehaviour
             if (left && gState == GroundStates.Neutral)
             {
                 physics.travel -= dashDistance;
+                blocking = true;
             }
             else if (left && gState != GroundStates.Neutral)
             {
@@ -184,6 +187,7 @@ public class PlayerController : MonoBehaviour
             if (right && gState == GroundStates.Neutral)
             {
                 physics.travel += dashDistance;
+                blocking = true;
             }
             else if (right && gState != GroundStates.Neutral)
             {

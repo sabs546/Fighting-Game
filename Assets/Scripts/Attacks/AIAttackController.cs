@@ -236,7 +236,7 @@ public class AIAttackController : MonoBehaviour
             }
         }
 
-        if (opponentPhysics.GetComponent<PlayerController>().gState == PlayerController.GroundStates.Backdash)
+        if (opponentPhysics.GetComponent<PlayerController>().gState == PlayerController.GroundStates.Backdash && opponentPhysics.GetComponent<PlayerController>().blocking)
         {
             blocked = true;
         }

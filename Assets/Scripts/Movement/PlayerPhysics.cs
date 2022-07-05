@@ -177,6 +177,11 @@ public class PlayerPhysics : MonoBehaviour
                 airLock = 0;
                 GetComponent<Animator>().SetBool("Guard", false);
             }
+
+            if (controller.gState != PlayerController.GroundStates.Backdash)
+            {
+                controller.blocking = false;
+            }
         }
 
         // --------------------------------------------------------

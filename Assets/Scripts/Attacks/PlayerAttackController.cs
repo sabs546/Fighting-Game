@@ -304,7 +304,7 @@ public class PlayerAttackController : MonoBehaviour
         if (!WorldRules.PvP)
         {
             opponent = opponentPhysics.gameObject;
-            if (opponent.GetComponent<AIController>().gState == AIController.GroundStates.Backdash)
+            if (opponent.GetComponent<AIController>().gState == AIController.GroundStates.Backdash && opponent.GetComponent<AIController>().blocking)
             {
                 blocked = true;
             }
@@ -316,7 +316,7 @@ public class PlayerAttackController : MonoBehaviour
         else
         {
             opponent = p2Physics.gameObject;
-            if (opponent.GetComponent<PlayerController>().gState == PlayerController.GroundStates.Backdash)
+            if (opponent.GetComponent<PlayerController>().gState == PlayerController.GroundStates.Backdash && opponent.GetComponent<PlayerController>().blocking)
             {
                 blocked = true;
             }

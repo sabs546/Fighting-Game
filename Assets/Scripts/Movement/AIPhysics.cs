@@ -182,6 +182,11 @@ public class AIPhysics : MonoBehaviour
                 airLock = 0;
                 GetComponent<Animator>().SetBool("Guard", false);
             }
+
+            if (controller.gState != AIController.GroundStates.Backdash)
+            {
+                controller.blocking = false;
+            }
         }
 
         // To stop crouching from locking the AI up

@@ -8,6 +8,8 @@ public class AIController : MonoBehaviour
     public float sprint;
     public float dashDistance;
     public float jumpPower;
+    [HideInInspector]
+    public bool blocking; // Prevents knockback auto-block
 
     public enum PlayerStates { Crouching, Grounded, Airborne };
     public enum GroundStates { Neutral, Dash, Backdash, Sprint, Stun, Jump };
@@ -119,6 +121,7 @@ public class AIController : MonoBehaviour
             case GroundStates.Backdash:
                 if (currentSide == Side.Left) physics.travel -= dashDistance;
                 if (currentSide == Side.Right) physics.travel += dashDistance;
+                blocking = true;
                 break;
             case GroundStates.Sprint:
                 physics.startSprint = true;
