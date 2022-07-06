@@ -45,8 +45,6 @@ public class GameStateControl : MonoBehaviour
         p1Animator = p1.GetComponent<Animator>();
         p2Animator = p2.GetComponent<Animator>();
         CPUAnimator = CPU.GetComponent<Animator>();
-
-        pauseSetting = pauseUI.GetComponent<FreezeGame>();
     }
 
     // Update is called once per frame

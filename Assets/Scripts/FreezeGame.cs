@@ -58,7 +58,7 @@ public class FreezeGame : MonoBehaviour
 
     private void OnDisable()
     {
-        if (p1 == null) return;
+        if (p1 == null || p2 == null || CPU == null) return;
         p1AtkController.enabled = true;
         p1Physics.enabled = true;
         p1Anim.enabled = true;
