@@ -25,7 +25,7 @@ public class HealthManager : MonoBehaviour
         {
             backBar.localScale = new Vector3(backBar.localScale.x - (0.1f * Time.deltaTime), 1.0f, 1.0f);
         }
-        if (GameStateControl.gameState == GameStateControl.GameState.Fighting && currentHealth > healthBar.localScale.x * maxHealth)
+        if ((GameStateControl.gameState == GameStateControl.GameState.Fighting || GameStateControl.gameState == GameStateControl.GameState.RoundStart) && currentHealth > healthBar.localScale.x * maxHealth)
         {
             healthBar.localScale = new Vector3(healthBar.localScale.x + (0.5f * Time.deltaTime), 1.0f, 1.0f);
             if (healthBar.localScale.x > 1.0f)
@@ -38,6 +38,11 @@ public class HealthManager : MonoBehaviour
 
     public void SendDamage(int damage)
     {
+        if (GameStateControl.gameState != GameStateControl.GameState.Fighting)
+        {
+            return;
+        }
+
         currentHealth -= damage;
         if (currentHealth <= 0)
         {
@@ -46,7 +51,7 @@ public class HealthManager : MonoBehaviour
             WorldRules.gameSpeed = 0.5f;
             Camera.main.GetComponent<CameraControl>().StartShake(64, 8, 1.0f);
             GetComponent<Animator>().speed = WorldRules.gameSpeed;
-            gameStateControl.GetComponent<GameStateControl>().SetGameState(GameStateControl.GameState.GameOver);
+            gameStateControl.GetComponent<GameStateControl>().SetGameState(GameStateControl.GameState.RoundOver);
         }
         if (TryGetComponent(out PlayerAttackController pAttackController))
         {

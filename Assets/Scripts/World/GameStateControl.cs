@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameStateControl : MonoBehaviour
 {
-    public enum GameState { Menu, Fighting, Pause, Unpause, GameOver };
+    public enum GameState { Menu, Fighting, Pause, RoundStart, RoundOver, GameOver };
     public static GameState gameState { get; private set; }
 
     [Header("Fighter Related")]
@@ -25,15 +26,33 @@ public class GameStateControl : MonoBehaviour
     public GameObject fightUI;
     public GameObject pauseUI;
     public FreezeGame pauseSetting;
+    public GameObject roundStartUI;
+    public GameObject roundOverUI;
     public GameObject gameOverUI;
 
     [Header("Misc")]
+    [SerializeField]
+    private Slider menuVolumeSlider;
+    [SerializeField]
+    private Slider pauseVolumeSlider;
+
+    [Header("Round Over")]
+    [SerializeField]
+    private TextMeshProUGUI roundWinner;
+    [SerializeField]
+    private TextMeshProUGUI currentScore;
+    [SerializeField]
+    private Image p1RoundCount;
+    [SerializeField]
+    private Image p2RoundCount;
+    [SerializeField]
+    private int roundLimit;
+    private int p1Wins;
+    private int p2Wins;
+
+    [Header("Game Over")]
     public TextMeshProUGUI winnerTag;
     private string winnerName;
-    [SerializeField]
-    private UnityEngine.UI.Slider menuVolumeSlider;
-    [SerializeField]
-    private UnityEngine.UI.Slider pauseVolumeSlider;
 
     // Start is called before the first frame update
     void Start()
@@ -45,6 +64,9 @@ public class GameStateControl : MonoBehaviour
         p1Animator = p1.GetComponent<Animator>();
         p2Animator = p2.GetComponent<Animator>();
         CPUAnimator = CPU.GetComponent<Animator>();
+
+        p1Wins = 0;
+        p2Wins = 0;
     }
 
     // Update is called once per frame
@@ -100,6 +122,7 @@ public class GameStateControl : MonoBehaviour
                 menuUI.SetActive(false);
                 pauseUI.SetActive(false);
                 pauseSetting.enabled = false;
+                roundStartUI.SetActive(false);
                 fightUI.SetActive(true);
                 break;
             case GameState.Pause:
@@ -107,9 +130,45 @@ public class GameStateControl : MonoBehaviour
                 pauseUI.SetActive(true);
                 pauseSetting.enabled = true;
                 fightUI.SetActive(false);
+                roundStartUI.SetActive(false);
                 pauseVolumeSlider.value = WorldRules.volume;
                 break;
+            case GameState.RoundStart:
+                gameState = GameState.RoundStart;
+                p1.GetComponent<HealthManager>().ResetHealth();
+                if (WorldRules.PvP) p2.GetComponent<HealthManager>().ResetHealth();
+                else               CPU.GetComponent<HealthManager>().ResetHealth();
+                roundOverUI.SetActive(false);
+                roundStartUI.SetActive(true);
+                fightUI.SetActive(true);
+                break;
+            case GameState.RoundOver:
+                // todo cleanup
+                gameState = GameState.RoundOver;
+                GameObject opponent = WorldRules.PvP ? p2 : CPU;
+                winnerName = string.Empty;
+
+                if (CheckDead(p1))
+                {
+                    p2Wins++;
+                    winnerName = opponent.GetComponent<HealthManager>().nameTag.text;
+                }
+                if (CheckDead(opponent))
+                {
+                    p1Wins++;
+                    winnerName = winnerName == string.Empty ? p1.GetComponent<HealthManager>().nameTag.text : "NOBODY";
+                }
+
+                p1.GetComponent<PlayerController>().enabled = false;
+                if (opponent.TryGetComponent(out PlayerController pController)) pController.enabled = false;
+                else if (opponent.TryGetComponent(out AIController aiController)) aiController.enabled = false;
+
+                roundWinner.text = winnerName + " WINS";
+                currentScore.text = p1Wins + " - " + p2Wins;
+                roundOverUI.SetActive(true);
+                break;
             case GameState.GameOver:
+                // todo also cleanup
                 gameState = GameState.GameOver;
                 fightUI.SetActive(false);
                 pauseUI.SetActive(false);
@@ -140,12 +199,24 @@ public class GameStateControl : MonoBehaviour
     private bool CheckDead(GameObject fighter)
     {
         HealthManager healthManager = fighter.GetComponent<HealthManager>();
-        if (healthManager.currentHealth == 0)
+        return healthManager.currentHealth == 0 ? true : false;
+    }
+
+    public void TriggerNewRound()
+    {
+        p1.GetComponent<HealthManager>().ResetHealth();
+        p1Animator.SetTrigger("Revive");
+        if (WorldRules.PvP)
         {
-            return true;
+            p2.GetComponent<HealthManager>().ResetHealth();
+            p2Animator.SetTrigger("Revive");
         }
-        winnerName = healthManager.nameTag.text;
-        return false;
+        else
+        {
+            CPU.GetComponent<HealthManager>().ResetHealth();
+            CPUAnimator.SetTrigger("Revive");
+        }
+        SetGameState(GameState.RoundStart);
     }
 
     public void EndGame()
@@ -175,10 +246,6 @@ public class GameStateControl : MonoBehaviour
         if (gameState == GameState.Pause)
         {
             SetGameState(GameState.Pause);
-        }
-        else
-        {
-            SetGameState(GameState.Unpause);
         }
     }
 

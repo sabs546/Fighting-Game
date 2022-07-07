@@ -64,7 +64,7 @@ public class CameraControl : MonoBehaviour
 
         cameraPos.x = centreDistanceX / 2;
 
-        if (state != CameraState.Menu && GameStateControl.gameState != GameStateControl.GameState.GameOver)
+        if (state != CameraState.Menu && GameStateControl.gameState < GameStateControl.GameState.RoundStart)
         {
             if (xDistance < close.distance)
             {
