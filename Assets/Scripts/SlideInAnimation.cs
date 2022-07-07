@@ -4,17 +4,26 @@ using UnityEngine;
 
 public class SlideInAnimation : MonoBehaviour
 {
+    // Movement Values ==================================================================
+    [Header("Movement Attributes")]
     [SerializeField]
-    private float startX;
+    private float startX;        // Where does the object begin
     [SerializeField]
-    private float moveDistanceX;
+    private float moveDistanceX; // How far will it move from the startX
     [SerializeField]
-    private float moveSpeedX;
-    private float lacticAcidX;
+    private float moveSpeedX;    // How fast will it move
     [SerializeField]
-    private RectTransform rectTransform;
-    private bool active;
-    private float distLeft;
+    private bool reverseDecay;   // Does it speed up or slow down
+
+    // Extra Values ===========================================================================
+    [Header("Externals")]
+    [SerializeField]
+    private RectTransform rectTransform;    // What is being moved
+
+    // Calculated Values ===================================
+    private bool active;       // Does it need moving
+    private float distLeft;    // How far is left to move
+    private float lacticAcidX; // Movement speed decay value
 
     private void OnEnable()
     {
@@ -31,8 +40,18 @@ public class SlideInAnimation : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        distLeft = (startX + moveDistanceX * 1.01f) - rectTransform.anchoredPosition.x;
-        lacticAcidX = distLeft / moveDistanceX;
+        if (reverseDecay)
+        {
+            distLeft = (startX + moveDistanceX * 0.99f) - rectTransform.anchoredPosition.x;
+            distLeft = moveDistanceX - distLeft;
+            lacticAcidX = distLeft / moveDistanceX;
+        }
+        else
+        {
+            distLeft = (startX + moveDistanceX * 1.01f) - rectTransform.anchoredPosition.x;
+            lacticAcidX = distLeft / moveDistanceX;
+        }
+
         if (active)
         {
             if (moveSpeedX > 0)

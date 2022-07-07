@@ -38,7 +38,7 @@ public class HealthManager : MonoBehaviour
 
     public void SendDamage(int damage)
     {
-        if (GameStateControl.gameState == GameStateControl.GameState.GameOver)
+        if (GameStateControl.gameState >= GameStateControl.GameState.RoundOver)
         {
             return;
         }

@@ -695,7 +695,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startX: 0
   moveDistanceX: 1289
-  moveSpeedX: 1200
+  moveSpeedX: 2400
+  reverseDecay: 1
   rectTransform: {fileID: 71527225}
 --- !u!114 &71527227
 MonoBehaviour:
@@ -2751,6 +2752,7 @@ MonoBehaviour:
   startX: -162.5
   moveDistanceX: 325
   moveSpeedX: 1200
+  reverseDecay: 0
   rectTransform: {fileID: 303925253}
 --- !u!1 &316532838
 GameObject:
@@ -4893,6 +4895,7 @@ MonoBehaviour:
   startX: 1289
   moveDistanceX: -1289
   moveSpeedX: -2400
+  reverseDecay: 0
   rectTransform: {fileID: 475308969}
 --- !u!1 &493531776
 GameObject:
@@ -5611,6 +5614,7 @@ MonoBehaviour:
   startX: -1289
   moveDistanceX: 1289
   moveSpeedX: 1200
+  reverseDecay: 0
   rectTransform: {fileID: 527631557}
 --- !u!114 &527631560
 MonoBehaviour:
@@ -7432,6 +7436,7 @@ MonoBehaviour:
   startX: 1289
   moveDistanceX: -1289
   moveSpeedX: -2400
+  reverseDecay: 0
   rectTransform: {fileID: 738229049}
 --- !u!114 &738229051
 MonoBehaviour:
@@ -7567,6 +7572,7 @@ MonoBehaviour:
   startX: 0
   moveDistanceX: -645
   moveSpeedX: -1200
+  reverseDecay: 0
   rectTransform: {fileID: 743776921}
 --- !u!1 &748939355
 GameObject:
@@ -10072,6 +10078,7 @@ MonoBehaviour:
   startX: -164
   moveDistanceX: 328
   moveSpeedX: 2400
+  reverseDecay: 0
   rectTransform: {fileID: 941321272}
 --- !u!1 &945152983
 GameObject:
@@ -13873,6 +13880,7 @@ MonoBehaviour:
   startX: -1289
   moveDistanceX: 1289
   moveSpeedX: 1200
+  reverseDecay: 0
   rectTransform: {fileID: 1271838302}
   gameStateControl: {fileID: 519420034}
   targetState: 3
@@ -16985,6 +16993,7 @@ MonoBehaviour:
   startX: 0
   moveDistanceX: 645
   moveSpeedX: 1200
+  reverseDecay: 0
   rectTransform: {fileID: 1600209763}
 --- !u!1 &1607190656
 GameObject:
@@ -19048,6 +19057,7 @@ MonoBehaviour:
   startX: -300
   moveDistanceX: 600
   moveSpeedX: 1200
+  reverseDecay: 0
   rectTransform: {fileID: 1730987642}
 --- !u!114 &1730987644
 MonoBehaviour:
@@ -20388,8 +20398,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startX: 0
-  moveDistanceX: 1289
-  moveSpeedX: 2400
+  moveDistanceX: -1289
+  moveSpeedX: -2400
+  reverseDecay: 1
   rectTransform: {fileID: 1890144471}
   gameStateControl: {fileID: 519420034}
   targetState: 1
@@ -22218,6 +22229,7 @@ MonoBehaviour:
   startX: -300
   moveDistanceX: 600
   moveSpeedX: 2400
+  reverseDecay: 0
   rectTransform: {fileID: 2110569977}
 --- !u!1001 &3446603170035260223
 PrefabInstance:
