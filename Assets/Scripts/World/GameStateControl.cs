@@ -30,13 +30,19 @@ public class GameStateControl : MonoBehaviour
     public GameObject roundOverUI;
     public GameObject gameOverUI;
 
-    [Header("Misc")]
+    [Header("Audio")]
     [SerializeField]
     private Slider menuVolumeSlider;
     [SerializeField]
     private Slider pauseVolumeSlider;
+    [SerializeField]
+    private AudioSource source;
+    [SerializeField]
+    private AudioClip readyFX;
+    [SerializeField]
+    private AudioClip fightFX;
 
-    [Header("Round Over")]
+    [Header("Round Related")]
     [SerializeField]
     private TextMeshProUGUI roundWinner;
     [SerializeField]
@@ -45,8 +51,6 @@ public class GameStateControl : MonoBehaviour
     private Image p1RoundCount;
     [SerializeField]
     private Image p2RoundCount;
-    [SerializeField]
-    private int roundLimit;
     private int p1Wins;
     private int p2Wins;
 
@@ -64,9 +68,6 @@ public class GameStateControl : MonoBehaviour
         p1Animator = p1.GetComponent<Animator>();
         p2Animator = p2.GetComponent<Animator>();
         CPUAnimator = CPU.GetComponent<Animator>();
-
-        p1Wins = 0;
-        p2Wins = 0;
     }
 
     // Update is called once per frame
@@ -77,6 +78,7 @@ public class GameStateControl : MonoBehaviour
 
     public void SetGameState(GameState state)
     {
+        GameObject opponent;
         switch (state)
         {
             case GameState.Menu:
@@ -96,6 +98,12 @@ public class GameStateControl : MonoBehaviour
                 p1Animator.SetTrigger("Revive");
                 p1.SetActive(false);
                 p1.SetActive(true);
+
+                p1RoundCount.fillAmount = 1.0f;
+                p2RoundCount.fillAmount = 1.0f;
+                p1Wins = 0;
+                p2Wins = 0;
+
                 if (WorldRules.PvP)
                 {
                     p2.transform.position = p2StartPos;
@@ -118,6 +126,14 @@ public class GameStateControl : MonoBehaviour
                 }
                 break;
             case GameState.Fighting:
+                if (gameState == GameState.RoundStart)
+                {
+                    p1.GetComponent<PlayerAttackController>().enabled = true;
+                    p2.GetComponent<PlayerAttackController>().enabled = true;
+                    CPU.GetComponent<AIAttackController>().enabled = true;
+                    source.clip = fightFX;
+                    source.Play();
+                }
                 gameState = GameState.Fighting;
                 menuUI.SetActive(false);
                 pauseUI.SetActive(false);
@@ -135,9 +151,27 @@ public class GameStateControl : MonoBehaviour
                 break;
             case GameState.RoundStart:
                 gameState = GameState.RoundStart;
+                source.clip = readyFX;
+                source.Play();
                 p1.GetComponent<HealthManager>().ResetHealth();
-                if (WorldRules.PvP) p2.GetComponent<HealthManager>().ResetHealth();
-                else               CPU.GetComponent<HealthManager>().ResetHealth();
+                p1Animator.SetTrigger("Revive");
+                p1.GetComponent<PlayerAttackController>().enabled = false;
+                p1.GetComponent<PlayerController>().enabled = true;
+                if (WorldRules.PvP)
+                {
+                    p2.GetComponent<HealthManager>().ResetHealth();
+                    p2Animator.SetTrigger("Revive");
+                    p2.GetComponent<PlayerAttackController>().enabled = false;
+                    p2.GetComponent<PlayerController>().enabled = true;
+                }
+                else
+                {
+                    CPU.GetComponent<HealthManager>().ResetHealth();
+                    CPUAnimator.SetTrigger("Revive");
+                    CPU.GetComponent<AIAttackController>().enabled = false;
+                    CPU.GetComponent<AIController>().enabled = true;
+                }
+                
                 roundOverUI.SetActive(false);
                 roundStartUI.SetActive(true);
                 fightUI.SetActive(true);
@@ -145,7 +179,7 @@ public class GameStateControl : MonoBehaviour
             case GameState.RoundOver:
                 // todo cleanup
                 gameState = GameState.RoundOver;
-                GameObject opponent = WorldRules.PvP ? p2 : CPU;
+                opponent = WorldRules.PvP ? p2 : CPU;
                 winnerName = string.Empty;
 
                 if (CheckDead(p1))
@@ -159,13 +193,22 @@ public class GameStateControl : MonoBehaviour
                     winnerName = winnerName == string.Empty ? p1.GetComponent<HealthManager>().nameTag.text : "NOBODY";
                 }
 
+                p1RoundCount.fillAmount = 1.0f - ((float)p2Wins / (float)WorldRules.roundLimit);
+                p2RoundCount.fillAmount = 1.0f - ((float)p1Wins / (float)WorldRules.roundLimit);
                 p1.GetComponent<PlayerController>().enabled = false;
                 if (opponent.TryGetComponent(out PlayerController pController)) pController.enabled = false;
                 else if (opponent.TryGetComponent(out AIController aiController)) aiController.enabled = false;
 
-                roundWinner.text = winnerName + " WINS";
-                currentScore.text = p1Wins + " - " + p2Wins;
-                roundOverUI.SetActive(true);
+                if (p1Wins == WorldRules.roundLimit || p2Wins == WorldRules.roundLimit)
+                {
+                    SetGameState(GameState.GameOver);
+                }
+                else
+                {
+                    roundWinner.text = winnerName + " WINS";
+                    currentScore.text = p1Wins + " - " + p2Wins;
+                    roundOverUI.SetActive(true);
+                }
                 break;
             case GameState.GameOver:
                 // todo also cleanup
@@ -173,25 +216,31 @@ public class GameStateControl : MonoBehaviour
                 fightUI.SetActive(false);
                 pauseUI.SetActive(false);
                 pauseSetting.enabled = false;
+                roundOverUI.SetActive(false);
                 gameOverUI.SetActive(true);
-
-                winnerName = "NOBODY";
-                if (CheckDead(p1))
-                {
-                    if (WorldRules.PvP && !CheckDead(p2))
-                    {
-                        winnerName = p2.GetComponent<HealthManager>().nameTag.text;
-                        p2.GetComponent<PlayerController>().enabled = false;
-                    }
-                    else if (!CheckDead(CPU))
-                    {
-                        winnerName = CPU.GetComponent<HealthManager>().nameTag.text;
-                        CPU.GetComponent<AIController>().enabled = false;
-                    }
-                }
-                winnerTag.SetText(winnerName);
+                opponent = WorldRules.PvP ? p2 : CPU;
 
                 p1.GetComponent<PlayerController>().enabled = false;
+                if (WorldRules.PvP)
+                {
+                    opponent.GetComponent<PlayerController>().enabled = false;
+                }
+                else
+                {
+                    opponent.GetComponent<AIController>().enabled = false;
+                }
+
+                winnerName = "NOBODY";
+                if (p1Wins < p2Wins)
+                {
+                    winnerName = opponent.GetComponent<HealthManager>().nameTag.text;
+                }
+                else if (p1Wins > p2Wins)
+                {
+                    winnerName = p1.GetComponent<HealthManager>().nameTag.text;
+                }
+
+                winnerTag.SetText(winnerName);
                 break;
         }
     }
@@ -202,36 +251,19 @@ public class GameStateControl : MonoBehaviour
         return healthManager.currentHealth == 0 ? true : false;
     }
 
-    public void TriggerNewRound()
-    {
-        p1.GetComponent<HealthManager>().ResetHealth();
-        p1Animator.SetTrigger("Revive");
-        if (WorldRules.PvP)
-        {
-            p2.GetComponent<HealthManager>().ResetHealth();
-            p2Animator.SetTrigger("Revive");
-        }
-        else
-        {
-            CPU.GetComponent<HealthManager>().ResetHealth();
-            CPUAnimator.SetTrigger("Revive");
-        }
-        SetGameState(GameState.RoundStart);
-    }
-
     public void EndGame()
     {
         p1Animator.enabled = true;
-        p1.GetComponent<HealthManager>().SendDamage(200);
+        p1.GetComponent<HealthManager>().Kill();
         if (WorldRules.PvP)
         {
             p2Animator.enabled = true;
-            p2.GetComponent<HealthManager>().SendDamage(200);
+            p2.GetComponent<HealthManager>().Kill();
         }
         else
         {
             CPUAnimator.enabled = true;
-            CPU.GetComponent<HealthManager>().SendDamage(200);
+            CPU.GetComponent<HealthManager>().Kill();
         }
         SetGameState(GameState.GameOver);
     }
@@ -247,6 +279,11 @@ public class GameStateControl : MonoBehaviour
         {
             SetGameState(GameState.Pause);
         }
+    }
+
+    public void AlignVolume()
+    {
+        source.volume = WorldRules.volume;
     }
 
     public void QuitGame()

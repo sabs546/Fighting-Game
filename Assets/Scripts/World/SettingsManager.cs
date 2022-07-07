@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class SettingsManager : MonoBehaviour
 {
-    public enum Setting { Volume, Health };
+    public enum Setting { Volume, Health, Rounds };
     public Setting setting;
     public TMPro.TextMeshProUGUI valueBox;
 
@@ -19,6 +19,11 @@ public class SettingsManager : MonoBehaviour
     public void SetVolume()
     {
         WorldRules.volume = GetComponent<Slider>().value;
+    }
+
+    public void SetRounds()
+    {
+        WorldRules.roundLimit = (int)GetComponent<Slider>().value;
     }
 
     public void SetValueText()

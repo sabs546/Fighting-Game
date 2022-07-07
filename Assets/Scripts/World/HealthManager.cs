@@ -38,7 +38,7 @@ public class HealthManager : MonoBehaviour
 
     public void SendDamage(int damage)
     {
-        if (GameStateControl.gameState != GameStateControl.GameState.Fighting)
+        if (GameStateControl.gameState == GameStateControl.GameState.GameOver)
         {
             return;
         }
@@ -62,6 +62,13 @@ public class HealthManager : MonoBehaviour
             AIAttackController.CancelAttack();
         }
         healthBar.localScale = new Vector3(currentHealth / (float)maxHealth, 1.0f, 1.0f);
+    }
+
+    public void Kill()
+    {
+        currentHealth = 0;
+        GetComponent<Animator>().SetTrigger("Die");
+        healthBar.localScale = new Vector3(0.0f, 1.0f, 1.0f);
     }
 
     public void SetMaxHealth(Slider slider)

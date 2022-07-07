@@ -17,6 +17,8 @@ public class TimerAnimation : MonoBehaviour
     private float distLeft;
     [SerializeField]
     GameStateControl gameStateControl;
+    [SerializeField]
+    GameStateControl.GameState targetState;
 
     private void OnEnable()
     {
@@ -64,7 +66,7 @@ public class TimerAnimation : MonoBehaviour
         }
         else
         {
-            gameStateControl.SetGameState(GameStateControl.GameState.Fighting);
+            gameStateControl.SetGameState(targetState);
         }
     }
 }

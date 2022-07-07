@@ -12,6 +12,7 @@ public class WorldRules : MonoBehaviour
     public static bool  PvP         = false; // Is 2 players enabled
     public static float volume      = 1.0f;  // For the volume slider
     public static float gameSpeed   = 1.0f;  // Changes the speed of the game
+    public static int   roundLimit  = 3;     // Number of rounds to win
 
     private void Start()
     {
