@@ -11,6 +11,9 @@ public class PlayerController : MonoBehaviour
     [HideInInspector]
     public bool blocking; // Prevents knockback auto-block
 
+    private enum Inputs { Up, Down, Left, Right, None };
+    private Inputs currentInput;
+    private Inputs currentRInput;
     [Header("Inputs")]
     private bool up;
     private bool down;
@@ -21,6 +24,7 @@ public class PlayerController : MonoBehaviour
     private bool rLeft;
     private bool rRight;
     private DPadButtons dpadInputs;
+    private KeyboardInput keyboardInputs;
 
     public enum PlayerStates { Crouching, Grounded, Airborne };
     public enum GroundStates { Neutral, Dash, Backdash, Sprint, Stun };
@@ -45,6 +49,7 @@ public class PlayerController : MonoBehaviour
         physics = GetComponent<PlayerPhysics>();
         attackController = GetComponent<PlayerAttackController>();
         dpadInputs = GetComponent<DPadButtons>();
+        keyboardInputs = GetComponent<KeyboardInput>();
     }
 
     private void OnDisable()
@@ -77,54 +82,82 @@ public class PlayerController : MonoBehaviour
         up = down = left = right = false;
         rUp = rDown = rLeft = rRight = false;
 
-        if (controls.type == SetControls.ControllerType.Keyboard)
+        if (attackController.state == PlayerAttackController.AttackState.Empty && gState != GroundStates.Stun)
         {
-            up = Input.GetKeyDown(controls.keyboardControls.Up) != up;
-            down = Input.GetKeyDown(controls.keyboardControls.Down) != down;
-            left = Input.GetKeyDown(controls.keyboardControls.Left) != left;
-            right = Input.GetKeyDown(controls.keyboardControls.Right) != right;
+            if (controls.type == SetControls.ControllerType.Keyboard)
+            { // todo something is wrong with sprint attacks and keyboard inputs
+                switch (keyboardInputs.KeyboardDown())
+                {
+                    case KeyboardInput.Inputs.Up:
+                        up = true;
+                        break;
+                    case KeyboardInput.Inputs.Down:
+                        down = true;
+                        break;
+                    case KeyboardInput.Inputs.Left:
+                        left = true;
+                        break;
+                    case KeyboardInput.Inputs.Right:
+                        right = true;
+                        break;
+                    case KeyboardInput.Inputs.None:
+                        switch (keyboardInputs.KeyboardUp())
+                        {
+                            case KeyboardInput.Inputs.Up:
+                                rUp = true;
+                                break;
+                            case KeyboardInput.Inputs.Down:
+                                rDown = true;
+                                break;
+                            case KeyboardInput.Inputs.Left:
+                                rLeft = true;
+                                break;
+                            case KeyboardInput.Inputs.Right:
+                                rRight = true;
+                                break;
+                        }
+                        break;
+                }
 
-            rUp = Input.GetKeyUp(controls.keyboardControls.Up) != rUp;
-            rDown = Input.GetKeyUp(controls.keyboardControls.Down) != rDown;
-            rLeft = Input.GetKeyUp(controls.keyboardControls.Left) != rLeft;
-            rRight = Input.GetKeyUp(controls.keyboardControls.Right) != rRight;
-        }
-        else if (controls.type == SetControls.ControllerType.Controller)
-        {
-            switch (dpadInputs.DPadDown())
-            {
-                case DPadButtons.Inputs.Up:
-                    up = true;
-                    break;
-                case DPadButtons.Inputs.Down:
-                    down = true;
-                    break;
-                case DPadButtons.Inputs.Left:
-                    left = true;
-                    break;
-                case DPadButtons.Inputs.Right:
-                    right = true;
-                    break;
-                case DPadButtons.Inputs.None:
-                    switch (dpadInputs.DPadUp())
-                    {
-                        case DPadButtons.Inputs.Up:
-                            rUp = true;
-                            break;
-                        case DPadButtons.Inputs.Down:
-                            rDown = true;
-                            break;
-                        case DPadButtons.Inputs.Left:
-                            rLeft = true;
-                            break;
-                        case DPadButtons.Inputs.Right:
-                            rRight = true;
-                            break;
-                    }
-                    break;
+                keyboardInputs.ClearInputs();
             }
+            else if (controls.type == SetControls.ControllerType.Controller)
+            {
+                switch (dpadInputs.DPadDown())
+                {
+                    case DPadButtons.Inputs.Up:
+                        up = true;
+                        break;
+                    case DPadButtons.Inputs.Down:
+                        down = true;
+                        break;
+                    case DPadButtons.Inputs.Left:
+                        left = true;
+                        break;
+                    case DPadButtons.Inputs.Right:
+                        right = true;
+                        break;
+                    case DPadButtons.Inputs.None:
+                        switch (dpadInputs.DPadUp())
+                        {
+                            case DPadButtons.Inputs.Up:
+                                rUp = true;
+                                break;
+                            case DPadButtons.Inputs.Down:
+                                rDown = true;
+                                break;
+                            case DPadButtons.Inputs.Left:
+                                rLeft = true;
+                                break;
+                            case DPadButtons.Inputs.Right:
+                                rRight = true;
+                                break;
+                        }
+                        break;
+                }
 
-            dpadInputs.ClearInputs();
+                dpadInputs.ClearInputs();
+            }
         }
 
         // --------------------------------------------------------
@@ -223,7 +256,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (gState != GroundStates.Stun)
+        if ((attackController.state == PlayerAttackController.AttackState.Empty || attackController.state == PlayerAttackController.AttackState.Recovery) && gState != GroundStates.Stun)
         {
             if (controls.type == SetControls.ControllerType.Keyboard)
             {

@@ -45,6 +45,7 @@ public class DPadButtons : MonoBehaviour
             controls.gamepadControls.Punch = controls.gamepadControls.Punch + 20;
             controls.gamepadControls.Kick = controls.gamepadControls.Kick + 20;
             controls.gamepadControls.Throw = controls.gamepadControls.Throw + 20;
+            controls.gamepadControls.Pause = controls.gamepadControls.Pause + 20;
         }
         else
         {
@@ -52,6 +53,7 @@ public class DPadButtons : MonoBehaviour
             controls.gamepadControls.Punch = controls.gamepadControls.Punch - 20;
             controls.gamepadControls.Kick = controls.gamepadControls.Kick - 20;
             controls.gamepadControls.Throw = controls.gamepadControls.Throw - 20;
+            controls.gamepadControls.Pause = controls.gamepadControls.Pause - 20;
         }
     }
 
