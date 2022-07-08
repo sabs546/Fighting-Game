@@ -221,7 +221,7 @@ public class AIAttackController : MonoBehaviour
         physics.launch -= currentAttack.Recoil.y / WorldRules.physicsRate;
         opponentPhysics.travel += currentAttack.Knockback.x / WorldRules.physicsRate;
         opponentPhysics.launch += currentAttack.Knockback.y / WorldRules.physicsRate;
-        if (!currentAttack.AlwaysRecoil)
+        if (!currentAttack.AlwaysRecoil && !currentAttack.DelayRecoil)
         {
             if (currentAttack.Recoil != Vector2.zero)
             {

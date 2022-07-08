@@ -231,6 +231,16 @@ public class PlayerPhysics : MonoBehaviour
         effectiveMovement = 0.0f;
     }
 
+    public void SlowDown()
+    {
+        effectiveMovement *= 0.5f;
+    }
+
+    public void Hover()
+    {
+        effectiveGravity *= 0.5f;
+    }
+
     public void SetOpponentType(GameObject type)
     {
         opponent = type;

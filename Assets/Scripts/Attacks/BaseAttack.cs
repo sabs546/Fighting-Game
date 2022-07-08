@@ -22,8 +22,7 @@ public class BaseAttack
     public virtual void SideSwap() { }
     public void RemoveRecoil()
     {
-        AlwaysRecoil = false;
-        DelayRecoil = false;
+        Recoil = Vector2.zero;
     }
     public void RemoveKnockback()
     {

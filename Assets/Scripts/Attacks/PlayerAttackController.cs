@@ -169,6 +169,11 @@ public class PlayerAttackController : MonoBehaviour
                     physics.launch += currentAttack.Recoil.y / WorldRules.physicsRate;
                     currentAttack.RemoveRecoil();
                 }
+                if (currentAttack.DelayRecoil)
+                {
+                    physics.SlowDown();
+                    physics.Hover();
+                }
 
                 if (timer == 1)
                 { // Changing the sounds to the whiffed versions
@@ -276,11 +281,11 @@ public class PlayerAttackController : MonoBehaviour
             p2Physics.launch += currentAttack.Knockback.y / WorldRules.physicsRate;
         }
 
-        if (!currentAttack.AlwaysRecoil)
+        if (!currentAttack.AlwaysRecoil || !currentAttack.DelayRecoil)
         {
             if (currentAttack.Recoil != Vector2.zero)
             {
-                physics.travel -= currentAttack.Recoil.x / WorldRules.physicsRate;
+                physics.travel -= currentAttack.Recoil.x / WorldRules.physicsRate; /// HERE
             }
             else
             {

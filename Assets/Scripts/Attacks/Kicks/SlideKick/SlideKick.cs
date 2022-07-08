@@ -22,7 +22,7 @@ public class SlideKick : BaseAttack
 
     public override void SideSwap()
     {
-        Range = new Vector2(Range.x * -1.0f, Range.y);
-        Knockback = new Vector2(Knockback.x * -1.0f, Knockback.y);
+        Range = new Vector2(-Range.x, Range.y);
+        Knockback = new Vector2(-Knockback.x, Knockback.y);
     }
 }
