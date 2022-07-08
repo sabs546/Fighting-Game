@@ -142,7 +142,6 @@ public class PlayerAttackController : MonoBehaviour
             if (timer == 0)
             {
                 controller.gState = PlayerController.GroundStates.Stun;
-                GetComponent<Animator>().SetBool("Stun", true);
             }
 
             if (timer < stunLimit)
@@ -152,17 +151,9 @@ public class PlayerAttackController : MonoBehaviour
             else
             {
                 controller.gState = PlayerController.GroundStates.Neutral;
-                GetComponent<Animator>().SetBool("Stun", false);
                 stunLimit = 0;
                 timer = 0;
             }
-        }
-
-        // todo temp patch code, needs more testing
-        if (stunLimit == 0 && controller.gState == PlayerController.GroundStates.Stun)
-        {
-            controller.gState = PlayerController.GroundStates.Neutral;
-            GetComponent<Animator>().SetBool("Stun", false);
         }
 
         // What happens in the attack state

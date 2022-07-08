@@ -85,6 +85,15 @@ public class SpriteManager : MonoBehaviour
             }
         }
 
+        if (controller.gState == PlayerController.GroundStates.Stun)
+        {
+            animator.SetBool("Stun", true);
+        }
+        else
+        {
+            animator.SetBool("Stun", false);
+        }
+
         // Can't turn around mid attack
         if (atkController.state != PlayerAttackController.AttackState.Recovery)
         {

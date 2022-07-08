@@ -96,7 +96,6 @@ public class AIAttackController : MonoBehaviour
             if (timer == 0)
             {
                 controller.gState = AIController.GroundStates.Stun;
-                GetComponent<Animator>().SetBool("Stun", true);
             }
 
             if (timer < stunLimit)
@@ -106,7 +105,6 @@ public class AIAttackController : MonoBehaviour
             else
             {
                 controller.gState = AIController.GroundStates.Neutral;
-                GetComponent<Animator>().SetBool("Stun", false);
                 stunLimit = 0;
                 timer = 0;
             }

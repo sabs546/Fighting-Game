@@ -76,6 +76,15 @@ public class AISpriteManager : MonoBehaviour
             }
         }
 
+        if (controller.gState == AIController.GroundStates.Stun)
+        {
+            animator.SetBool("Stun", true);
+        }
+        else
+        {
+            animator.SetBool("Stun", false);
+        }
+
         // Can't turn around mid attack
         if (atkController.state != AIAttackController.AttackState.Recovery)
         {
