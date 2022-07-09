@@ -35,6 +35,14 @@ public class PlayerPhysics : MonoBehaviour
     private PlayerController controller;
     public  GameObject       opponent;
 
+    [Header("Audio")]
+    [SerializeField]
+    private AudioSource source;
+    [SerializeField]
+    private AudioClip dashWind;
+    [SerializeField]
+    private AudioClip jumpWind;
+
     // Start is called before the first frame update
     private void Start()
     {
@@ -65,6 +73,11 @@ public class PlayerPhysics : MonoBehaviour
         if (controller.gState == PlayerController.GroundStates.Dash ||
             controller.gState == PlayerController.GroundStates.Backdash) launch *= 0.75f;
         effectiveGravity -= launch;                                                                                                // Launch applies next for no real reason
+        if (launch == controller.jumpPower)
+        {
+            source.clip = jumpWind;
+            source.Play();
+        }
         launch = 0.0f;                                                                                                             // External forces like jumping are nullified
         
         controller.aState = effectiveGravity < 0.0f ? PlayerController.AirStates.Rising : PlayerController.AirStates.Falling;      // Check if you're rising or falling
@@ -146,6 +159,11 @@ public class PlayerPhysics : MonoBehaviour
             {
                 if (controller.gState != PlayerController.GroundStates.Sprint && controller.gState != PlayerController.GroundStates.Dash)
                 {
+                    if (controller.gState != PlayerController.GroundStates.Backdash && controller.gState != PlayerController.GroundStates.Dash)
+                    {
+                        source.clip = dashWind;
+                        source.Play();
+                    }
                     controller.gState = PlayerController.GroundStates.Backdash;
                 }
                 enableSprint = true;
@@ -157,6 +175,11 @@ public class PlayerPhysics : MonoBehaviour
             {
                 if (controller.gState != PlayerController.GroundStates.Sprint)
                 {
+                    if (controller.gState != PlayerController.GroundStates.Backdash && controller.gState != PlayerController.GroundStates.Dash)
+                    {
+                        source.clip = dashWind;
+                        source.Play();
+                    }
                     controller.gState = PlayerController.GroundStates.Dash;
                     if (enableCrouch) controller.pState = PlayerController.PlayerStates.Crouching;
                 }
@@ -198,6 +221,8 @@ public class PlayerPhysics : MonoBehaviour
             effectiveMovement = -effectiveMovement;
             effectiveGravity = -controller.jumpPower;
             startSprint = false;
+            source.clip = jumpWind;
+            source.Play();
         }
         else if (pos.x > effectiveMaxRight)
         {
@@ -205,6 +230,8 @@ public class PlayerPhysics : MonoBehaviour
             effectiveMovement = -effectiveMovement;
             effectiveGravity = -controller.jumpPower;
             startSprint = false;
+            source.clip = jumpWind;
+            source.Play();
         }
 
         transform.position = pos;

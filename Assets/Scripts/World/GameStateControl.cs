@@ -283,7 +283,7 @@ public class GameStateControl : MonoBehaviour
 
     public void AlignVolume()
     {
-        source.volume = WorldRules.volume;
+        source.volume = WorldRules.volume / 100.0f;
     }
 
     public void QuitGame()

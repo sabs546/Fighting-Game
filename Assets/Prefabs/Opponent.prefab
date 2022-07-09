@@ -112,6 +112,9 @@ MonoBehaviour:
   startSprint: 0
   airLock: 0
   opponent: {fileID: 0}
+  source: {fileID: 6362332988191231724}
+  dashWind: {fileID: 8300000, guid: 11e629138cdcc254dbb867d0dd8db767, type: 3}
+  jumpWind: {fileID: 8300000, guid: dfd8bd9e1bb89f44ca3e94204d1d930b, type: 3}
 --- !u!114 &6362332988191231725
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -144,6 +147,7 @@ MonoBehaviour:
   sprint: 0.2
   dashDistance: 0.4
   jumpPower: 0.4
+  blocking: 0
   pState: 0
   gState: 0
   aState: 0
