@@ -197,14 +197,14 @@ public class PlayerPhysics : MonoBehaviour
             pos.x = effectiveMaxLeft;
             effectiveMovement = -effectiveMovement;
             effectiveGravity = -controller.jumpPower;
-            //travel = travel * 0.5f * -1.0f;
+            startSprint = false;
         }
         else if (pos.x > effectiveMaxRight)
         {
             pos.x = effectiveMaxRight;
             effectiveMovement = -effectiveMovement;
             effectiveGravity = -controller.jumpPower;
-            //travel = travel * 0.5f * -1.0f;
+            startSprint = false;
         }
 
         transform.position = pos;
