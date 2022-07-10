@@ -4,17 +4,16 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    // Movement Values =======================
     [Header("Movement")]
-    public float sprint;
-    public float dashDistance;
-    public float jumpPower;
-    [HideInInspector]
-    public bool blocking; // Prevents knockback auto-block
+    public float sprint;       // Sprint speed
+    public float dashDistance; // Dash speed
+    public float jumpPower;    // Jump height
 
+    // Input Values =======================================================
     private enum Inputs { Up, Down, Left, Right, None };
-    private Inputs currentInput;
-    private Inputs currentRInput;
-    [Header("Inputs")]
+    private Inputs currentInput;          // The down input of a button
+    private Inputs currentRInput;         // The up input of a button
     private bool up;
     private bool down;
     private bool left;
@@ -23,9 +22,10 @@ public class PlayerController : MonoBehaviour
     private bool rDown;
     private bool rLeft;
     private bool rRight;
-    private DPadButtons dpadInputs;
-    private KeyboardInput keyboardInputs;
+    private DPadButtons dpadInputs;       // Handles the directional inputs
+    private KeyboardInput keyboardInputs; // Also did it to keyboard
 
+    // States =========================================================
     public enum PlayerStates { Crouching, Grounded, Airborne };
     public enum GroundStates { Neutral, Dash, Backdash, Sprint, Stun };
     public enum AirStates    { Rising, Falling };
@@ -37,10 +37,14 @@ public class PlayerController : MonoBehaviour
     public enum Side { Left, Right };
     public Side currentSide;
 
+    // Components ==================================
     [Header("Components")]
     private SetControls controls;
     private PlayerPhysics physics;
     private PlayerAttackController attackController;
+
+    // Prevents knockback auto-block
+    public bool blocking { get; private set; }
 
     // Start is called before the first frame update
     void OnEnable()
@@ -289,5 +293,10 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void EnableBlock()
+    {
+        blocking = true;
     }
 }

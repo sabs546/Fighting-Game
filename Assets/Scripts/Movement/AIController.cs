@@ -5,40 +5,49 @@ using UnityEngine;
 
 public class AIController : MonoBehaviour
 {
-    public float sprint;
-    public float dashDistance;
-    public float jumpPower;
-    [HideInInspector]
-    public bool blocking; // Prevents knockback auto-block
+    // Movement Values =========================
+    public float sprint;         // Sprint speed
+    public float dashDistance;   // Dash speed
+    public float jumpPower;      // Jump height
 
+    // States ===============================================================
     public enum PlayerStates { Crouching, Grounded, Airborne };
     public enum GroundStates { Neutral, Dash, Backdash, Sprint, Stun, Jump };
     public enum AirStates    { Rising, Falling };
     public PlayerStates pState;
     public GroundStates gState;
     public AirStates    aState;
-    public enum Playstyle { Rushdown, Adaptive, Turtle }; // The AI needs a decision making process, but they need something to decide why they would make a decision
-    public Playstyle playStyle;                           // Rather than just always being optimal, the playstyle should decide what they want to do at any given time
+
+    // The AI needs a decision making process, but they need something to decide why they would make a decision
+    // Rather than just always being optimal, the playstyle should decide what they want to do at any given time
+    // todo Currently only rushdown is in use, the rest will be implemented with time
+    public enum Playstyle { Rushdown, Adaptive, Turtle };
+    public Playstyle playStyle;
 
     public enum Side { Left, Right };
     public Side currentSide;
 
+    // Tracking ====================================================
     public GameObject opponent;  // Used for AI tracking of opponent
     public float      reach;     // Check for punching range
     public float      dashReach; // Check for approach range
 
-    private SetControls controls;
+    // Other Components ========================
     private AIPhysics physics;
     private AIAttackController attackController;
-    private int aFatigue; // Attack fatigue
-    private int mFatigue; // Movement fatigue
-    private int fatigue;  // Decision fatigue is how high to set the timer before making another decision
-    private int ticker;   // Countdown for aggression
+
+    // Calculated Values ==================================================================
+    private int aFatigue;        // Attack fatigue
+    private int mFatigue;        // Movement fatigue
+    private int fatigue;         // Inherits one of the above fatigues to slow down actions
+    private int ticker;          // Countdown for aggression
+
+    // Prevents knockback auto-block
+    public bool blocking { get; private set; }
 
     // Start is called before the first frame update
     void OnEnable()
     {
-        controls = GetComponent<SetControls>();
         physics = GetComponent<AIPhysics>();
         attackController = GetComponent<AIAttackController>();
         aFatigue = 20;
@@ -301,5 +310,10 @@ public class AIController : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void EnableBlock()
+    {
+        blocking = true;
     }
 }

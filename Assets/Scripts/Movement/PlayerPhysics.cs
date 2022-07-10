@@ -148,6 +148,11 @@ public class PlayerPhysics : MonoBehaviour
         if (controller.gState != PlayerController.GroundStates.Sprint)
         {
             effectiveMovement += travel;
+            if (travel == controller.dashDistance || travel == -controller.dashDistance)
+            {
+                source.clip = dashWind;
+                source.Play();
+            }
             travel = 0.0f;
         }
 
@@ -159,11 +164,6 @@ public class PlayerPhysics : MonoBehaviour
             {
                 if (controller.gState != PlayerController.GroundStates.Sprint && controller.gState != PlayerController.GroundStates.Dash)
                 {
-                    if (controller.gState != PlayerController.GroundStates.Backdash && controller.gState != PlayerController.GroundStates.Dash)
-                    {
-                        source.clip = dashWind;
-                        source.Play();
-                    }
                     controller.gState = PlayerController.GroundStates.Backdash;
                 }
                 enableSprint = true;
@@ -175,11 +175,6 @@ public class PlayerPhysics : MonoBehaviour
             {
                 if (controller.gState != PlayerController.GroundStates.Sprint)
                 {
-                    if (controller.gState != PlayerController.GroundStates.Backdash && controller.gState != PlayerController.GroundStates.Dash)
-                    {
-                        source.clip = dashWind;
-                        source.Play();
-                    }
                     controller.gState = PlayerController.GroundStates.Dash;
                     if (enableCrouch) controller.pState = PlayerController.PlayerStates.Crouching;
                 }
@@ -203,7 +198,7 @@ public class PlayerPhysics : MonoBehaviour
 
             if (controller.gState != PlayerController.GroundStates.Backdash)
             {
-                controller.blocking = false;
+                controller.EnableBlock();
             }
         }
 

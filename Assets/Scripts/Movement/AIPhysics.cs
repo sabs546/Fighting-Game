@@ -9,8 +9,6 @@ public class AIPhysics : MonoBehaviour
     private float   fTimeGravity;     // Gravity locked to 60fps
     private float   fTimeDrag;        // Drag locked to 60fps
     private float   fTimeFloorDrag;   // FloorDrag locked to 60fps
-    [SerializeField]
-    private Vector2 barrierToss;       // Barrier rejection power
 
     // Controlled Values ======================================================
     [HideInInspector]
@@ -153,6 +151,11 @@ public class AIPhysics : MonoBehaviour
         if (controller.gState != AIController.GroundStates.Sprint)
         {
             effectiveMovement += travel;
+            if (travel == controller.dashDistance || travel == -controller.dashDistance)
+            {
+                source.clip = dashWind;
+                source.Play();
+            }
             travel = 0.0f;
         }
 
@@ -164,11 +167,6 @@ public class AIPhysics : MonoBehaviour
             {
                 if (controller.gState != AIController.GroundStates.Sprint && controller.gState != AIController.GroundStates.Dash)
                 {
-                    if (controller.gState != AIController.GroundStates.Backdash && controller.gState != AIController.GroundStates.Dash)
-                    {
-                        source.clip = dashWind;
-                        source.Play();
-                    }
                     controller.gState = AIController.GroundStates.Backdash;
                 }
                 enableSprint = true;
@@ -180,11 +178,6 @@ public class AIPhysics : MonoBehaviour
             {
                 if (controller.gState != AIController.GroundStates.Sprint)
                 {
-                    if (controller.gState != AIController.GroundStates.Backdash && controller.gState != AIController.GroundStates.Dash)
-                    {
-                        source.clip = dashWind;
-                        source.Play();
-                    }
                     controller.gState = AIController.GroundStates.Dash;
                     if (enableCrouch && controller.pState != AIController.PlayerStates.Airborne) controller.pState = AIController.PlayerStates.Crouching;
                 }
@@ -208,7 +201,7 @@ public class AIPhysics : MonoBehaviour
 
             if (controller.gState != AIController.GroundStates.Backdash)
             {
-                controller.blocking = false;
+                controller.EnableBlock();
             }
         }
 
