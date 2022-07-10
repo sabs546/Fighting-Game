@@ -130,6 +130,8 @@ public class PlayerAttackController : MonoBehaviour
             if (currentAttack is FallingKick && controller.pState == PlayerController.PlayerStates.Grounded)
             {
                 currentAttack = new SlideKick();
+                GetComponent<AttackAudioManager>().PlaySound("BlockHeavy", 1);
+                Camera.main.GetComponent<CameraControl>().StartShake(2, 4u, 0.5f);
                 state = AttackState.Startup;
                 timer = 0;
                 currentAttack.RemoveRecoil();
@@ -179,11 +181,11 @@ public class PlayerAttackController : MonoBehaviour
                 { // Changing the sounds to the whiffed versions
                     if (currentAttack.SparkType == HitSparkManager.SparkType.Launch)
                     {
-                        GetComponent<AttackAudioManager>().PlaySound("Whiff_Heavy_01");
+                        GetComponent<AttackAudioManager>().PlaySound("Whiff_Heavy_01", 0);
                     }
                     else if (currentAttack.SparkType == HitSparkManager.SparkType.Mid || currentAttack.SparkType == HitSparkManager.SparkType.Low)
                     {
-                        GetComponent<AttackAudioManager>().PlaySound("Whiff_Light_01");
+                        GetComponent<AttackAudioManager>().PlaySound("Whiff_Light_01", 0);
                     }
                 }
             }
@@ -334,11 +336,11 @@ public class PlayerAttackController : MonoBehaviour
 
             // Other stuff
             opponent.GetComponent<HealthManager>().SendDamage(currentAttack.Damage);
-            GetComponent<AttackAudioManager>().PlaySound(currentAttack.SoundName);
+            GetComponent<AttackAudioManager>().PlaySound(currentAttack.SoundName, 0);
             timer = currentAttack.Speed.y;
             if (currentAttack.SoundName == "Heavy_01")
             {
-                Camera.main.GetComponent<CameraControl>().StartShake(16, 2, 0.5f);
+                Camera.main.GetComponent<CameraControl>().StartShake(16, 2u, 0.5f);
             }
         }
         else
@@ -346,12 +348,12 @@ public class PlayerAttackController : MonoBehaviour
             timer = currentAttack.Speed.y;
             if (currentAttack.SoundName == "Heavy_01")
             {
-                GetComponent<AttackAudioManager>().PlaySound("BlockHeavy");
-                Camera.main.GetComponent<CameraControl>().StartShake(4, 2, 1.0f);
+                GetComponent<AttackAudioManager>().PlaySound("BlockHeavy", 0);
+                Camera.main.GetComponent<CameraControl>().StartShake(4, 2u, 1.0f);
             }
             else
             {
-                GetComponent<AttackAudioManager>().PlaySound("BlockLight");
+                GetComponent<AttackAudioManager>().PlaySound("BlockLight", 0);
             }
             opponent.GetComponent<Animator>().SetBool("Guard", true);
         }
