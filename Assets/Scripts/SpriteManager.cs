@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SpriteManager : MonoBehaviour
 {
@@ -35,14 +33,14 @@ public class SpriteManager : MonoBehaviour
             }
             else if (atkController.currentAttack.attackType == BaseAttack.AttackType.Kick)
             {
-                animator.SetBool("Kick", true);
                 animator.SetBool("Punch", false);
+                animator.SetBool("Kick", true);
                 animator.SetBool("Throw", false);
             }
             else if (atkController.currentAttack.attackType == BaseAttack.AttackType.Throw)
             {
-                animator.SetBool("Kick", false);
                 animator.SetBool("Punch", false);
+                animator.SetBool("Kick", false);
                 animator.SetBool("Throw", true);
             }
         }
@@ -62,15 +60,25 @@ public class SpriteManager : MonoBehaviour
                 {
                     animator.SetBool("Crouch", true);
                 }
+                animator.SetBool("Guard", false);
             }
             else if (controller.gState == PlayerController.GroundStates.Backdash)
             {
                 animator.SetInteger("XDir", -1);
+                if (atkController.blocked)
+                {
+                    animator.SetBool("Guard", true);
+                }
             }
             else if (controller.gState == PlayerController.GroundStates.Sprint)
             {
                 animator.SetBool("Sprint", true);
                 sprite.flipX = controller.currentSide == PlayerController.Side.Right ? true : false;
+                animator.SetBool("Guard", false);
+            }
+            else if (controller.gState == PlayerController.GroundStates.Neutral)
+            {
+                animator.SetBool("Guard", false);
             }
         }
         else if (controller.pState == PlayerController.PlayerStates.Airborne)

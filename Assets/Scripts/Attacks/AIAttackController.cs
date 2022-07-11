@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class AIAttackController : MonoBehaviour
 {
-    // Attack Values ================================================================
+    // Attack Values ===================================================================
     public  BaseAttack currentAttack;         // Attack currently playing
     public  bool       allowFollowup;         // Does the CPU want to follow up
     private BaseAttack nextAttack;            // The next available attack in the string
@@ -27,6 +25,7 @@ public class AIAttackController : MonoBehaviour
     private BoxCollider2D   hitbox;           // The hitbox of the attack
     private int             timer;            // Frame counter
     private int             blockStun;        // Stacks on top of attack cooldown
+    public  bool            blocked { get; private set; }
 
     // Start is called before the first frame update
     void Start()
@@ -224,8 +223,6 @@ public class AIAttackController : MonoBehaviour
             //Debug.Log(hitbox.name + " " + hitbox.enabled);
             return;
         }
-
-        bool blocked = false;
 
         // Weight stuff
         physics.launch -= currentAttack.Recoil.y / WorldRules.physicsRate;

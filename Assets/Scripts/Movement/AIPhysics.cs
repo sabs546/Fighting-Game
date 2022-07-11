@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class AIPhysics : MonoBehaviour
 {
@@ -182,7 +180,6 @@ public class AIPhysics : MonoBehaviour
                     if (enableCrouch && controller.pState != AIController.PlayerStates.Airborne) controller.pState = AIController.PlayerStates.Crouching;
                 }
                 enableSprint = true;
-                GetComponent<Animator>().SetBool("Guard", false);
             }
 
             // Come to a stop
@@ -196,12 +193,11 @@ public class AIPhysics : MonoBehaviour
                 enableSprint = false;
                 enableCrouch = false;
                 airLock = 0;
-                GetComponent<Animator>().SetBool("Guard", false);
             }
 
             if (controller.gState != AIController.GroundStates.Backdash)
             {
-                controller.EnableBlock();
+                controller.DisableBlock();
             }
         }
 

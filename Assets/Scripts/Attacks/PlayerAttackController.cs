@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerAttackController : MonoBehaviour
 {
@@ -27,6 +25,7 @@ public class PlayerAttackController : MonoBehaviour
     private BoxCollider2D   hitbox;           // The hitbox of the attack
     private int             timer;            // Frame counter
     private int             blockStun;        // Stacks on top of attack cooldown
+    public  bool            blocked { get; private set; }
 
     // Input registering
     [HideInInspector]
@@ -48,6 +47,7 @@ public class PlayerAttackController : MonoBehaviour
         timer = 0;
         stunLimit = 0;
         blockStun = 0;
+        blocked = false;
 
         physics = GetComponent<PlayerPhysics>();
         opponentPhysics = physics.opponent.GetComponent<AIPhysics>();
@@ -272,8 +272,6 @@ public class PlayerAttackController : MonoBehaviour
             return;
         }
 
-        bool blocked = false;
-
         // Weight stuff
         physics.launch -= currentAttack.Recoil.y / WorldRules.physicsRate;
         if (p2Physics == null)
@@ -363,7 +361,6 @@ public class PlayerAttackController : MonoBehaviour
             {
                 GetComponent<AttackAudioManager>().PlaySound("BlockLight", 0);
             }
-            opponent.GetComponent<Animator>().SetBool("Guard", true);
         }
     }
 

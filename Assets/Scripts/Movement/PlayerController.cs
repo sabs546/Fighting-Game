@@ -1,14 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    // Movement Values =======================
+    // Movement Values ==================================
     [Header("Movement")]
-    public float sprint;       // Sprint speed
-    public float dashDistance; // Dash speed
-    public float jumpPower;    // Jump height
+    public float sprint;                  // Sprint speed
+    public float dashDistance;            // Dash speed
+    public float jumpPower;               // Jump height
 
     // Input Values =======================================================
     private enum Inputs { Up, Down, Left, Right, None };
@@ -295,8 +293,8 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void EnableBlock()
+    public void DisableBlock()
     {
-        blocking = true;
+        blocking = false;
     }
 }

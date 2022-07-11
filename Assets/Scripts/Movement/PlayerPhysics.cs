@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerPhysics : MonoBehaviour
 {
@@ -179,7 +177,6 @@ public class PlayerPhysics : MonoBehaviour
                     if (enableCrouch) controller.pState = PlayerController.PlayerStates.Crouching;
                 }
                 enableSprint = true;
-                GetComponent<Animator>().SetBool("Guard", false);
             }
 
             // Come to a stop
@@ -193,12 +190,11 @@ public class PlayerPhysics : MonoBehaviour
                 enableSprint = false;
                 enableCrouch = false;
                 airLock = 0;
-                GetComponent<Animator>().SetBool("Guard", false);
             }
 
             if (controller.gState != PlayerController.GroundStates.Backdash)
             {
-                controller.EnableBlock();
+                controller.DisableBlock();
             }
         }
 

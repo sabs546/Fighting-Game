@@ -312,8 +312,8 @@ public class AIController : MonoBehaviour
         }
     }
 
-    public void EnableBlock()
+    public void DisableBlock()
     {
-        blocking = true;
+        blocking = false;
     }
 }

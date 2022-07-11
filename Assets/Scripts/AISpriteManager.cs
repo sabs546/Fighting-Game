@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class AISpriteManager : MonoBehaviour
 {
@@ -10,7 +8,7 @@ public class AISpriteManager : MonoBehaviour
     SpriteRenderer sprite;
 
     // Start is called before the first frame update
-    void OnEnable()
+    void Start()
     {
         controller = GetComponent<AIController>();
         atkController = GetComponent<AIAttackController>();
@@ -31,17 +29,26 @@ public class AISpriteManager : MonoBehaviour
             {
                 animator.SetBool("Punch", true);
                 animator.SetBool("Kick", false);
+                animator.SetBool("Throw", false);
             }
             else if (atkController.currentAttack.attackType == BaseAttack.AttackType.Kick)
             {
-                animator.SetBool("Kick", true);
                 animator.SetBool("Punch", false);
+                animator.SetBool("Kick", true);
+                animator.SetBool("Throw", false);
+            }
+            else if (atkController.currentAttack.attackType == BaseAttack.AttackType.Throw)
+            {
+                animator.SetBool("Punch", false);
+                animator.SetBool("Kick", false);
+                animator.SetBool("Throw", true);
             }
         }
         else
         {
             animator.SetBool("Punch", false);
             animator.SetBool("Kick", false);
+            animator.SetBool("Throw", false);
         }
 
         if (controller.pState == AIController.PlayerStates.Grounded || controller.pState == AIController.PlayerStates.Crouching)
@@ -53,15 +60,25 @@ public class AISpriteManager : MonoBehaviour
                 {
                     animator.SetBool("Crouch", true);
                 }
+                animator.SetBool("Guard", false);
             }
             else if (controller.gState == AIController.GroundStates.Backdash)
             {
                 animator.SetInteger("XDir", -1);
+                if (atkController.blocked)
+                {
+                    animator.SetBool("Guard", true);
+                }
             }
             else if (controller.gState == AIController.GroundStates.Sprint)
             {
                 animator.SetBool("Sprint", true);
                 sprite.flipX = controller.currentSide == AIController.Side.Right ? true : false;
+                animator.SetBool("Guard", false);
+            }
+            else if (controller.gState == AIController.GroundStates.Neutral)
+            {
+                animator.SetBool("Guard", false);
             }
         }
         else if (controller.pState == AIController.PlayerStates.Airborne)
