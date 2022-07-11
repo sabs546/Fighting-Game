@@ -4,27 +4,29 @@ using UnityEngine;
 
 public class AIAttackController : MonoBehaviour
 {
-    // Attack Values =======================================================================================
-    public  BaseAttack currentAttack;                             // Attack currently playing
-    public  bool       allowFollowup;                             // Does the CPU want to follow up
-    private BaseAttack nextAttack;                                // The next available attack in the string
+    // Attack Values ================================================================
+    public  BaseAttack currentAttack;         // Attack currently playing
+    public  bool       allowFollowup;         // Does the CPU want to follow up
+    private BaseAttack nextAttack;            // The next available attack in the string
     
-    public enum AttackState { Empty, Startup, Active, Recovery }; // Attack phases
-    public AttackState state;                                     // And what will hold them
+    public enum AttackState { Empty, Startup, Active, Recovery };
+    public AttackState state;                 // Attack phases and what will hold them
 
     // Player Values ========================================
-    private AIController controller;       // Player control
-    private SpriteRenderer sprite;         // Sprite control
-    private SetControls controls;          // Attack controls
+    private AIController   controller;        // Player control
+    private SpriteRenderer sprite;            // Sprite control
+    private SetControls    controls;          // Attack controls
 
-    // Attack Traits ====================================================
-    private AIPhysics physics;             // For your own knockback
-    private PlayerPhysics opponentPhysics; // For the opponents knockback
-    private BoxCollider2D hitbox;          // The hitbox of the attack
-    private int timer;                     // Frame counter
-    public  HitSparkManager hitSpark;      // The hit sparks
-    public  int  stunLimit;                // How long the stun lasts
-    public  bool enableLowAttacks;         // Unlock crouch attacks
+    // Attack Traits ============================================================
+    public  HitSparkManager hitSpark;         // The hit sparks
+    public  int             stunLimit;        // How long the stun lasts
+    public  bool            enableLowAttacks; // Unlock crouch attacks
+    // Private ------------------------------------------------------------------
+    private AIPhysics       physics;          // For your own knockback
+    private PlayerPhysics   opponentPhysics;  // For the opponents knockback
+    private BoxCollider2D   hitbox;           // The hitbox of the attack
+    private int             timer;            // Frame counter
+    private int             blockStun;        // Stacks on top of attack cooldown
 
     // Start is called before the first frame update
     void Start()
@@ -37,6 +39,7 @@ public class AIAttackController : MonoBehaviour
         state = AttackState.Empty;
         timer = 0;
         stunLimit = 0;
+        blockStun = 0;
 
         physics = GetComponent<AIPhysics>();
         opponentPhysics = physics.opponent.GetComponent<PlayerPhysics>();
@@ -154,7 +157,7 @@ public class AIAttackController : MonoBehaviour
                     currentAttack.RemoveRecoil();
                 }
             }
-            else if (timer < currentAttack.Speed.z) // During attack recovery
+            else if (timer < currentAttack.Speed.z + blockStun) // During attack recovery
             {
                 state = AttackState.Recovery;
                 hitbox.enabled = false;
@@ -162,6 +165,7 @@ public class AIAttackController : MonoBehaviour
             }
             else // After attack completes
             {
+                blockStun = 0;
                 state = AttackState.Empty;
                 timer = 0;
                 stunLimit = 0;
@@ -244,6 +248,7 @@ public class AIAttackController : MonoBehaviour
         {
             blocked = true;
             nextAttack = null;
+            blockStun = currentAttack.Speed.x;
         }
         else
         {
