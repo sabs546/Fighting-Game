@@ -309,6 +309,7 @@ public class PlayerAttackController : MonoBehaviour
             if (opponent.GetComponent<AIController>().gState == AIController.GroundStates.Backdash && opponent.GetComponent<AIController>().blocking)
             {
                 blocked = true;
+                nextAttack = null;
             }
             else
             {
@@ -321,6 +322,7 @@ public class PlayerAttackController : MonoBehaviour
             if (opponent.GetComponent<PlayerController>().gState == PlayerController.GroundStates.Backdash && opponent.GetComponent<PlayerController>().blocking)
             {
                 blocked = true;
+                nextAttack = null;
             }
             else
             {
