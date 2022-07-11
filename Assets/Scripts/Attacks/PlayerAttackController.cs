@@ -157,6 +157,10 @@ public class PlayerAttackController : MonoBehaviour
                 timer = 0;
             }
         }
+        else if (controller.gState == PlayerController.GroundStates.Stun && stunLimit == 0)
+        {
+            controller.gState = PlayerController.GroundStates.Neutral;
+        }
 
         // What happens in the attack state
         if (state != AttackState.Empty)

@@ -111,6 +111,10 @@ public class AIAttackController : MonoBehaviour
                 timer = 0;
             }
         }
+        else if (controller.gState == AIController.GroundStates.Stun && stunLimit == 0)
+        {
+            controller.gState = AIController.GroundStates.Neutral;
+        }
 
         // What happens in the attack state
         if (state != AttackState.Empty)
