@@ -698,6 +698,7 @@ MonoBehaviour:
   moveSpeedX: 2400
   reverseDecay: 1
   rectTransform: {fileID: 71527225}
+  useScreenWidth: 0
 --- !u!114 &71527227
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2787,6 +2788,7 @@ MonoBehaviour:
   moveSpeedX: 1200
   reverseDecay: 0
   rectTransform: {fileID: 303925253}
+  useScreenWidth: 0
 --- !u!1 &316532838
 GameObject:
   m_ObjectHideFlags: 0
@@ -4975,6 +4977,7 @@ MonoBehaviour:
   moveSpeedX: -2400
   reverseDecay: 0
   rectTransform: {fileID: 475308969}
+  useScreenWidth: 0
 --- !u!1 &493531776
 GameObject:
   m_ObjectHideFlags: 0
@@ -5727,6 +5730,7 @@ MonoBehaviour:
   moveSpeedX: 1200
   reverseDecay: 0
   rectTransform: {fileID: 527631557}
+  useScreenWidth: 0
 --- !u!114 &527631560
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7549,6 +7553,7 @@ MonoBehaviour:
   moveSpeedX: -2400
   reverseDecay: 0
   rectTransform: {fileID: 738229049}
+  useScreenWidth: 1
 --- !u!114 &738229051
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7685,6 +7690,7 @@ MonoBehaviour:
   moveSpeedX: -1200
   reverseDecay: 0
   rectTransform: {fileID: 743776921}
+  useScreenWidth: 0
 --- !u!1 &748939355
 GameObject:
   m_ObjectHideFlags: 0
@@ -10225,6 +10231,7 @@ MonoBehaviour:
   moveSpeedX: 2400
   reverseDecay: 0
   rectTransform: {fileID: 941321272}
+  useScreenWidth: 0
 --- !u!1 &945152983
 GameObject:
   m_ObjectHideFlags: 0
@@ -14045,6 +14052,7 @@ MonoBehaviour:
   rectTransform: {fileID: 1271838302}
   gameStateControl: {fileID: 519420034}
   targetState: 3
+  useScreenWidth: 0
 --- !u!114 &1271838304
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17255,6 +17263,7 @@ MonoBehaviour:
   moveSpeedX: 1200
   reverseDecay: 0
   rectTransform: {fileID: 1600209763}
+  useScreenWidth: 0
 --- !u!1 &1607190656
 GameObject:
   m_ObjectHideFlags: 0
@@ -19352,6 +19361,7 @@ MonoBehaviour:
   moveSpeedX: 1200
   reverseDecay: 0
   rectTransform: {fileID: 1730987642}
+  useScreenWidth: 0
 --- !u!114 &1730987644
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20697,6 +20707,7 @@ MonoBehaviour:
   rectTransform: {fileID: 1890144471}
   gameStateControl: {fileID: 519420034}
   targetState: 1
+  useScreenWidth: 255
 --- !u!114 &1890144473
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22524,6 +22535,7 @@ MonoBehaviour:
   moveSpeedX: 2400
   reverseDecay: 0
   rectTransform: {fileID: 2110569977}
+  useScreenWidth: 0
 --- !u!1001 &3446603170035260223
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -196,11 +196,11 @@ public class PlayerPhysics : MonoBehaviour
                 airLock = 0;
                 GetComponent<BoxCollider2D>().enabled = true;
             }
+        }
 
-            if (controller.gState != PlayerController.GroundStates.Backdash)
-            {
-                controller.DisableBlock();
-            }
+        if (controller.gState != PlayerController.GroundStates.Backdash)
+        {
+            controller.DisableBlock();
         }
 
         // --------------------------------------------------------

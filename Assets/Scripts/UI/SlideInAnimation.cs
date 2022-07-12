@@ -24,11 +24,26 @@ public class SlideInAnimation : MonoBehaviour
     private bool active;       // Does it need moving
     private float distLeft;    // How far is left to move
     private float lacticAcidX; // Movement speed decay value
+    [SerializeField]
+    private bool useScreenWidth;
 
     private void OnEnable()
     {
         active = true;
         lacticAcidX = 1.0f;
+        if (useScreenWidth)
+        {
+            if (moveSpeedX < 0)
+            {
+                startX = Screen.width;
+                moveDistanceX = -Screen.width;
+            }
+            else if (moveSpeedX > 0)
+            {
+                startX = -Screen.width;
+                moveDistanceX = Screen.width;
+            }
+        }
     }
 
     private void OnDisable()

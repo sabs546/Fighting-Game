@@ -199,11 +199,11 @@ public class AIPhysics : MonoBehaviour
                 airLock = 0;
                 GetComponent<BoxCollider2D>().enabled = true;
             }
+        }
 
-            if (controller.gState != AIController.GroundStates.Backdash)
-            {
-                controller.DisableBlock();
-            }
+        if (controller.gState != AIController.GroundStates.Backdash)
+        {
+            controller.DisableBlock();
         }
 
         // To stop crouching from locking the AI up
