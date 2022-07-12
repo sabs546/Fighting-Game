@@ -7786,8 +7786,9 @@ MonoBehaviour:
     Crouch -
 
     This isn''t really what you''d
-    expect from a traditional crouch which is used to dodge high''s and block lows,
-    rather it''s used simply to access other attacks'
+    expect from a traditional crouch, it will give you access to crouch attacks,
+    but it only lasts as long as your dash will last, it also dodges throws, and
+    lets you slide through your opponent'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a50fd38a2661c8f4d8b0b39ef6383763, type: 2}
   m_sharedMaterial: {fileID: -6993522698956005608, guid: a50fd38a2661c8f4d8b0b39ef6383763,
@@ -7857,10 +7858,10 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 748939357}
-    characterCount: 1118
+    characterCount: 1182
     spriteCount: 0
-    spaceCount: 204
-    wordCount: 200
+    spaceCount: 217
+    wordCount: 213
     linkCount: 0
     lineCount: 22
     pageCount: 1
