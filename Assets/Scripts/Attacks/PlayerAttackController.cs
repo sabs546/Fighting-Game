@@ -376,44 +376,49 @@ public class PlayerAttackController : MonoBehaviour
 
         if (!WorldRules.PvP)
         {
-            opponentPhysics.GetComponent<AIAttackController>().stunLimit = currentAttack.Stun;
+            if (opponentPhysics.GetComponent<AIController>().pState == AIController.PlayerStates.Crouching)
+            {
+                currentAttack.RemoveRecoil();
+                currentAttack.RemoveKnockback();
+                return;
+            }
         }
         else
         {
-            p2Physics.GetComponent<PlayerAttackController>().stunLimit = currentAttack.Stun;
+            if (p2Physics.GetComponent<PlayerController>().pState == PlayerController.PlayerStates.Crouching)
+            {
+                currentAttack.RemoveRecoil();
+                currentAttack.RemoveKnockback();
+                return;
+            }
         }
 
         if (timer < currentAttack.Speed.y)
         {
-            if (p2Physics == null)
+            if (!WorldRules.PvP)
             {
                 opponentPhysics.GetComponent<AIAttackController>().CancelAttack();
-            }
-            else
-            {
-                p2Physics.GetComponent<PlayerAttackController>().CancelAttack();
-            }
+                opponentPhysics.GetComponent<AIAttackController>().stunLimit = currentAttack.Stun;
 
-            if (currentAttack.DelayRecoil)
-            {
-                physics.travel -= currentAttack.Recoil.x / WorldRules.physicsRate;
-                physics.launch -= currentAttack.Recoil.y / WorldRules.physicsRate;
-                currentAttack.RemoveRecoil();
-            }
-        }
-        else if (timer < currentAttack.Speed.z)
-        {
-            if (p2Physics == null)
-            {
                 opponentPhysics.travel = currentAttack.Knockback.x / WorldRules.physicsRate;
                 opponentPhysics.launch = currentAttack.Knockback.y / WorldRules.physicsRate;
             }
             else
             {
+                p2Physics.GetComponent<PlayerAttackController>().CancelAttack();
+                p2Physics.GetComponent<PlayerAttackController>().stunLimit = currentAttack.Stun;
+
                 p2Physics.travel = currentAttack.Knockback.x / WorldRules.physicsRate;
                 p2Physics.launch = currentAttack.Knockback.y / WorldRules.physicsRate;
             }
             currentAttack.RemoveKnockback();
+
+            if (!currentAttack.AlwaysRecoil && !currentAttack.DelayRecoil)
+            {
+                physics.travel -= currentAttack.Recoil.x / WorldRules.physicsRate;
+                physics.launch -= currentAttack.Recoil.y / WorldRules.physicsRate;
+                currentAttack.RemoveRecoil();
+            }
         }
     }
 

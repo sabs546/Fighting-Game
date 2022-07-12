@@ -295,24 +295,28 @@ public class AIAttackController : MonoBehaviour
             return;
         }
 
-        opponentPhysics.GetComponent<AIAttackController>().stunLimit = currentAttack.Stun;
+        if (opponentPhysics.GetComponent<PlayerController>().pState == PlayerController.PlayerStates.Crouching)
+        {
+            currentAttack.RemoveRecoil();
+            currentAttack.RemoveKnockback();
+            return;
+        }
 
         if (timer < currentAttack.Speed.y)
         {
             opponentPhysics.GetComponent<AIAttackController>().CancelAttack();
+            opponentPhysics.GetComponent<AIAttackController>().stunLimit = currentAttack.Stun;
 
-            if (currentAttack.DelayRecoil)
+            opponentPhysics.travel = currentAttack.Knockback.x / WorldRules.physicsRate;
+            opponentPhysics.launch = currentAttack.Knockback.y / WorldRules.physicsRate;
+            currentAttack.RemoveKnockback();
+
+            if (!currentAttack.AlwaysRecoil && !currentAttack.DelayRecoil)
             {
                 physics.travel -= currentAttack.Recoil.x / WorldRules.physicsRate;
                 physics.launch -= currentAttack.Recoil.y / WorldRules.physicsRate;
                 currentAttack.RemoveRecoil();
             }
-        }
-        else if (timer < currentAttack.Speed.z)
-        {
-            opponentPhysics.travel = currentAttack.Knockback.x / WorldRules.physicsRate;
-            opponentPhysics.launch = currentAttack.Knockback.y / WorldRules.physicsRate;
-            currentAttack.RemoveKnockback();
         }
     }
 

@@ -174,7 +174,11 @@ public class PlayerPhysics : MonoBehaviour
                 if (controller.gState != PlayerController.GroundStates.Sprint)
                 {
                     controller.gState = PlayerController.GroundStates.Dash;
-                    if (enableCrouch) controller.pState = PlayerController.PlayerStates.Crouching;
+                    if (enableCrouch)
+                    {
+                        controller.pState = PlayerController.PlayerStates.Crouching;
+                        GetComponent<BoxCollider2D>().enabled = false;
+                    }
                 }
                 enableSprint = true;
             }
@@ -190,6 +194,7 @@ public class PlayerPhysics : MonoBehaviour
                 enableSprint = false;
                 enableCrouch = false;
                 airLock = 0;
+                GetComponent<BoxCollider2D>().enabled = true;
             }
 
             if (controller.gState != PlayerController.GroundStates.Backdash)

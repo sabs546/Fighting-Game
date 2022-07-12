@@ -177,7 +177,11 @@ public class AIPhysics : MonoBehaviour
                 if (controller.gState != AIController.GroundStates.Sprint)
                 {
                     controller.gState = AIController.GroundStates.Dash;
-                    if (enableCrouch && controller.pState != AIController.PlayerStates.Airborne) controller.pState = AIController.PlayerStates.Crouching;
+                    if (enableCrouch)
+                    {
+                        controller.pState = AIController.PlayerStates.Crouching;
+                        GetComponent<BoxCollider2D>().enabled = false;
+                    }
                 }
                 enableSprint = true;
             }
@@ -193,6 +197,7 @@ public class AIPhysics : MonoBehaviour
                 enableSprint = false;
                 enableCrouch = false;
                 airLock = 0;
+                GetComponent<BoxCollider2D>().enabled = true;
             }
 
             if (controller.gState != AIController.GroundStates.Backdash)
