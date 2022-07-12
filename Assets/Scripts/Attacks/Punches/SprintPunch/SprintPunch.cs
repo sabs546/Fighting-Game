@@ -22,7 +22,8 @@ public class SprintPunch : BaseAttack
 
     public override void SideSwap()
     {
-        Range = new Vector2(Range.x * -1.0f, 0.0f);
-        Knockback = new Vector2(Knockback.x * -1.0f, 0.0f);
+        Range = new Vector2(-Range.x, Range.y);
+        Recoil = new Vector2(-Recoil.x, Recoil.y);
+        Knockback = new Vector2(-Knockback.x, Knockback.y);
     }
 }

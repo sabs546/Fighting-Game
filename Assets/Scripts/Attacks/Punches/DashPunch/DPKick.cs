@@ -14,7 +14,7 @@ public class DPKick : BaseAttack
         Size = new Vector2(1.0f, 1.0f);
         Recoil = new Vector2(-16.0f, 0.0f);
         Knockback = new Vector2(32.0f, 0.0f);
-        AlwaysRecoil = false;
+        AlwaysRecoil = true;
         DelayRecoil = true;
         SparkType = HitSparkManager.SparkType.Mid;
         SoundName = "Light_01";
@@ -22,7 +22,8 @@ public class DPKick : BaseAttack
 
     public override void SideSwap()
     {
-        Range = new Vector2(Range.x * -1.0f, 0.0f);
-        Knockback = new Vector2(Knockback.x * -1.0f, 0.0f);
+        Range = new Vector2(-Range.x, Range.y);
+        Recoil = new Vector2(-Recoil.x, Recoil.y);
+        Knockback = new Vector2(-Knockback.x, Knockback.y);
     }
 }

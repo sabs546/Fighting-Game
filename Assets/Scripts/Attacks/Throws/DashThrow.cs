@@ -14,8 +14,8 @@ public class DashThrow : BaseAttack
         Size = new Vector2(1.0f, 1.0f);
         Recoil = new Vector2(0.0f, 0.0f);
         Knockback = new Vector2(32.0f, 8.0f);
-        AlwaysRecoil = true;
-        DelayRecoil = true;
+        AlwaysRecoil = false;
+        DelayRecoil = false;
         SparkType = HitSparkManager.SparkType.Null;
         SoundName = "Light_01";
     }

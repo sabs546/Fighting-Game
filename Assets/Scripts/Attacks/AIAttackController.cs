@@ -127,8 +127,8 @@ public class AIAttackController : MonoBehaviour
                 state = AttackState.Startup;
                 if (currentAttack.AlwaysRecoil && !currentAttack.DelayRecoil)
                 {
-                    physics.travel += sprite.flipX ? currentAttack.Recoil.x / WorldRules.physicsRate : -currentAttack.Recoil.x / WorldRules.physicsRate;
-                    physics.launch += currentAttack.Recoil.y / WorldRules.physicsRate;
+                    physics.travel -= currentAttack.Recoil.x / WorldRules.physicsRate;
+                    physics.launch -= currentAttack.Recoil.y / WorldRules.physicsRate;
                     currentAttack.RemoveRecoil();
                 }
                 if (timer == 1)
@@ -151,8 +151,8 @@ public class AIAttackController : MonoBehaviour
                 hitbox.size = currentAttack.Size;
                 if (currentAttack.DelayRecoil)
                 {
-                    physics.travel += sprite.flipX ? currentAttack.Recoil.x / WorldRules.physicsRate : -currentAttack.Recoil.x / WorldRules.physicsRate;
-                    physics.launch += currentAttack.Recoil.y / WorldRules.physicsRate;
+                    physics.travel -= currentAttack.Recoil.x / WorldRules.physicsRate;
+                    physics.launch -= currentAttack.Recoil.y / WorldRules.physicsRate;
                     currentAttack.RemoveRecoil();
                 }
             }
@@ -205,6 +205,7 @@ public class AIAttackController : MonoBehaviour
                         if (attackType == BaseAttack.AttackType.Kick) { return new FallingKick(); }
                         break;
                 }
+                if (attackType == BaseAttack.AttackType.Throw) { return new AirThrow(); }
                 break;
 
             case AIController.PlayerStates.Crouching:
@@ -225,7 +226,6 @@ public class AIAttackController : MonoBehaviour
         }
 
         // Weight stuff
-        physics.launch -= currentAttack.Recoil.y / WorldRules.physicsRate;
         opponentPhysics.travel += currentAttack.Knockback.x / WorldRules.physicsRate;
         opponentPhysics.launch += currentAttack.Knockback.y / WorldRules.physicsRate;
         if (!currentAttack.AlwaysRecoil && !currentAttack.DelayRecoil)
@@ -233,6 +233,8 @@ public class AIAttackController : MonoBehaviour
             if (currentAttack.Recoil != Vector2.zero)
             {
                 physics.travel -= currentAttack.Recoil.x / WorldRules.physicsRate;
+                physics.launch -= currentAttack.Recoil.y / WorldRules.physicsRate;
+                currentAttack.RemoveRecoil();
             }
             else
             {
@@ -298,6 +300,13 @@ public class AIAttackController : MonoBehaviour
         if (timer < currentAttack.Speed.y)
         {
             opponentPhysics.GetComponent<AIAttackController>().CancelAttack();
+
+            if (currentAttack.DelayRecoil)
+            {
+                physics.travel -= currentAttack.Recoil.x / WorldRules.physicsRate;
+                physics.launch -= currentAttack.Recoil.y / WorldRules.physicsRate;
+                currentAttack.RemoveRecoil();
+            }
         }
         else if (timer < currentAttack.Speed.z)
         {

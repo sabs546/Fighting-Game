@@ -170,12 +170,13 @@ public class PlayerAttackController : MonoBehaviour
                 state = AttackState.Startup;
                 if (currentAttack.AlwaysRecoil && !currentAttack.DelayRecoil)
                 {
-                    physics.travel += sprite.flipX ? currentAttack.Recoil.x / WorldRules.physicsRate : -currentAttack.Recoil.x / WorldRules.physicsRate;
-                    physics.launch += currentAttack.Recoil.y / WorldRules.physicsRate;
+                    physics.travel -= currentAttack.Recoil.x / WorldRules.physicsRate;
+                    physics.launch -= currentAttack.Recoil.y / WorldRules.physicsRate;
                     currentAttack.RemoveRecoil();
                 }
-                if (currentAttack.DelayRecoil)
-                {
+
+                if (currentAttack is FallingKick)
+                { // Special case for air hang time, this is the only attack that does it
                     physics.SlowDown();
                     physics.Hover();
                 }
@@ -198,10 +199,10 @@ public class PlayerAttackController : MonoBehaviour
                 hitbox.enabled = true;
                 hitbox.offset = currentAttack.Range;
                 hitbox.size = currentAttack.Size;
-                if (currentAttack.DelayRecoil && currentAttack.attackType != BaseAttack.AttackType.Throw)
+                if (currentAttack.DelayRecoil && currentAttack.AlwaysRecoil)
                 {
-                    physics.travel += sprite.flipX ? currentAttack.Recoil.x / WorldRules.physicsRate : -currentAttack.Recoil.x / WorldRules.physicsRate;
-                    physics.launch += currentAttack.Recoil.y / WorldRules.physicsRate;
+                    physics.travel -= currentAttack.Recoil.x / WorldRules.physicsRate;
+                    physics.launch -= currentAttack.Recoil.y / WorldRules.physicsRate;
                     currentAttack.RemoveRecoil();
                 }
             }
@@ -254,6 +255,7 @@ public class PlayerAttackController : MonoBehaviour
                         if (attackType == controls.keyboardControls.Kick) { return new FallingKick(); }
                         break;
                 }
+                if (attackType == controls.keyboardControls.Throw) { return new AirThrow(); }
                 break;
 
             case PlayerController.PlayerStates.Crouching:
@@ -273,7 +275,6 @@ public class PlayerAttackController : MonoBehaviour
         }
 
         // Weight stuff
-        physics.launch -= currentAttack.Recoil.y / WorldRules.physicsRate;
         if (p2Physics == null)
         {
             opponentPhysics.travel += currentAttack.Knockback.x / WorldRules.physicsRate;
@@ -289,7 +290,9 @@ public class PlayerAttackController : MonoBehaviour
         {
             if (currentAttack.Recoil != Vector2.zero)
             {
-                physics.travel -= currentAttack.Recoil.x / WorldRules.physicsRate; /// HERE
+                physics.travel -= currentAttack.Recoil.x / WorldRules.physicsRate;
+                physics.launch -= currentAttack.Recoil.y / WorldRules.physicsRate;
+                currentAttack.RemoveRecoil();
             }
             else
             {
@@ -389,6 +392,13 @@ public class PlayerAttackController : MonoBehaviour
             else
             {
                 p2Physics.GetComponent<PlayerAttackController>().CancelAttack();
+            }
+
+            if (currentAttack.DelayRecoil)
+            {
+                physics.travel -= currentAttack.Recoil.x / WorldRules.physicsRate;
+                physics.launch -= currentAttack.Recoil.y / WorldRules.physicsRate;
+                currentAttack.RemoveRecoil();
             }
         }
         else if (timer < currentAttack.Speed.z)
