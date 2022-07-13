@@ -195,15 +195,16 @@ public class AIPhysics : MonoBehaviour
                 }
                 effectiveMovement = 0.0f;
                 enableSprint = false;
+                startSprint = false;
                 enableCrouch = false;
                 airLock = 0;
                 GetComponent<BoxCollider2D>().enabled = true;
             }
-        }
 
-        if (controller.gState != AIController.GroundStates.Backdash)
-        {
-            controller.DisableBlock();
+            if (controller.gState != AIController.GroundStates.Backdash)
+            {
+                controller.DisableBlock();
+            }
         }
 
         // To stop crouching from locking the AI up
@@ -260,5 +261,11 @@ public class AIPhysics : MonoBehaviour
     public void Brake()
     {
         effectiveMovement = 0.0f;
+    }
+
+    public void Hang()
+    {
+        effectiveMovement *= 0.5f;
+        effectiveGravity *= 0.5f;
     }
 }

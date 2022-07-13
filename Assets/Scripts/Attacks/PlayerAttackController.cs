@@ -175,11 +175,8 @@ public class PlayerAttackController : MonoBehaviour
                     currentAttack.RemoveRecoil();
                 }
 
-                if (currentAttack is FallingKick)
-                { // Special case for air hang time, this is the only attack that does it
-                    physics.SlowDown();
-                    physics.Hover();
-                }
+                // Special case for air hang time, this is the only attack that does it
+                if (currentAttack is FallingKick) physics.Hang();
 
                 if (timer == 1)
                 { // Changing the sounds to the whiffed versions
@@ -209,13 +206,12 @@ public class PlayerAttackController : MonoBehaviour
             else if (timer < currentAttack.Speed.z + blockStun) // During attack recovery
             {
                 state = AttackState.Recovery;
-                if (currentAttack.attackType != BaseAttack.AttackType.Throw) hitbox.enabled = false;
+                hitbox.enabled = false;
                 if (controller.gState == PlayerController.GroundStates.Sprint) physics.startSprint = false;
             }
             else // After attack completes
             {
                 blockStun = 0;
-                hitbox.enabled = false;
                 state = AttackState.Empty;
                 timer = 0;
                 stunLimit = 0;
@@ -273,6 +269,8 @@ public class PlayerAttackController : MonoBehaviour
         {
             return;
         }
+
+        blocked = false;
 
         // Weight stuff
         if (p2Physics == null)

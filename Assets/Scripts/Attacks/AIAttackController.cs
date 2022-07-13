@@ -60,6 +60,19 @@ public class AIAttackController : MonoBehaviour
                 nextAttack = currentAttack.Followup;
             }
         }
+        // This one is an odd case, where an attack transitions into another attack automatically
+        else if (state == AttackState.Active)
+        {
+            if (currentAttack is FallingKick && controller.pState == AIController.PlayerStates.Grounded)
+            {
+                currentAttack = new SlideKick();
+                GetComponent<AttackAudioManager>().PlaySound("BlockHeavy", 1);
+                Camera.main.GetComponent<CameraControl>().StartShake(4, 4u, 0.5f);
+                state = AttackState.Startup;
+                timer = 0;
+                currentAttack.RemoveRecoil();
+            }
+        }
         // The next part of the string
         else if (state == AttackState.Recovery)
         {
@@ -78,19 +91,6 @@ public class AIAttackController : MonoBehaviour
                         nextAttack = currentAttack.Followup;
                     }
                 }
-            }
-        }
-        // This one is an odd case, where an attack transitions into another attack automatically
-        else if (state == AttackState.Active)
-        {
-            if (currentAttack is FallingKick && controller.pState == AIController.PlayerStates.Grounded)
-            {
-                currentAttack = new SlideKick();
-                GetComponent<AttackAudioManager>().PlaySound("BlockHeavy", 1);
-                Camera.main.GetComponent<CameraControl>().StartShake(4, 4u, 0.5f);
-                state = AttackState.Startup;
-                timer = 0;
-                currentAttack.RemoveRecoil();
             }
         }
 
@@ -131,6 +131,10 @@ public class AIAttackController : MonoBehaviour
                     physics.launch -= currentAttack.Recoil.y / WorldRules.physicsRate;
                     currentAttack.RemoveRecoil();
                 }
+
+                // Special case for air hang time, this is the only attack that does it
+                if (currentAttack is FallingKick) physics.Hang();
+
                 if (timer == 1)
                 {
                     if (currentAttack.SparkType == HitSparkManager.SparkType.Launch)
@@ -149,7 +153,7 @@ public class AIAttackController : MonoBehaviour
                 hitbox.enabled = true;
                 hitbox.offset = currentAttack.Range;
                 hitbox.size = currentAttack.Size;
-                if (currentAttack.DelayRecoil)
+                if (currentAttack.DelayRecoil && currentAttack.AlwaysRecoil)
                 {
                     physics.travel -= currentAttack.Recoil.x / WorldRules.physicsRate;
                     physics.launch -= currentAttack.Recoil.y / WorldRules.physicsRate;
@@ -224,6 +228,8 @@ public class AIAttackController : MonoBehaviour
             //Debug.Log(hitbox.name + " " + hitbox.enabled);
             return;
         }
+
+        blocked = false;
 
         // Weight stuff
         opponentPhysics.travel += currentAttack.Knockback.x / WorldRules.physicsRate;

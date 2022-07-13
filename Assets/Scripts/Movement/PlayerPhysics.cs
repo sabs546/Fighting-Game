@@ -134,7 +134,7 @@ public class PlayerPhysics : MonoBehaviour
         // --------------------------------------------------------
         // - Sprinting -
         // -------
-        if (enableSprint && startSprint)
+        if (enableSprint && startSprint && controller.pState != PlayerController.PlayerStates.Airborne)
         {
             controller.gState = PlayerController.GroundStates.Sprint;
             effectiveMovement = travel;
@@ -192,15 +192,16 @@ public class PlayerPhysics : MonoBehaviour
                 }
                 effectiveMovement = 0.0f;
                 enableSprint = false;
+                startSprint = false;
                 enableCrouch = false;
                 airLock = 0;
                 GetComponent<BoxCollider2D>().enabled = true;
             }
-        }
 
-        if (controller.gState != PlayerController.GroundStates.Backdash)
-        {
-            controller.DisableBlock();
+            if (controller.gState != PlayerController.GroundStates.Backdash)
+            {
+                controller.DisableBlock();
+            }
         }
 
         // --------------------------------------------------------
@@ -254,13 +255,9 @@ public class PlayerPhysics : MonoBehaviour
         effectiveMovement = 0.0f;
     }
 
-    public void SlowDown()
+    public void Hang()
     {
         effectiveMovement *= 0.5f;
-    }
-
-    public void Hover()
-    {
         effectiveGravity *= 0.5f;
     }
 
