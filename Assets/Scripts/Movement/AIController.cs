@@ -38,8 +38,6 @@ public class AIController : MonoBehaviour
     // Delay =======================================
     [Header("Delay")]
     [SerializeField]
-    private int rFatigue;        // Round fatigue
-    [SerializeField]
     private int aFatigue;        // Attack fatigue
     [SerializeField]
     private int mFatigue;        // Movement fatigue
@@ -76,11 +74,6 @@ public class AIController : MonoBehaviour
         if (GameStateControl.gameState == GameStateControl.GameState.Pause)
         {
             return;
-        }
-
-        if (GameStateControl.gameState == GameStateControl.GameState.RoundStart)
-        {
-            fatigue = rFatigue;
         }
 
         if (attackController.stunLimit > 0)
@@ -294,7 +287,7 @@ public class AIController : MonoBehaviour
                     }
                 }
 
-                if (pState == PlayerStates.Grounded || pState == PlayerStates.Crouching)
+                if (pState == PlayerStates.Grounded)
                 {
                     if (!CheckInRange(false, true))
                     {
