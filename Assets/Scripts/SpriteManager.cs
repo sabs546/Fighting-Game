@@ -6,6 +6,7 @@ public class SpriteManager : MonoBehaviour
     PlayerAttackController atkController;
     Animator animator;
     SpriteRenderer sprite;
+    HealthManager healthManager;
 
     // Start is called before the first frame update
     void Start()
@@ -14,6 +15,7 @@ public class SpriteManager : MonoBehaviour
         atkController = GetComponent<PlayerAttackController>();
         animator = GetComponent<Animator>();
         sprite = GetComponent<SpriteRenderer>();
+        healthManager = GetComponent<HealthManager>();
     }
 
     // Update is called once per frame
@@ -65,10 +67,6 @@ public class SpriteManager : MonoBehaviour
             else if (controller.gState == PlayerController.GroundStates.Backdash)
             {
                 animator.SetInteger("XDir", -1);
-                if (atkController.blocked)
-                {
-                    animator.SetBool("Guard", true);
-                }
             }
             else if (controller.gState == PlayerController.GroundStates.Sprint)
             {
@@ -107,10 +105,24 @@ public class SpriteManager : MonoBehaviour
         {
             sprite.flipX = controller.currentSide == PlayerController.Side.Right ? true : false;
         }
+
+        if (healthManager.currentHealth <= 0 && !animator.GetCurrentAnimatorStateInfo(0).IsName("DeathStun"))
+        {
+            animator.SetTrigger("Die");
+        }
+        else if (healthManager.currentHealth > 0 && animator.GetCurrentAnimatorStateInfo(0).IsName("DeathStun"))
+        {
+            animator.SetTrigger("Revive");
+        }
     }
 
     public void EnableFollowup(bool enable)
     {
         animator.SetBool("Followup", enable);
+    }
+
+    public void EnableBlock()
+    {
+        animator.SetBool("Guard", true);
     }
 }

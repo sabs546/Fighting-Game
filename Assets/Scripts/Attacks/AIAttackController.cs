@@ -25,7 +25,6 @@ public class AIAttackController : MonoBehaviour
     private BoxCollider2D   hitbox;           // The hitbox of the attack
     private int             timer;            // Frame counter
     private int             blockStun;        // Stacks on top of attack cooldown
-    public  bool            blocked { get; private set; }
 
     // Start is called before the first frame update
     void Start()
@@ -229,7 +228,7 @@ public class AIAttackController : MonoBehaviour
             return;
         }
 
-        blocked = false;
+        bool blocked = false;
 
         // Weight stuff
         opponentPhysics.travel += currentAttack.Knockback.x / WorldRules.physicsRate;
@@ -251,6 +250,7 @@ public class AIAttackController : MonoBehaviour
 
         if (opponentPhysics.GetComponent<PlayerController>().gState == PlayerController.GroundStates.Backdash && opponentPhysics.GetComponent<PlayerController>().blocking)
         {
+            opponentPhysics.GetComponent<SpriteManager>().EnableBlock();
             blocked = true;
             nextAttack = null;
             blockStun = currentAttack.Speed.x;

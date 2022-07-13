@@ -47,7 +47,6 @@ public class HealthManager : MonoBehaviour
         if (currentHealth <= 0)
         {
             currentHealth = 0;
-            GetComponent<Animator>().SetTrigger("Die");
             WorldRules.gameSpeed = 0.5f;
             Camera.main.GetComponent<CameraControl>().StartShake(64, 8u, 1.0f);
             GetComponent<Animator>().speed = WorldRules.gameSpeed;
@@ -67,7 +66,6 @@ public class HealthManager : MonoBehaviour
     public void Kill()
     {
         currentHealth = 0;
-        GetComponent<Animator>().SetTrigger("Die");
         healthBar.localScale = new Vector3(0.0f, 1.0f, 1.0f);
     }
 

@@ -25,7 +25,6 @@ public class PlayerAttackController : MonoBehaviour
     private BoxCollider2D   hitbox;           // The hitbox of the attack
     private int             timer;            // Frame counter
     private int             blockStun;        // Stacks on top of attack cooldown
-    public  bool            blocked { get; private set; }
 
     // Input registering
     [HideInInspector]
@@ -47,7 +46,6 @@ public class PlayerAttackController : MonoBehaviour
         timer = 0;
         stunLimit = 0;
         blockStun = 0;
-        blocked = false;
 
         physics = GetComponent<PlayerPhysics>();
         opponentPhysics = physics.opponent.GetComponent<AIPhysics>();
@@ -270,7 +268,7 @@ public class PlayerAttackController : MonoBehaviour
             return;
         }
 
-        blocked = false;
+        bool blocked = false;
 
         // Weight stuff
         if (p2Physics == null)
@@ -307,6 +305,7 @@ public class PlayerAttackController : MonoBehaviour
             opponent = opponentPhysics.gameObject;
             if (opponent.GetComponent<AIController>().gState == AIController.GroundStates.Backdash && opponent.GetComponent<AIController>().blocking)
             {
+                opponent.GetComponent<AISpriteManager>().EnableBlock();
                 blocked = true;
                 nextAttack = null;
                 blockStun = currentAttack.Speed.x;
@@ -321,6 +320,7 @@ public class PlayerAttackController : MonoBehaviour
             opponent = p2Physics.gameObject;
             if (opponent.GetComponent<PlayerController>().gState == PlayerController.GroundStates.Backdash && opponent.GetComponent<PlayerController>().blocking)
             {
+                opponent.GetComponent<SpriteManager>().EnableBlock();
                 blocked = true;
                 nextAttack = null;
                 blockStun = currentAttack.Speed.x;

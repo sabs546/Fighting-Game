@@ -70,12 +70,6 @@ public class GameStateControl : MonoBehaviour
         CPUAnimator = CPU.GetComponent<Animator>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void SetGameState(GameState state)
     {
         GameObject opponent;
@@ -95,7 +89,6 @@ public class GameStateControl : MonoBehaviour
                 p1.GetComponent<HealthManager>().ResetHealth();
                 p1.GetComponent<PlayerController>().currentSide = PlayerController.Side.Left;
                 p1.GetComponent<PlayerPhysics>().enabled = false;
-                p1Animator.SetTrigger("Revive");
                 p1.SetActive(false);
                 p1.SetActive(true);
 
@@ -110,7 +103,6 @@ public class GameStateControl : MonoBehaviour
                     p2.GetComponent<HealthManager>().ResetHealth();
                     p2.GetComponent<PlayerController>().currentSide = PlayerController.Side.Right;
                     p2.GetComponent<PlayerPhysics>().enabled = false;
-                    p2Animator.SetTrigger("Revive");
                     p2.SetActive(false);
                     p2.SetActive(true);
                 }
@@ -120,7 +112,6 @@ public class GameStateControl : MonoBehaviour
                     CPU.GetComponent<HealthManager>().ResetHealth();
                     CPU.GetComponent<AIController>().currentSide = AIController.Side.Right;
                     CPU.GetComponent<AIPhysics>().enabled = false;
-                    CPUAnimator.SetTrigger("Revive");
                     CPU.SetActive(false);
                     CPU.SetActive(true);
                 }
@@ -154,20 +145,17 @@ public class GameStateControl : MonoBehaviour
                 source.clip = readyFX;
                 source.Play();
                 p1.GetComponent<HealthManager>().ResetHealth();
-                p1Animator.SetTrigger("Revive");
                 p1.GetComponent<PlayerAttackController>().enabled = false;
                 p1.GetComponent<PlayerController>().enabled = true;
                 if (WorldRules.PvP)
                 {
                     p2.GetComponent<HealthManager>().ResetHealth();
-                    p2Animator.SetTrigger("Revive");
                     p2.GetComponent<PlayerAttackController>().enabled = false;
                     p2.GetComponent<PlayerController>().enabled = true;
                 }
                 else
                 {
                     CPU.GetComponent<HealthManager>().ResetHealth();
-                    CPUAnimator.SetTrigger("Revive");
                     CPU.GetComponent<AIAttackController>().enabled = false;
                     CPU.GetComponent<AIController>().enabled = true;
                 }
