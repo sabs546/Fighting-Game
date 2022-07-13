@@ -105,7 +105,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41e33b5d4735fcd47a092df964dc0a67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  barrierToss: {x: 0, y: 0}
   launch: 0
   travel: 0
   enableSprint: 0
@@ -148,7 +147,6 @@ MonoBehaviour:
   sprint: 0.2
   dashDistance: 0.4
   jumpPower: 0.4
-  blocking: 0
   pState: 0
   gState: 0
   aState: 0
@@ -157,6 +155,9 @@ MonoBehaviour:
   opponent: {fileID: 0}
   reach: 6
   dashReach: 8
+  rFatigue: 40
+  aFatigue: 20
+  mFatigue: 10
 --- !u!114 &6362332988191231721
 MonoBehaviour:
   m_ObjectHideFlags: 0

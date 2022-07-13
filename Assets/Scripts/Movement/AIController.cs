@@ -6,6 +6,7 @@ using UnityEngine;
 public class AIController : MonoBehaviour
 {
     // Movement Values =========================
+    [Header("Movement")]
     public float sprint;         // Sprint speed
     public float dashDistance;   // Dash speed
     public float jumpPower;      // Jump height
@@ -14,6 +15,7 @@ public class AIController : MonoBehaviour
     public enum PlayerStates { Crouching, Grounded, Airborne };
     public enum GroundStates { Neutral, Dash, Backdash, Sprint, Stun, Jump };
     public enum AirStates    { Rising, Falling };
+    [Header("States")]
     public PlayerStates pState;
     public GroundStates gState;
     public AirStates    aState;
@@ -28,17 +30,25 @@ public class AIController : MonoBehaviour
     public Side currentSide;
 
     // Tracking ====================================================
+    [Header("Tracking")]
     public GameObject opponent;  // Used for AI tracking of opponent
     public float      reach;     // Check for punching range
     public float      dashReach; // Check for approach range
+
+    // Delay =======================================
+    [Header("Delay")]
+    [SerializeField]
+    private int rFatigue;        // Round fatigue
+    [SerializeField]
+    private int aFatigue;        // Attack fatigue
+    [SerializeField]
+    private int mFatigue;        // Movement fatigue
 
     // Other Components ========================
     private AIPhysics physics;
     private AIAttackController attackController;
 
     // Calculated Values ==================================================================
-    private int aFatigue;        // Attack fatigue
-    private int mFatigue;        // Movement fatigue
     private int fatigue;         // Inherits one of the above fatigues to slow down actions
     private int ticker;          // Countdown for aggression
 
@@ -50,8 +60,6 @@ public class AIController : MonoBehaviour
     {
         physics = GetComponent<AIPhysics>();
         attackController = GetComponent<AIAttackController>();
-        aFatigue = 20;
-        mFatigue = 10;
         fatigue = mFatigue;
         ticker = 0;
     }
@@ -68,6 +76,11 @@ public class AIController : MonoBehaviour
         if (GameStateControl.gameState == GameStateControl.GameState.Pause)
         {
             return;
+        }
+
+        if (GameStateControl.gameState == GameStateControl.GameState.RoundStart)
+        {
+            fatigue = rFatigue;
         }
 
         if (attackController.stunLimit > 0)
