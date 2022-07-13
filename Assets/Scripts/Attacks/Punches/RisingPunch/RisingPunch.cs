@@ -6,8 +6,8 @@ public class RisingPunch : BaseAttack
     {
         attackType = AttackType.Punch;
         Damage = 25;
-        Speed = new Vector3Int(10, 12, 27);
-        Stun = 30;
+        Speed = new Vector3Int(10, 12, 37);
+        Stun = 40;
         Followup = null;
 
         Range = new Vector2(0.5f, 0.25f);

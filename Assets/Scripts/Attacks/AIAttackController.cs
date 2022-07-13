@@ -87,7 +87,7 @@ public class AIAttackController : MonoBehaviour
             {
                 currentAttack = new SlideKick();
                 GetComponent<AttackAudioManager>().PlaySound("BlockHeavy", 1);
-                Camera.main.GetComponent<CameraControl>().StartShake(2, 4u, 0.5f);
+                Camera.main.GetComponent<CameraControl>().StartShake(4, 4u, 0.5f);
                 state = AttackState.Startup;
                 timer = 0;
                 currentAttack.RemoveRecoil();

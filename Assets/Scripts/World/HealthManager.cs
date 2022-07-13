@@ -49,7 +49,7 @@ public class HealthManager : MonoBehaviour
             currentHealth = 0;
             GetComponent<Animator>().SetTrigger("Die");
             WorldRules.gameSpeed = 0.5f;
-            Camera.main.GetComponent<CameraControl>().StartShake(64, 8, 1.0f);
+            Camera.main.GetComponent<CameraControl>().StartShake(64, 8u, 1.0f);
             GetComponent<Animator>().speed = WorldRules.gameSpeed;
             gameStateControl.GetComponent<GameStateControl>().SetGameState(GameStateControl.GameState.RoundOver);
         }
