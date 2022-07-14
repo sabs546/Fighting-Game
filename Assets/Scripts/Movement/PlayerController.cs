@@ -74,7 +74,8 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            if (controls.type == SetControls.ControllerType.Keyboard && Input.GetKeyDown(controls.keyboardControls.Pause) ||
+            if (GameStateControl.gameState == GameStateControl.GameState.Fighting &&
+                controls.type == SetControls.ControllerType.Keyboard && Input.GetKeyDown(controls.keyboardControls.Pause) ||
                 controls.type == SetControls.ControllerType.Controller && Input.GetKeyDown(controls.gamepadControls.Pause))
             {
                 Camera.main.GetComponent<GameStateControl>().SetGameState(GameStateControl.GameState.Pause);

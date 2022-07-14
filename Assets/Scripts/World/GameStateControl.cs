@@ -137,7 +137,6 @@ public class GameStateControl : MonoBehaviour
                 pauseUI.SetActive(true);
                 pauseSetting.enabled = true;
                 fightUI.SetActive(false);
-                roundStartUI.SetActive(false);
                 pauseVolumeSlider.value = WorldRules.volume;
                 break;
             case GameState.RoundStart:
