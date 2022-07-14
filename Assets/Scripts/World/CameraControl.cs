@@ -188,7 +188,8 @@ public class CameraControl : MonoBehaviour
                 cameraPos.y = menu.height;
                 if (cam.orthographicSize > menu.zoom - 0.01f && cam.orthographicSize < menu.zoom + 0.01f)
                 {
-                    menuScreen.GetComponent<MenuController>().menuBlock.interactable = true;
+                    MenuController menuController = menuScreen.GetComponent<MenuController>();
+                    if (menuController.currentPage == 0) menuController.menuBlock.interactable = true;
                     cam.orthographicSize = menu.zoom;
                 }
             }

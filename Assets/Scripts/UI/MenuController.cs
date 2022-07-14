@@ -13,7 +13,7 @@ public class MenuController : MonoBehaviour
     public float[] pageHeight;
     public float scrollSpeed;
     private bool changePage;
-    private int currentPage;
+    public int currentPage { get; private set; }
     private AudioSource settingsVolume;
     [SerializeField]
     private AudioSource pauseVolume;
