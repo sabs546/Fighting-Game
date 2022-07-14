@@ -215,7 +215,7 @@ public class PlayerPhysics : MonoBehaviour
         if (pos.x < effectiveMaxLeft)
         {
             pos.x = effectiveMaxLeft;
-            effectiveMovement = -effectiveMovement;
+            effectiveMovement = Mathf.Clamp(-effectiveMovement, -controller.dashDistance, controller.dashDistance);
             effectiveGravity = -controller.jumpPower;
             startSprint = false;
             source.clip = jumpWind;
@@ -224,7 +224,7 @@ public class PlayerPhysics : MonoBehaviour
         else if (pos.x > effectiveMaxRight)
         {
             pos.x = effectiveMaxRight;
-            effectiveMovement = -effectiveMovement;
+            effectiveMovement = Mathf.Clamp(-effectiveMovement, -controller.dashDistance, controller.dashDistance);
             effectiveGravity = -controller.jumpPower;
             startSprint = false;
             source.clip = jumpWind;
