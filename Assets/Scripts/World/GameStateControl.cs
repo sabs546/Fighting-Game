@@ -105,6 +105,17 @@ public class GameStateControl : MonoBehaviour
                 whiteOut.color = new Color(1.0f, 1.0f, 1.0f, ticker);
             }
         }
+        if (gameState == GameState.Fighting)
+        {
+            if (whiteOut.color.a > 0.0f)
+            {
+                whiteOut.color = new Color(whiteOut.color.r, whiteOut.color.g, whiteOut.color.b, whiteOut.color.a - Time.deltaTime);
+                if (whiteOut.color.a < 0.0f)
+                {
+                    whiteOut.color = new Color(whiteOut.color.r, whiteOut.color.g, whiteOut.color.b, 0.0f);
+                }
+            }
+        }
     }
 
     public void SetGameState(GameState state)

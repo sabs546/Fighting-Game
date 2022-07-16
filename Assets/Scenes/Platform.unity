@@ -16373,6 +16373,11 @@ PrefabInstance:
       propertyPath: backBar
       value: 
       objectReference: {fileID: 1733471530}
+    - target: {fileID: 3446603169683583358, guid: 6434817484d6de149b311f7a3b81cea1,
+        type: 3}
+      propertyPath: whiteOut
+      value: 
+      objectReference: {fileID: 168889505}
     - target: {fileID: 9091546037705337984, guid: 6434817484d6de149b311f7a3b81cea1,
         type: 3}
       propertyPath: m_Enabled
@@ -24492,6 +24497,11 @@ PrefabInstance:
       propertyPath: backBar
       value: 
       objectReference: {fileID: 1030250367}
+    - target: {fileID: 3446603169683583358, guid: 501d13d989524664884280d2b151037e,
+        type: 3}
+      propertyPath: whiteOut
+      value: 
+      objectReference: {fileID: 168889505}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 501d13d989524664884280d2b151037e, type: 3}
 --- !u!114 &3446603170035260224 stripped
@@ -24603,6 +24613,11 @@ PrefabInstance:
       propertyPath: backBar
       value: 
       objectReference: {fileID: 1733471530}
+    - target: {fileID: 6362332988191231725, guid: 5baf6e6c8e4c4cc47aeeb0a9c272ce56,
+        type: 3}
+      propertyPath: whiteOut
+      value: 
+      objectReference: {fileID: 168889505}
     - target: {fileID: 6362332988191231726, guid: 5baf6e6c8e4c4cc47aeeb0a9c272ce56,
         type: 3}
       propertyPath: opponent

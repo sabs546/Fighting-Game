@@ -11,6 +11,8 @@ public class HealthManager : MonoBehaviour
     public RectTransform healthBar;
     public RectTransform backBar;
     public GameStateControl gameStateControl;
+    [SerializeField]
+    private Image whiteOut;
 
     // Start is called before the first frame update
     void Start()
@@ -44,6 +46,7 @@ public class HealthManager : MonoBehaviour
         }
 
         currentHealth -= damage;
+        whiteOut.color = new Color(1.0f, 0.0f, 0.0f, whiteOut.color.a + (damage * 0.02f));
         if (currentHealth <= 0)
         {
             currentHealth = 0;
