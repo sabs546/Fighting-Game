@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Linq;
 
-public class InputSwap : MonoBehaviour
+public class InputSwap : MonoBehaviour, IDeselectHandler
 {
     [SerializeField]
     private string originalString;
@@ -84,6 +84,11 @@ public class InputSwap : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void OnDeselect(BaseEventData data)
+    {
+        keyboardSelected = gamepadSelected = false;
     }
 
     public void Mode(int type)
