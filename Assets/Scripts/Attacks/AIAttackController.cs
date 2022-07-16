@@ -25,6 +25,7 @@ public class AIAttackController : MonoBehaviour
     private BoxCollider2D   hitbox;           // The hitbox of the attack
     private int             timer;            // Frame counter
     private int             blockStun;        // Stacks on top of attack cooldown
+    private bool            cancelCancel;     // To allow 2 people to trade attacks without cancelling
 
     // Start is called before the first frame update
     void Start()
@@ -152,6 +153,7 @@ public class AIAttackController : MonoBehaviour
                 hitbox.enabled = true;
                 hitbox.offset = currentAttack.Range;
                 hitbox.size = currentAttack.Size;
+                cancelCancel = true;
                 if (currentAttack.DelayRecoil && currentAttack.AlwaysRecoil)
                 {
                     physics.travel -= currentAttack.Recoil.x / WorldRules.physicsRate;
@@ -164,6 +166,7 @@ public class AIAttackController : MonoBehaviour
                 state = AttackState.Recovery;
                 hitbox.enabled = false;
                 if (controller.gState == AIController.GroundStates.Sprint) physics.startSprint = false;
+                cancelCancel = false;
             }
             else // After attack completes
             {
@@ -174,6 +177,7 @@ public class AIAttackController : MonoBehaviour
                 GetComponent<AISpriteManager>().EnableFollowup(false);
                 currentAttack = null;
                 allowFollowup = false;
+                cancelCancel = false;
             }
         }
     }
@@ -328,6 +332,11 @@ public class AIAttackController : MonoBehaviour
 
     public void CancelAttack()
     {
+        if (cancelCancel)
+        {
+            cancelCancel = false;
+            return;
+        }
         currentAttack = null;
         hitbox.enabled = false;
         timer = 0;

@@ -25,6 +25,7 @@ public class PlayerAttackController : MonoBehaviour
     private BoxCollider2D   hitbox;           // The hitbox of the attack
     private int             timer;            // Frame counter
     private int             blockStun;        // Stacks on top of attack cooldown
+    private bool            cancelCancel;     // To allow 2 people to trade attacks without cancelling
 
     // Input registering
     [HideInInspector]
@@ -46,6 +47,7 @@ public class PlayerAttackController : MonoBehaviour
         timer = 0;
         stunLimit = 0;
         blockStun = 0;
+        cancelCancel = false;
 
         physics = GetComponent<PlayerPhysics>();
         opponentPhysics = physics.opponent.GetComponent<AIPhysics>();
@@ -194,6 +196,10 @@ public class PlayerAttackController : MonoBehaviour
                 hitbox.enabled = true;
                 hitbox.offset = currentAttack.Range;
                 hitbox.size = currentAttack.Size;
+                if (currentAttack.attackType != BaseAttack.AttackType.Throw)
+                {
+                    cancelCancel = true;
+                }
                 if (currentAttack.DelayRecoil && currentAttack.AlwaysRecoil)
                 {
                     physics.travel -= currentAttack.Recoil.x / WorldRules.physicsRate;
@@ -206,6 +212,7 @@ public class PlayerAttackController : MonoBehaviour
                 state = AttackState.Recovery;
                 hitbox.enabled = false;
                 if (controller.gState == PlayerController.GroundStates.Sprint) physics.startSprint = false;
+                cancelCancel = false;
             }
             else // After attack completes
             {
@@ -215,6 +222,7 @@ public class PlayerAttackController : MonoBehaviour
                 stunLimit = 0;
                 GetComponent<SpriteManager>().EnableFollowup(false);
                 currentAttack = null;
+                cancelCancel = false;
             }
         }
     }
@@ -436,6 +444,11 @@ public class PlayerAttackController : MonoBehaviour
 
     public void CancelAttack()
     {
+        if (cancelCancel)
+        {
+            cancelCancel = false;
+            return;
+        }
         currentAttack = null;
         hitbox.enabled = false;
         timer = 0;
