@@ -30,25 +30,26 @@ public class InputSwap : MonoBehaviour, IDeselectHandler
     {
         if (keyboardSelected)
         {
-            if (Input.inputString != string.Empty && Input.inputString != Input.inputString.ToUpper())
+            if (Input.inputString != string.Empty)
             {
-                string input = Input.inputString.ToUpper();
-                currentText.text = originalString + input;
-                KeyCode thisKeyCode = (KeyCode)System.Enum.Parse(typeof(KeyCode), input);
-                switch (originalString)
+                KeyCode code = CheckValid(Input.inputString);
+                if (code != KeyCode.None)
                 {
-                    case "Punch - ":
-                        controls.keyboardControls.Punch = thisKeyCode;
-                        break;
-                    case "Kick - ":
-                        controls.keyboardControls.Kick = thisKeyCode;
-                        break;
-                    case "Throw - ":
-                        controls.keyboardControls.Throw = thisKeyCode;
-                        break;
+                    switch (originalString)
+                    {
+                        case "Punch - ":
+                            controls.keyboardControls.Punch = code;
+                            break;
+                        case "Kick - ":
+                            controls.keyboardControls.Kick = code;
+                            break;
+                        case "Throw - ":
+                            controls.keyboardControls.Throw = code;
+                            break;
+                    }
+                    keyboardSelected = false;
+                    EventSystem.current.SetSelectedGameObject(null);
                 }
-                keyboardSelected = false;
-                EventSystem.current.SetSelectedGameObject(null);
             }
         }
         else if (gamepadSelected)
@@ -134,5 +135,47 @@ public class InputSwap : MonoBehaviour, IDeselectHandler
                 return "RB";
         }
         return string.Empty;
+    }
+
+    private KeyCode CheckValid(string inputString)
+    {
+        // Letters
+        if (inputString != string.Empty && inputString != inputString.ToUpper())
+        {
+            string input = inputString.ToUpper();
+            currentText.text = originalString + input;
+            return (KeyCode)System.Enum.Parse(typeof(KeyCode), input);
+        }
+
+        // Numpad
+        byte[] ascii = System.Text.Encoding.ASCII.GetBytes(inputString);
+        KeyCode code = GetNumpadDown();
+        if (code != KeyCode.None)
+        {
+            currentText.text = originalString + "Numpad " + inputString;
+            return code;
+        }
+
+        // Alpha
+        if (ascii.First() >= 48 && ascii.First() <= 57)
+        {
+            currentText.text = originalString + inputString;
+            return (KeyCode)ascii.First();
+        }
+        return KeyCode.None;
+    }
+
+    private KeyCode GetNumpadDown()
+    {
+        if (Input.GetKey(KeyCode.Keypad1)) return KeyCode.Keypad1;
+        if (Input.GetKey(KeyCode.Keypad2)) return KeyCode.Keypad2;
+        if (Input.GetKey(KeyCode.Keypad3)) return KeyCode.Keypad3;
+        if (Input.GetKey(KeyCode.Keypad4)) return KeyCode.Keypad4;
+        if (Input.GetKey(KeyCode.Keypad5)) return KeyCode.Keypad5;
+        if (Input.GetKey(KeyCode.Keypad6)) return KeyCode.Keypad6;
+        if (Input.GetKey(KeyCode.Keypad7)) return KeyCode.Keypad7;
+        if (Input.GetKey(KeyCode.Keypad8)) return KeyCode.Keypad8;
+        if (Input.GetKey(KeyCode.Keypad9)) return KeyCode.Keypad9;
+        return KeyCode.None;
     }
 }

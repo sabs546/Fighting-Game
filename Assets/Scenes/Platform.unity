@@ -3107,7 +3107,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   originalString: 'Kick - '
-  controls: {fileID: 353790528}
+  controls: {fileID: 1108586765}
 --- !u!114 &316532841
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9198,7 +9198,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   originalString: 'Punch - '
-  controls: {fileID: 353790528}
+  controls: {fileID: 1108586765}
 --- !u!114 &823500895
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19074,7 +19074,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   originalString: 'Throw - '
-  controls: {fileID: 353790528}
+  controls: {fileID: 1108586765}
 --- !u!114 &1642176553
 MonoBehaviour:
   m_ObjectHideFlags: 0
