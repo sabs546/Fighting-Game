@@ -47,7 +47,7 @@ public class HealthManager : MonoBehaviour
         if (currentHealth <= 0)
         {
             currentHealth = 0;
-            WorldRules.gameSpeed = 0.5f;
+            WorldRules.gameSpeed = 0.0f;
             Camera.main.GetComponent<CameraControl>().StartShake(64, 8u, 1.0f);
             GetComponent<Animator>().speed = WorldRules.gameSpeed;
             gameStateControl.GetComponent<GameStateControl>().SetGameState(GameStateControl.GameState.RoundOver);

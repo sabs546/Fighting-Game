@@ -51,8 +51,11 @@ public class GameStateControl : MonoBehaviour
     private Image p1RoundCount;
     [SerializeField]
     private Image p2RoundCount;
+    [SerializeField]
+    private Image whiteOut;
     private int p1Wins;
     private int p2Wins;
+    private float ticker;
 
     [Header("Game Over")]
     public TextMeshProUGUI winnerTag;
@@ -68,6 +71,40 @@ public class GameStateControl : MonoBehaviour
         p1Animator = p1.GetComponent<Animator>();
         p2Animator = p2.GetComponent<Animator>();
         CPUAnimator = CPU.GetComponent<Animator>();
+
+        ticker = 0.0f;
+    }
+
+    private void Update()
+    {
+        if (gameState == GameState.RoundOver || gameState == GameState.GameOver)
+        {
+            if (WorldRules.gameSpeed < 1.0f)
+            {
+                ticker = 1.0f;
+                WorldRules.gameSpeed += 0.1f * Time.deltaTime;
+                p1Animator.speed = WorldRules.gameSpeed;
+                if (WorldRules.PvP) p2Animator.speed = WorldRules.gameSpeed;
+                else                CPUAnimator.speed = WorldRules.gameSpeed;
+                if (WorldRules.gameSpeed > 1.0f)
+                {
+                    WorldRules.gameSpeed = 1.0f;
+                }
+                whiteOut.color = new Color(1.0f, 1.0f, 1.0f, WorldRules.gameSpeed * 2.0f);
+            }
+        }
+        if (gameState == GameState.RoundStart)
+        {
+            if (ticker > 0.0f)
+            {
+                ticker -= Time.deltaTime;
+                if (ticker < 0.0f)
+                {
+                    ticker = 0.0f;
+                }
+                whiteOut.color = new Color(1.0f, 1.0f, 1.0f, ticker);
+            }
+        }
     }
 
     public void SetGameState(GameState state)
