@@ -306,6 +306,171 @@ public class AIController : MonoBehaviour
                 }
             }
         }
+        else if (playStyle == Playstyle.Turtle)
+        {
+            // First we check if we're within hitting range or not, but this time it's the opponents hitting range
+            if (!CheckInRange(true))
+            {
+                attackController.allowFollowup = false;
+                // So we're not within attack range, we need to know if we're grounded or not first off
+                if (pState == PlayerStates.Grounded)
+                {
+                    // We are grounded, lets try and read the opponent
+                    if (opponentController.gState == PlayerController.GroundStates.Neutral ||
+                        opponentAtkController.state == PlayerAttackController.AttackState.Recovery)
+                    {
+                        // So the opponent is either stuck or doing nothing, now it's time to go in
+                        if (gState == GroundStates.Neutral)
+                        {
+                            SendMovementSignal(GroundStates.Dash);
+                            fatigue = mFatigue;
+                            return;
+                        }
+
+                        // If we are already dashing, it's a good time to check on the opponent
+                        if (gState == GroundStates.Dash || gState == GroundStates.Backdash)
+                        {
+                            // We're approaching, but they're far enough that one dash isn't enough, we can kick up a sprint here
+                            SendMovementSignal(GroundStates.Sprint);
+                            fatigue = mFatigue;
+                            return;
+                        }
+                    }
+                    else if (gState == GroundStates.Neutral && opponentController.gState == PlayerController.GroundStates.Dash)
+                    {
+                        SendMovementSignal(GroundStates.Backdash);
+                        fatigue = mFatigue;
+                        return;
+                    }
+                    else if (gState == GroundStates.Neutral && opponentController.gState == PlayerController.GroundStates.Backdash)
+                    {
+                        // The opponent is retreating, you don't wanna give them too much breathing room so just give a basic dash in
+                        SendMovementSignal(GroundStates.Dash);
+                        fatigue = mFatigue;
+                        return;
+                    }
+                }
+            }
+            else if (CheckInRange(true))
+            {
+                // We're within range, the opponent might attack
+                physics.startSprint = false;
+
+                if (pState == PlayerStates.Grounded)
+                {
+                    if (gState == GroundStates.Neutral)
+                    {
+                        // Check for airborne
+                        if (!CheckInRange(true, true))
+                        {
+                            // We're within range, but they're too high up
+                            if (opponentAtkController.state == PlayerAttackController.AttackState.Recovery ||
+                                opponentAtkController.state == PlayerAttackController.AttackState.Empty)
+                            {
+                                SendMovementSignal(GroundStates.Jump);
+                                fatigue = mFatigue;
+                                return;
+                            }
+
+                            // We're within range, but they're too high up
+                            if (opponentAtkController.state == PlayerAttackController.AttackState.Startup ||
+                                opponentAtkController.state == PlayerAttackController.AttackState.Active)
+                            {
+                                SendMovementSignal(GroundStates.Backdash);
+                                fatigue = mFatigue;
+                                return;
+                            }
+                        }
+                        else if (opponentController.gState == PlayerController.GroundStates.Dash)
+                        {
+                            SendMovementSignal(GroundStates.Backdash);
+                            fatigue = mFatigue;
+                            return;
+                        }
+
+                        if (TooCloseForComfort())
+                        {
+                            SendMovementSignal(GroundStates.Backdash);
+                            fatigue = mFatigue;
+                            return;
+                        }
+                    }
+                    else if (gState == GroundStates.Dash || gState == GroundStates.Sprint)
+                    {
+                        if (opponentAtkController.state == PlayerAttackController.AttackState.Startup)
+                        {
+                            SendThrowSignal();
+                            return;
+                        }
+                        if (opponentAtkController.state == PlayerAttackController.AttackState.Recovery ||
+                            opponentAtkController.state == PlayerAttackController.AttackState.Empty ||
+                            opponentController.gState != PlayerController.GroundStates.Backdash)
+                        {
+                            SendAttackSignal();
+                            return;
+                        }
+                    }
+                }
+                else if (pState == PlayerStates.Airborne)
+                {
+                    if (CheckInRange(true))
+                    {
+                        if (opponentAtkController.state == PlayerAttackController.AttackState.Startup)
+                        {
+                            SendThrowSignal();
+                            return;
+                        }
+                        SendAttackSignal();
+                        return;
+                    }
+                }
+            }
+            else if (CheckInRange(false))
+            {
+                if (pState == PlayerStates.Grounded)
+                {
+                    if (gState == GroundStates.Neutral)
+                    {
+                        // Check for airborne
+                        if (!CheckInRange(false, true))
+                        {
+                            // We're within range, but they're too high up
+                            if (opponentAtkController.state == PlayerAttackController.AttackState.Startup ||
+                                opponentAtkController.state == PlayerAttackController.AttackState.Active)
+                            {
+                                SendMovementSignal(GroundStates.Jump);
+                                fatigue = mFatigue;
+                                return;
+                            }
+                        }
+
+                        // Otherwise just jump back a bit
+                        if (opponentAtkController.state == PlayerAttackController.AttackState.Startup ||
+                        opponentAtkController.state == PlayerAttackController.AttackState.Active)
+                        {
+                            SendMovementSignal(GroundStates.Backdash);
+                            fatigue = mFatigue;
+                            return;
+                        }
+                        if (opponentAtkController.state == PlayerAttackController.AttackState.Recovery ||
+                            opponentAtkController.state == PlayerAttackController.AttackState.Empty)
+                        {
+                            SendMovementSignal(GroundStates.Dash);
+                            fatigue = mFatigue;
+                            return;
+                        }
+                    }
+                    else if (gState == GroundStates.Sprint)
+                    {
+                        if (opponentController.gState != PlayerController.GroundStates.Backdash)
+                        {
+                            SendAttackSignal();
+                            return;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public void DisableBlock()

@@ -24623,6 +24623,11 @@ PrefabInstance:
       propertyPath: opponent
       value: 
       objectReference: {fileID: 353790518}
+    - target: {fileID: 6362332988191231726, guid: 5baf6e6c8e4c4cc47aeeb0a9c272ce56,
+        type: 3}
+      propertyPath: playStyle
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 6362332988191231727, guid: 5baf6e6c8e4c4cc47aeeb0a9c272ce56,
         type: 3}
       propertyPath: volumeSlider
