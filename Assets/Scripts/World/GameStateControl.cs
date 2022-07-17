@@ -6,60 +6,75 @@ using UnityEngine.UI;
 
 public class GameStateControl : MonoBehaviour
 {
+    // States =======================================================================
     public enum GameState { Menu, Fighting, Pause, RoundStart, RoundOver, GameOver };
     public static GameState gameState { get; private set; }
 
+    // Fighters ===============
     [Header("Fighter Related")]
-    public GameObject p1;
-    public GameObject p2;
-    public GameObject CPU;
-
+    [SerializeField]
+    private GameObject p1;
+    [SerializeField]
+    private GameObject p2;
+    [SerializeField]
+    private GameObject CPU;
+    // Fighter Components -------
     private Animator p1Animator;
     private Animator p2Animator;
     private Animator CPUAnimator;
-
     private Vector2 p1StartPos;
     private Vector2 p2StartPos;
 
+    // UI ===========================================================
     [Header("Menu Related")]
-    public GameObject menuUI;
-    public GameObject fightUI;
-    public GameObject pauseUI;
-    public FreezeGame pauseSetting;
-    public GameObject roundStartUI;
-    public GameObject roundOverUI;
-    public GameObject gameOverUI;
+    [SerializeField]
+    private GameObject menuUI;       // Main menu
+    [SerializeField]
+    private GameObject fightUI;      // Healthbars
+    [SerializeField]
+    private GameObject pauseUI;      // Pause
+    [SerializeField]
+    private FreezeGame pauseSetting; // When pause stops the fighting
+    [SerializeField]
+    private GameObject roundStartUI; // Ready banner
+    [SerializeField]
+    private GameObject roundOverUI;  // Round over banner
+    [SerializeField]
+    private GameObject gameOverUI;   // Game over banner
 
+    // Audio ================================================================
     [Header("Audio")]
     [SerializeField]
-    private Slider menuVolumeSlider;
+    private Slider menuVolumeSlider;  // Settings slider
     [SerializeField]
-    private Slider pauseVolumeSlider;
+    private Slider pauseVolumeSlider; // Pause slider, Also syncs the sliders
     [SerializeField]
-    private AudioSource source;
+    private AudioSource source;       // Main AudioSource
     [SerializeField]
-    private AudioClip readyFX;
+    private AudioClip readyFX;        // Movement noise
     [SerializeField]
-    private AudioClip fightFX;
+    private AudioClip fightFX;        // Fighting noise
 
+    // Rounds ============================================================
     [Header("Round Related")]
     [SerializeField]
-    private TextMeshProUGUI roundWinner;
+    private TextMeshProUGUI roundWinner;  // Name for the banner
     [SerializeField]
-    private TextMeshProUGUI currentScore;
+    private TextMeshProUGUI currentScore; // Round wins for the banner
     [SerializeField]
-    private Image p1RoundCount;
+    private Image p1RoundCount;           // For the lives circle
     [SerializeField]
-    private Image p2RoundCount;
+    private Image p2RoundCount;           // For the other likes circle
     [SerializeField]
-    private Image whiteOut;
-    private int p1Wins;
-    private int p2Wins;
-    private float ticker;
+    private Image whiteOut;               // When the sky lights up
+    private int p1Wins;                   // Keeps track for current score
+    private int p2Wins;                   // Keeps track for other score
+    private float ticker;                 // For whiteout fading
 
+    // Game Over =================================================
     [Header("Game Over")]
-    public TextMeshProUGUI winnerTag;
-    private string winnerName;
+    public TextMeshProUGUI winnerTag; // To set the winners name
+    private string winnerName;        // To store the winners name
 
     // Start is called before the first frame update
     void Start()
@@ -221,15 +236,15 @@ public class GameStateControl : MonoBehaviour
                 {
                     p2Wins++;
                     winnerName = opponent.GetComponent<HealthManager>().nameTag.text;
+                    p1RoundCount.fillAmount = 1.0f - ((float)p2Wins / (float)WorldRules.roundLimit);
                 }
                 if (CheckDead(opponent))
                 {
                     p1Wins++;
                     winnerName = winnerName == string.Empty ? p1.GetComponent<HealthManager>().nameTag.text : "NOBODY";
+                    p2RoundCount.fillAmount = 1.0f - ((float)p1Wins / (float)WorldRules.roundLimit);
                 }
 
-                p1RoundCount.fillAmount = 1.0f - ((float)p2Wins / (float)WorldRules.roundLimit);
-                p2RoundCount.fillAmount = 1.0f - ((float)p1Wins / (float)WorldRules.roundLimit);
                 p1.GetComponent<PlayerController>().enabled = false;
                 if (opponent.TryGetComponent(out PlayerController pController)) pController.enabled = false;
                 else if (opponent.TryGetComponent(out AIController aiController)) aiController.enabled = false;

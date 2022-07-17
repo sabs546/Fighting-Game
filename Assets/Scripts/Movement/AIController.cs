@@ -34,6 +34,9 @@ public class AIController : MonoBehaviour
     public GameObject opponent;  // Used for AI tracking of opponent
     public float      reach;     // Check for punching range
     public float      dashReach; // Check for approach range
+    [SerializeField]
+    [Tooltip("Range at which the AI wants to backdash")]
+    private float     shyRange;
 
     // Delay =======================================
     [Header("Delay")]
@@ -91,12 +94,7 @@ public class AIController : MonoBehaviour
     // When you're almost inside each other and can no longer land anything
     private bool TooCloseForComfort()
     {
-        // todo repeat declarations
-        Vector3 pos = transform.position;
-        Vector3 oppPos = opponent.transform.position;
-
-        // todo Might need this to be a variable or something
-        if (Math.Abs(pos.x - oppPos.x) < 2)
+        if (Math.Abs(transform.position.x - opponent.transform.position.x) < shyRange)
         {
             return true;
         }
@@ -107,26 +105,21 @@ public class AIController : MonoBehaviour
     // Check the range between the fighters
     private bool CheckInRange(bool armsReach, bool vertical = false)
     {
-        Vector3 pos = transform.position;
-        Vector3 oppPos = opponent.transform.position;
-
         float reachDistance = armsReach ? reach : dashReach;
 
         if (!vertical)
         {
-            if (Math.Abs(pos.x - oppPos.x) < reachDistance) return true;
+            if (Math.Abs(transform.position.x - opponent.transform.position.x) < reachDistance) return true;
         }
         else
         {
-            if (Math.Abs(pos.y - oppPos.y) == 0.0f) return true;
+            if (Math.Abs(transform.position.y - opponent.transform.position.y) == 0.0f) return true;
         }
         return false;
     }
 
     private void SendMovementSignal(GroundStates state)
     {
-        Vector3 pos = transform.position;
-        Vector3 oppPos = opponent.transform.position;
         switch (state)
         {
             case GroundStates.Dash:
@@ -151,9 +144,6 @@ public class AIController : MonoBehaviour
 
     private void SendAttackSignal()
     {
-        Vector3 pos = transform.position;
-        Vector3 oppPos = opponent.transform.position;
-
         if (attackController.allowFollowup)
         {
             attackController.currentAttack = attackController.currentAttack.Followup;
@@ -180,10 +170,10 @@ public class AIController : MonoBehaviour
                 switch (aState)
                 {
                     case AirStates.Rising:
-                        if (oppPos.y > pos.y) attackController.currentAttack = attackController.FindAttack(BaseAttack.AttackType.Punch);
+                        if (opponent.transform.position.y > transform.position.y) attackController.currentAttack = attackController.FindAttack(BaseAttack.AttackType.Punch);
                         break;
                     case AirStates.Falling:
-                        if (oppPos.y < pos.y) attackController.currentAttack = attackController.FindAttack(BaseAttack.AttackType.Kick);
+                        if (opponent.transform.position.y < transform.position.y) attackController.currentAttack = attackController.FindAttack(BaseAttack.AttackType.Kick);
                         break;
                 }
                 break;

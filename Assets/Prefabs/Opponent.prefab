@@ -132,6 +132,7 @@ MonoBehaviour:
   healthBar: {fileID: 0}
   backBar: {fileID: 0}
   gameStateControl: {fileID: 0}
+  whiteOut: {fileID: 0}
 --- !u!114 &6362332988191231726
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -155,7 +156,7 @@ MonoBehaviour:
   opponent: {fileID: 0}
   reach: 6
   dashReach: 8
-  rFatigue: 40
+  shyRange: 2
   aFatigue: 20
   mFatigue: 10
 --- !u!114 &6362332988191231721

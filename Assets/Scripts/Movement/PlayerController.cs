@@ -88,7 +88,7 @@ public class PlayerController : MonoBehaviour
         if (attackController.state == PlayerAttackController.AttackState.Empty && gState != GroundStates.Stun)
         {
             if (controls.type == SetControls.ControllerType.Keyboard)
-            { // todo something is wrong with sprint attacks and keyboard inputs
+            {
                 switch (keyboardInputs.KeyboardDown())
                 {
                     case KeyboardInput.Inputs.Up:
