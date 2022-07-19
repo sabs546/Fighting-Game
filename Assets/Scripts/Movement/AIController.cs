@@ -24,7 +24,7 @@ public class AIController : MonoBehaviour
     // Rather than just always being optimal, the playstyle should decide what they want to do at any given time
     // todo Currently only rushdown is in use, the rest will be implemented with time
     public enum Playstyle { Rushdown, Adaptive, Turtle };
-    public Playstyle playStyle;
+    public Playstyle playstyle;
 
     public enum Side { Left, Right };
     public Side currentSide;
@@ -48,6 +48,8 @@ public class AIController : MonoBehaviour
     // Other Components ========================
     private AIPhysics physics;
     private AIAttackController attackController;
+    private PlayerController opponentController;
+    private PlayerAttackController opponentAtkController;
 
     // Calculated Values ==================================================================
     private int fatigue;         // Inherits one of the above fatigues to slow down actions
@@ -61,6 +63,8 @@ public class AIController : MonoBehaviour
     {
         physics = GetComponent<AIPhysics>();
         attackController = GetComponent<AIAttackController>();
+        opponentController = opponent.GetComponent<PlayerController>();
+        opponentAtkController = opponent.GetComponent<PlayerAttackController>();
         fatigue = mFatigue;
         ticker = 0;
     }
@@ -211,9 +215,6 @@ public class AIController : MonoBehaviour
 
     private void DecisionMaker()
     {
-        PlayerController opponentController = opponent.GetComponent<PlayerController>();
-        PlayerAttackController opponentAtkController = opponent.GetComponent<PlayerAttackController>();
-
         if (GetComponent<HealthManager>().currentHealth <= 0)
         {
             return;
@@ -225,17 +226,124 @@ public class AIController : MonoBehaviour
         }
 
         // todo This seems inefficient once rushdown, always rushdown right? Might need to come back to this one
-        if (playStyle == Playstyle.Rushdown)
+        if (playstyle == Playstyle.Rushdown)
         {
-            // First we check if we're within hitting range or not
-            if (!CheckInRange(true))
+            AggressiveDecision();
+        }
+        else if (playstyle == Playstyle.Turtle)
+        {
+            DefensiveDecision();
+        }
+    }
+
+    public void DisableBlock()
+    {
+        blocking = false;
+    }
+
+    public void ChangePlayStyle(int type)
+    {
+        playstyle = (Playstyle)type;
+    }
+
+    // I wonder if I can keep these in another script, it's inconvenient either way
+    private void AggressiveDecision()
+    {
+        // First we check if we're within hitting range or not
+        if (!CheckInRange(true))
+        {
+            attackController.allowFollowup = false;
+            // So we're not within attack range, that means we need to advance
+            if (pState == PlayerStates.Grounded)
             {
-                attackController.allowFollowup = false;
-                // So we're not within attack range, that means we need to advance
-                if (pState == PlayerStates.Grounded)
+                // That means we need to dash
+                if (gState != GroundStates.Dash && gState != GroundStates.Sprint)
                 {
-                    // That means we need to dash
-                    if (gState != GroundStates.Dash && gState != GroundStates.Sprint)
+                    SendMovementSignal(GroundStates.Dash);
+                    fatigue = mFatigue;
+                    return;
+                }
+
+                // If we are already dashing, it's a good time to check on the opponent
+                if (opponentController.pState == PlayerController.PlayerStates.Grounded)
+                {
+                    if (!CheckInRange(false))
+                    {
+                        // We're approaching, but they're far enough that one dash isn't enough, we can kick up a sprint here
+                        SendMovementSignal(GroundStates.Sprint);
+                    }
+                    // Otherwise let the dash ride, we can still make it
+                }
+            }
+        }
+        else
+        {
+            // We're within range, we should probably throw out some kinda attack
+            // Lets deal with that in another script at another time, we're just focusing on movement right now
+
+            // That being said, first we need to stop moving towards the player, and if that movement is a sprint, it needs to be stopped manually
+            physics.startSprint = false;
+
+            if (gState == GroundStates.Dash && pState != PlayerStates.Crouching)
+            {
+                // I just made it 1 in 3 since it means it has an equal chance as standard punch or kick
+                if (UnityEngine.Random.Range(0, 3) == 0)
+                {
+                    physics.enableCrouch = true;
+                    ticker = mFatigue;
+                    return;
+                }
+                if (opponentAtkController.state == PlayerAttackController.AttackState.Startup)
+                {
+                    SendThrowSignal();
+                }
+            }
+
+            if (pState == PlayerStates.Grounded)
+            {
+                if (!CheckInRange(false, true))
+                {
+                    // We're within range, but they're too high up
+                    SendMovementSignal(GroundStates.Jump);
+                    fatigue = mFatigue;
+                    return;
+                }
+
+                // Otherwise continue as normal
+                if (gState == GroundStates.Neutral)
+                {
+                    // Getting within comfortable physical violence range
+                    SendMovementSignal(TooCloseForComfort() ? GroundStates.Backdash : GroundStates.Dash);
+                    fatigue = mFatigue;
+                }
+                else
+                {
+                    SendAttackSignal();
+                }
+            }
+            else if (pState == PlayerStates.Airborne)
+            {
+                // So we're within attack range, and we're in the air, we can throw something out
+                SendAttackSignal();
+            }
+        }
+    }
+
+    private void DefensiveDecision()
+    {
+        // First we check if we're within hitting range or not, but this time it's the opponents hitting range
+        if (!CheckInRange(true))
+        {
+            attackController.allowFollowup = false;
+            // So we're not within attack range, we need to know if we're grounded or not first off
+            if (pState == PlayerStates.Grounded)
+            {
+                // We are grounded, lets try and read the opponent
+                if (opponentController.gState == PlayerController.GroundStates.Neutral ||
+                    opponentAtkController.state == PlayerAttackController.AttackState.Recovery)
+                {
+                    // So the opponent is either stuck or doing nothing, now it's time to go in
+                    if (gState == GroundStates.Neutral)
                     {
                         SendMovementSignal(GroundStates.Dash);
                         fatigue = mFatigue;
@@ -243,159 +351,89 @@ public class AIController : MonoBehaviour
                     }
 
                     // If we are already dashing, it's a good time to check on the opponent
-                    if (opponentController.pState == PlayerController.PlayerStates.Grounded)
+                    if (gState == GroundStates.Dash || gState == GroundStates.Backdash)
                     {
-                        if (!CheckInRange(false))
-                        {
-                            // We're approaching, but they're far enough that one dash isn't enough, we can kick up a sprint here
-                            SendMovementSignal(GroundStates.Sprint);
-                        }
-                        // Otherwise let the dash ride, we can still make it
+                        // We're approaching, but they're far enough that one dash isn't enough, we can kick up a sprint here
+                        SendMovementSignal(GroundStates.Sprint);
+                        fatigue = mFatigue;
+                        return;
                     }
+                }
+                else if (gState == GroundStates.Neutral && opponentController.gState == PlayerController.GroundStates.Dash)
+                {
+                    SendMovementSignal(GroundStates.Backdash);
+                    fatigue = mFatigue;
+                    return;
+                }
+                else if (gState == GroundStates.Neutral && opponentController.gState == PlayerController.GroundStates.Backdash)
+                {
+                    // The opponent is retreating, you don't wanna give them too much breathing room so just give a basic dash in
+                    SendMovementSignal(GroundStates.Dash);
+                    fatigue = mFatigue;
+                    return;
                 }
             }
-            else
+
+            if (opponentAtkController.state == PlayerAttackController.AttackState.Startup ||
+                opponentAtkController.state == PlayerAttackController.AttackState.Active)
             {
-                // We're within range, we should probably throw out some kinda attack
-                // Lets deal with that in another script at another time, we're just focusing on movement right now
-
-                // That being said, first we need to stop moving towards the player, and if that movement is a sprint, it needs to be stopped manually
-                physics.startSprint = false;
-
-                if (gState == GroundStates.Dash && pState != PlayerStates.Crouching)
+                if (gState == GroundStates.Neutral)
                 {
-                    // I just made it 1 in 3 since it means it has an equal chance as standard punch or kick
-                    if (UnityEngine.Random.Range(0, 3) == 0)
-                    {
-                        physics.enableCrouch = true;
-                        ticker = mFatigue;
-                        return;
-                    }
-                    if (opponentAtkController.state == PlayerAttackController.AttackState.Startup)
-                    {
-                        SendThrowSignal();
-                    }
+                    SendMovementSignal(GroundStates.Backdash);
+                    fatigue = mFatigue;
+                    return;
                 }
-
-                if (pState == PlayerStates.Grounded)
-                {
-                    if (!CheckInRange(false, true))
-                    {
-                        // We're within range, but they're too high up
-                        SendMovementSignal(GroundStates.Jump);
-                        fatigue = mFatigue;
-                        return;
-                    }
-
-                    // Otherwise continue as normal
-                    if (gState == GroundStates.Neutral)
-                    {
-                        // Getting within comfortable physical violence range
-                        SendMovementSignal(TooCloseForComfort() ? GroundStates.Backdash : GroundStates.Dash);
-                        fatigue = mFatigue;
-                    }
-                    else
-                    {
-                        SendAttackSignal();
-                    }
-                }
-                else if (pState == PlayerStates.Airborne)
-                {
-                    // So we're within attack range, and we're in the air, we can throw something out
-                    SendAttackSignal();
-                }
+            }
+            else if (opponentAtkController.state == PlayerAttackController.AttackState.Recovery ||
+                     opponentController.gState == PlayerController.GroundStates.Stun)
+            {
+                SendMovementSignal(GroundStates.Dash);
+                fatigue = mFatigue;
+                return;
             }
         }
-        else if (playStyle == Playstyle.Turtle)
+        else if (CheckInRange(true))
         {
-            // First we check if we're within hitting range or not, but this time it's the opponents hitting range
-            if (!CheckInRange(true))
+            // We're within range, the opponent might attack
+            physics.startSprint = false;
+
+            if (pState == PlayerStates.Grounded)
             {
-                attackController.allowFollowup = false;
-                // So we're not within attack range, we need to know if we're grounded or not first off
-                if (pState == PlayerStates.Grounded)
+                if (gState == GroundStates.Neutral)
                 {
-                    // We are grounded, lets try and read the opponent
-                    if (opponentController.gState == PlayerController.GroundStates.Neutral ||
-                        opponentAtkController.state == PlayerAttackController.AttackState.Recovery)
+                    // Check for airborne
+                    if (!CheckInRange(true, true))
                     {
-                        // So the opponent is either stuck or doing nothing, now it's time to go in
-                        if (gState == GroundStates.Neutral)
+                        // We're within range, but they're too high up
+                        if (opponentAtkController.state == PlayerAttackController.AttackState.Recovery ||
+                            opponentAtkController.state == PlayerAttackController.AttackState.Empty)
                         {
-                            SendMovementSignal(GroundStates.Dash);
+                            SendMovementSignal(GroundStates.Jump);
                             fatigue = mFatigue;
                             return;
                         }
 
-                        // If we are already dashing, it's a good time to check on the opponent
-                        if (gState == GroundStates.Dash || gState == GroundStates.Backdash)
+                        // We're within range, but they're too high up
+                        if (opponentAtkController.state == PlayerAttackController.AttackState.Startup ||
+                            opponentAtkController.state == PlayerAttackController.AttackState.Active)
                         {
-                            // We're approaching, but they're far enough that one dash isn't enough, we can kick up a sprint here
-                            SendMovementSignal(GroundStates.Sprint);
+                            SendMovementSignal(GroundStates.Backdash);
                             fatigue = mFatigue;
                             return;
                         }
                     }
-                    else if (gState == GroundStates.Neutral && opponentController.gState == PlayerController.GroundStates.Dash)
+                    else if (TooCloseForComfort() ||
+                             opponentController.gState == PlayerController.GroundStates.Neutral ||
+                             opponentController.gState == PlayerController.GroundStates.Dash)
                     {
                         SendMovementSignal(GroundStates.Backdash);
                         fatigue = mFatigue;
                         return;
                     }
-                    else if (gState == GroundStates.Neutral && opponentController.gState == PlayerController.GroundStates.Backdash)
-                    {
-                        // The opponent is retreating, you don't wanna give them too much breathing room so just give a basic dash in
-                        SendMovementSignal(GroundStates.Dash);
-                        fatigue = mFatigue;
-                        return;
-                    }
                 }
-            }
-            else if (CheckInRange(true))
-            {
-                // We're within range, the opponent might attack
-                physics.startSprint = false;
-
-                if (pState == PlayerStates.Grounded)
+                else if (gState == GroundStates.Dash || gState == GroundStates.Sprint)
                 {
-                    if (gState == GroundStates.Neutral)
-                    {
-                        // Check for airborne
-                        if (!CheckInRange(true, true))
-                        {
-                            // We're within range, but they're too high up
-                            if (opponentAtkController.state == PlayerAttackController.AttackState.Recovery ||
-                                opponentAtkController.state == PlayerAttackController.AttackState.Empty)
-                            {
-                                SendMovementSignal(GroundStates.Jump);
-                                fatigue = mFatigue;
-                                return;
-                            }
-
-                            // We're within range, but they're too high up
-                            if (opponentAtkController.state == PlayerAttackController.AttackState.Startup ||
-                                opponentAtkController.state == PlayerAttackController.AttackState.Active)
-                            {
-                                SendMovementSignal(GroundStates.Backdash);
-                                fatigue = mFatigue;
-                                return;
-                            }
-                        }
-                        else if (opponentController.gState == PlayerController.GroundStates.Dash)
-                        {
-                            SendMovementSignal(GroundStates.Backdash);
-                            fatigue = mFatigue;
-                            return;
-                        }
-
-                        if (TooCloseForComfort())
-                        {
-                            SendMovementSignal(GroundStates.Backdash);
-                            fatigue = mFatigue;
-                            return;
-                        }
-                    }
-                    else if (gState == GroundStates.Dash || gState == GroundStates.Sprint)
+                    if (CheckInRange(true, true))
                     {
                         if (opponentAtkController.state == PlayerAttackController.AttackState.Startup)
                         {
@@ -410,71 +448,86 @@ public class AIController : MonoBehaviour
                             return;
                         }
                     }
-                }
-                else if (pState == PlayerStates.Airborne)
-                {
-                    if (CheckInRange(true))
+                    else
                     {
-                        if (opponentAtkController.state == PlayerAttackController.AttackState.Startup)
+                        if (pState == PlayerStates.Grounded)
                         {
-                            SendThrowSignal();
+                            SendMovementSignal(GroundStates.Jump);
+                        }
+                    }
+                }
+            }
+            else if (pState == PlayerStates.Airborne)
+            {
+                if (CheckInRange(true))
+                {
+                    if (opponentAtkController.state == PlayerAttackController.AttackState.Startup)
+                    {
+                        SendThrowSignal();
+                        return;
+                    }
+                    SendAttackSignal();
+                    return;
+                }
+            }
+        }
+        else if (CheckInRange(false))
+        {
+            if (pState == PlayerStates.Grounded)
+            {
+                if (gState == GroundStates.Neutral)
+                {
+                    // Check for airborne
+                    if (!CheckInRange(false, true))
+                    {
+                        // We're within range, but they're too high up
+                        if (opponentAtkController.state == PlayerAttackController.AttackState.Startup ||
+                            opponentAtkController.state == PlayerAttackController.AttackState.Active)
+                        {
+                            SendMovementSignal(GroundStates.Jump);
+                            fatigue = mFatigue;
                             return;
                         }
+                    }
+
+                    // Otherwise just jump back a bit
+                    if (opponentAtkController.state == PlayerAttackController.AttackState.Startup ||
+                        opponentAtkController.state == PlayerAttackController.AttackState.Active)
+                    {
+                        SendMovementSignal(GroundStates.Backdash);
+                        fatigue = mFatigue;
+                        return;
+                    }
+                    if (opponentAtkController.state == PlayerAttackController.AttackState.Recovery ||
+                        opponentAtkController.state == PlayerAttackController.AttackState.Empty)
+                    {
+                        SendMovementSignal(GroundStates.Dash);
+                        fatigue = mFatigue;
+                        return;
+                    }
+                }
+                else if (gState == GroundStates.Sprint)
+                {
+                    if (opponentController.gState != PlayerController.GroundStates.Backdash)
+                    {
                         SendAttackSignal();
                         return;
                     }
                 }
             }
-            else if (CheckInRange(false))
+            else if (opponentController.pState == PlayerController.PlayerStates.Airborne &&
+                     opponentController.aState == PlayerController.AirStates.Falling)
             {
-                if (pState == PlayerStates.Grounded)
+                if (opponentAtkController.state != PlayerAttackController.AttackState.Empty)
                 {
                     if (gState == GroundStates.Neutral)
                     {
-                        // Check for airborne
-                        if (!CheckInRange(false, true))
-                        {
-                            // We're within range, but they're too high up
-                            if (opponentAtkController.state == PlayerAttackController.AttackState.Startup ||
-                                opponentAtkController.state == PlayerAttackController.AttackState.Active)
-                            {
-                                SendMovementSignal(GroundStates.Jump);
-                                fatigue = mFatigue;
-                                return;
-                            }
-                        }
-
-                        // Otherwise just jump back a bit
-                        if (opponentAtkController.state == PlayerAttackController.AttackState.Startup ||
-                        opponentAtkController.state == PlayerAttackController.AttackState.Active)
-                        {
-                            SendMovementSignal(GroundStates.Backdash);
-                            fatigue = mFatigue;
-                            return;
-                        }
-                        if (opponentAtkController.state == PlayerAttackController.AttackState.Recovery ||
-                            opponentAtkController.state == PlayerAttackController.AttackState.Empty)
-                        {
-                            SendMovementSignal(GroundStates.Dash);
-                            fatigue = mFatigue;
-                            return;
-                        }
-                    }
-                    else if (gState == GroundStates.Sprint)
-                    {
-                        if (opponentController.gState != PlayerController.GroundStates.Backdash)
-                        {
-                            SendAttackSignal();
-                            return;
-                        }
+                        SendMovementSignal(GroundStates.Backdash);
+                        fatigue = mFatigue;
+                        return;
                     }
                 }
             }
         }
-    }
-
-    public void DisableBlock()
-    {
-        blocking = false;
     }
 }
