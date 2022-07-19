@@ -6,7 +6,8 @@ public class ChangeScale : MonoBehaviour
 {
     [SerializeField]
     private RectTransform objectToScale;
-    private Vector2 originalScale;
+    [SerializeField]
+    private Vector3 originalScale;
 
     private void Start()
     {
@@ -15,7 +16,7 @@ public class ChangeScale : MonoBehaviour
 
     public void Rescale(float amount)
     {
-        objectToScale.localScale *= new Vector2(amount, amount);
+        objectToScale.localScale *= amount;
     }
 
     public void Revert()
