@@ -314,8 +314,8 @@ public class AIAttackController : MonoBehaviour
 
         if (timer < currentAttack.Speed.y)
         {
-            opponentPhysics.GetComponent<AIAttackController>().CancelAttack();
-            opponentPhysics.GetComponent<AIAttackController>().stunLimit = currentAttack.Stun;
+            opponentPhysics.GetComponent<PlayerAttackController>().CancelAttack();
+            opponentPhysics.GetComponent<PlayerAttackController>().stunLimit = currentAttack.Stun;
 
             opponentPhysics.travel = currentAttack.Knockback.x / WorldRules.physicsRate;
             opponentPhysics.launch = currentAttack.Knockback.y / WorldRules.physicsRate;

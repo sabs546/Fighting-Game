@@ -459,14 +459,26 @@ public class AIController : MonoBehaviour
             }
             else if (pState == PlayerStates.Airborne)
             {
-                if (CheckInRange(true))
+                if (opponentAtkController.state == PlayerAttackController.AttackState.Startup)
                 {
-                    if (opponentAtkController.state == PlayerAttackController.AttackState.Startup)
-                    {
-                        SendThrowSignal();
-                        return;
-                    }
-                    SendAttackSignal();
+                    SendThrowSignal();
+                    return;
+                }
+                SendAttackSignal();
+                return;
+            }
+
+            if (opponentController.gState == PlayerController.GroundStates.Sprint)
+            {
+                if (gState == GroundStates.Neutral)
+                {
+                    SendMovementSignal(GroundStates.Backdash);
+                    fatigue = mFatigue;
+                    return;
+                }
+                else if (gState == GroundStates.Dash || gState == GroundStates.Sprint)
+                {
+                    SendThrowSignal();
                     return;
                 }
             }
