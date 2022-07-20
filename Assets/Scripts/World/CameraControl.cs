@@ -3,9 +3,11 @@ using UnityEngine;
 
 public class CameraControl : MonoBehaviour
 {
-    // UI Stuff ======================================
-    public GameObject menuScreen; // To enable/disable
-    public GameObject fightUI;    // To enable/disable
+    // UI Stuff ================================================
+    public GameObject menuScreen;    // To enable/disable
+    public GameObject fightUI;       // To enable/disable
+    [SerializeField]
+    private ClockControl roundClock; // To start the round timer
 
     // Positioning ====================================================================
     public GameObject p1;      // Needed to calculate distance
@@ -14,7 +16,7 @@ public class CameraControl : MonoBehaviour
     private Vector2 p1Pos;     // Saves time when getting position
     private Vector2 p2Pos;
     private Vector3 cameraPos; // Alter these values then apply them to the camera once
-    private Vector3 shakePos;  // When the camera shakes it should hold a temp value so it can go back to normal
+    private Vector3 shakePos;  // Temp pos used when shaking so it can return to normal
 
     // States ===========================================================
     public enum CameraState { Menu, Close, Normal, Far };
@@ -109,6 +111,7 @@ public class CameraControl : MonoBehaviour
                         cpu.GetComponent<AIController>().enabled = true;
                         cpu.GetComponent<AISpriteManager>().enabled = true;
                     }
+                    roundClock.BeginTimer();
                 }
 
                 if (cam.transform.position.y > close.height)

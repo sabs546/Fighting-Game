@@ -13,6 +13,7 @@ public class WorldRules : MonoBehaviour
     public static float volume      = 1.0f;  // For the volume slider
     public static float gameSpeed   = 1.0f;  // Changes the speed of the game
     public static int   roundLimit  = 3;     // Number of rounds to win
+    public static float roundTimer  = 0.0f;  // How long the round can last
 
     private void Start()
     {

@@ -58,6 +58,7 @@ public class PlayerController : MonoBehaviour
     {
         gState = GroundStates.Neutral;
         pState = PlayerStates.Crouching;
+        physics.startSprint = false;
     }
 
     // Update is called once per frame

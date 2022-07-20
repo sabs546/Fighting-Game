@@ -26,6 +26,11 @@ public class SettingsManager : MonoBehaviour
         WorldRules.roundLimit = (int)GetComponent<Slider>().value;
     }
 
+    public void SetRoundTimer()
+    {
+        WorldRules.roundTimer = GetComponent<Slider>().value;
+    }
+
     public void SetValueText()
     {
         valueBox.text = GetComponent<Slider>().value.ToString();

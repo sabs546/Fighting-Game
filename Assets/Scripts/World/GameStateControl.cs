@@ -66,6 +66,8 @@ public class GameStateControl : MonoBehaviour
     [SerializeField]
     private Image p2RoundCount;           // For the other likes circle
     [SerializeField]
+    private ClockControl roundClock;      // To reset the timer
+    [SerializeField]
     private Image whiteOut;               // When the sky lights up
     private int p1Wins;                   // Keeps track for current score
     private int p2Wins;                   // Keeps track for other score
@@ -180,6 +182,11 @@ public class GameStateControl : MonoBehaviour
                 }
                 break;
             case GameState.Fighting:
+                fightUI.SetActive(true);
+                if (WorldRules.roundTimer > 0.0f)
+                {
+                    roundClock.ResetTimer();
+                }
                 if (gameState == GameState.RoundStart)
                 {
                     p1.GetComponent<PlayerAttackController>().enabled = true;
@@ -187,13 +194,13 @@ public class GameStateControl : MonoBehaviour
                     CPU.GetComponent<AIAttackController>().enabled = true;
                     source.clip = fightFX;
                     source.Play();
+                    roundClock.BeginTimer();
                 }
                 gameState = GameState.Fighting;
                 menuUI.SetActive(false);
                 pauseUI.SetActive(false);
                 pauseSetting.enabled = false;
                 roundStartUI.SetActive(false);
-                fightUI.SetActive(true);
                 break;
             case GameState.Pause:
                 gameState = GameState.Pause;
@@ -225,24 +232,54 @@ public class GameStateControl : MonoBehaviour
                 roundOverUI.SetActive(false);
                 roundStartUI.SetActive(true);
                 fightUI.SetActive(true);
+                if (WorldRules.roundTimer > 0.0f)
+                {
+                    roundClock.ResetTimer();
+                }
                 break;
             case GameState.RoundOver:
                 // todo cleanup
                 gameState = GameState.RoundOver;
                 opponent = WorldRules.PvP ? p2 : CPU;
-                winnerName = string.Empty;
+                winnerName = "NOBODY";
+                bool nobodyDied = true;
 
                 if (CheckDead(p1))
                 {
                     p2Wins++;
                     winnerName = opponent.GetComponent<HealthManager>().nameTag.text;
                     p1RoundCount.fillAmount = 1.0f - ((float)p2Wins / (float)WorldRules.roundLimit);
+                    nobodyDied = false;
                 }
                 if (CheckDead(opponent))
                 {
                     p1Wins++;
-                    winnerName = winnerName == string.Empty ? p1.GetComponent<HealthManager>().nameTag.text : "NOBODY";
+                    winnerName = p1.GetComponent<HealthManager>().nameTag.text;
                     p2RoundCount.fillAmount = 1.0f - ((float)p1Wins / (float)WorldRules.roundLimit);
+                    nobodyDied = false;
+                }
+
+                if (roundClock.gameObject.activeSelf && nobodyDied)
+                {
+                    switch (CheckLowest(p1, opponent))
+                    {
+                        case -1:
+                            p1Wins++;
+                            winnerName = p1.GetComponent<HealthManager>().nameTag.text;
+                            p2RoundCount.fillAmount = 1.0f - ((float)p1Wins / (float)WorldRules.roundLimit);
+                            break;
+                        case 0:
+                            p1Wins++;
+                            p2Wins++;
+                            p1RoundCount.fillAmount = 1.0f - ((float)p2Wins / (float)WorldRules.roundLimit);
+                            p2RoundCount.fillAmount = 1.0f - ((float)p1Wins / (float)WorldRules.roundLimit);
+                            break;
+                        case 1:
+                            p2Wins++;
+                            winnerName = opponent.GetComponent<HealthManager>().nameTag.text;
+                            p1RoundCount.fillAmount = 1.0f - ((float)p2Wins / (float)WorldRules.roundLimit);
+                            break;
+                    }
                 }
 
                 p1.GetComponent<PlayerController>().enabled = false;
@@ -299,6 +336,25 @@ public class GameStateControl : MonoBehaviour
     {
         HealthManager healthManager = fighter.GetComponent<HealthManager>();
         return healthManager.currentHealth == 0 ? true : false;
+    }
+
+    // Spefically for ties
+    private int CheckLowest(GameObject p1, GameObject p2)
+    {
+        float p1Health = p1.GetComponent<HealthManager>().currentHealth;
+        float p2Health = p2.GetComponent<HealthManager>().currentHealth;
+        if (p1Health > p2Health)
+        {
+            return -1;
+        }
+        else if (p2Health > p1Health)
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
     }
 
     public void EndGame()
