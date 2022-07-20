@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
 
-public class SlideKick : BaseAttack
+public class AltSlideKick : BaseAttack
 {
-    public SlideKick()
+    public AltSlideKick()
     {
         attackType = AttackType.Kick;
         Damage = 10;
-        Speed = new Vector3Int(10, 20, 32);
-        Stun = 10;
+        Speed = new Vector3Int(10, 20, 52);
+        Stun = 20;
         Followup = null;
 
         Range = new Vector2(0.25f, 0.0f);

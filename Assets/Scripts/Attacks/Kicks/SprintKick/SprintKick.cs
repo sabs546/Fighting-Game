@@ -8,7 +8,7 @@ public class SprintKick : BaseAttack
     {
         attackType = AttackType.Kick;
         Damage = 25;
-        Speed = new Vector3Int(15, 17, 32);
+        Speed = new Vector3Int(15, 17, 42);
         Stun = 30;
         Followup = null;
 

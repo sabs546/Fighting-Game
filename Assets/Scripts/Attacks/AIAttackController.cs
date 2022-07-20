@@ -65,7 +65,7 @@ public class AIAttackController : MonoBehaviour
         {
             if (currentAttack is FallingKick && controller.pState == AIController.PlayerStates.Grounded)
             {
-                currentAttack = new SlideKick();
+                currentAttack = new AltSlideKick();
                 GetComponent<AttackAudioManager>().PlaySound("BlockHeavy", 1);
                 Camera.main.GetComponent<CameraControl>().StartShake(4, 4u, 0.5f);
                 state = AttackState.Startup;
