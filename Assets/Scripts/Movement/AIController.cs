@@ -375,22 +375,22 @@ public class AIController : MonoBehaviour
                 }
             }
 
-            if (opponentAtkController.state == PlayerAttackController.AttackState.Startup ||
-                opponentAtkController.state == PlayerAttackController.AttackState.Active)
+            if (gState == GroundStates.Neutral)
             {
-                if (gState == GroundStates.Neutral)
+                if (opponentAtkController.state == PlayerAttackController.AttackState.Startup ||
+                    opponentAtkController.state == PlayerAttackController.AttackState.Active)
                 {
                     SendMovementSignal(GroundStates.Backdash);
                     fatigue = mFatigue;
                     return;
                 }
-            }
-            else if (opponentAtkController.state == PlayerAttackController.AttackState.Recovery ||
-                     opponentController.gState == PlayerController.GroundStates.Stun)
-            {
-                SendMovementSignal(GroundStates.Dash);
-                fatigue = mFatigue;
-                return;
+                else if (opponentAtkController.state == PlayerAttackController.AttackState.Recovery ||
+                         opponentController.gState == PlayerController.GroundStates.Stun)
+                {
+                    SendMovementSignal(GroundStates.Dash);
+                    fatigue = mFatigue;
+                    return;
+                }
             }
         }
         else if (CheckInRange(true))
