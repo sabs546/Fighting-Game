@@ -122,7 +122,7 @@ public class GameStateControl : MonoBehaviour
                 whiteOut.color = new Color(1.0f, 1.0f, 1.0f, ticker);
             }
         }
-        if (gameState == GameState.Fighting)
+        if (gameState == GameState.Fighting || gameState == GameState.Menu)
         {
             if (whiteOut.color.a > 0.0f)
             {

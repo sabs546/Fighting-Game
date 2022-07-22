@@ -27,12 +27,12 @@ public class ClockControl : MonoBehaviour
             clockCircle.fillAmount += 1.0f * Time.deltaTime;
         }
 
-        if (begin && timeLeft > 0.0f)
+        if (begin && timeLeft > 0.0f && GameStateControl.gameState == GameStateControl.GameState.Fighting)
         {
             timeLeft -= Time.deltaTime;
             clockCircle.fillAmount = timeLeft / WorldRules.roundTimer;
         }
-        else if (begin)
+        else if (begin && timeLeft <= 0.0f)
         {
             begin = false;
             timeLeft = 0.0f;
@@ -48,5 +48,6 @@ public class ClockControl : MonoBehaviour
     public void ResetTimer()
     {
         timeLeft = WorldRules.roundTimer;
+        begin = false;
     }
 }
