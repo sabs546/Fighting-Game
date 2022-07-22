@@ -12,6 +12,8 @@ public class SlideInAnimation : MonoBehaviour
     private float moveSpeedX;    // How fast will it move
     [SerializeField]
     private bool reverseDecay;   // Does it speed up or slow down
+    [SerializeField]
+    private bool vertical;       // I'm not reentering all those variables ima just flip it here
 
     // Extra Values ===========================================================================
     [Header("Externals")]
@@ -46,7 +48,7 @@ public class SlideInAnimation : MonoBehaviour
 
     private void OnDisable()
     {
-        rectTransform.anchoredPosition = new Vector2(startX, rectTransform.anchoredPosition.y);
+        rectTransform.anchoredPosition = !vertical ? new Vector2(startX, rectTransform.anchoredPosition.y) : new Vector2(rectTransform.anchoredPosition.x, startX);
         active = false;
     }
 
@@ -55,40 +57,70 @@ public class SlideInAnimation : MonoBehaviour
     {
         if (reverseDecay)
         {
-            distLeft = (startX + moveDistanceX * 0.99f) - rectTransform.anchoredPosition.x;
+            distLeft = (startX + moveDistanceX * 0.99f) - (!vertical ? rectTransform.anchoredPosition.x : rectTransform.anchoredPosition.y);
             distLeft = moveDistanceX - distLeft;
             lacticAcidX = distLeft / moveDistanceX;
         }
         else
         {
-            distLeft = (startX + moveDistanceX * 1.01f) - rectTransform.anchoredPosition.x;
+            distLeft = (startX + moveDistanceX * 1.01f) - (!vertical ? rectTransform.anchoredPosition.x : rectTransform.anchoredPosition.y);
             lacticAcidX = distLeft / moveDistanceX;
         }
 
         if (active)
         {
-            if (moveSpeedX > 0)
+            if (!vertical)
             {
-                if (rectTransform.anchoredPosition.x < startX + moveDistanceX)
+                if (moveSpeedX > 0)
                 {
-                    rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x + (moveSpeedX * lacticAcidX * Time.deltaTime), rectTransform.anchoredPosition.y);
+                    if (rectTransform.anchoredPosition.x < startX + moveDistanceX)
+                    {
+                        rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x + (moveSpeedX * lacticAcidX * Time.deltaTime), rectTransform.anchoredPosition.y);
+                    }
+                    else
+                    {
+                        rectTransform.anchoredPosition = new Vector2(startX + moveDistanceX, rectTransform.anchoredPosition.y);
+                        active = false;
+                    }
                 }
                 else
                 {
-                    rectTransform.anchoredPosition = new Vector2(startX + moveDistanceX, rectTransform.anchoredPosition.y);
-                    active = false;
+                    if (rectTransform.anchoredPosition.x > startX + moveDistanceX)
+                    {
+                        rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x + (moveSpeedX * lacticAcidX * Time.deltaTime), rectTransform.anchoredPosition.y);
+                    }
+                    else
+                    {
+                        rectTransform.anchoredPosition = new Vector2(startX + moveDistanceX, rectTransform.anchoredPosition.y);
+                        active = false;
+                    }
                 }
             }
             else
             {
-                if (rectTransform.anchoredPosition.x > startX + moveDistanceX)
+                if (moveSpeedX > 0)
                 {
-                    rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x + (moveSpeedX * lacticAcidX * Time.deltaTime), rectTransform.anchoredPosition.y);
+                    if (rectTransform.anchoredPosition.y < startX + moveDistanceX)
+                    {
+                        rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, rectTransform.anchoredPosition.y + (moveSpeedX * lacticAcidX * Time.deltaTime));
+                    }
+                    else
+                    {
+                        rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, startX + moveDistanceX);
+                        active = false;
+                    }
                 }
                 else
                 {
-                    rectTransform.anchoredPosition = new Vector2(startX + moveDistanceX, rectTransform.anchoredPosition.y);
-                    active = false;
+                    if (rectTransform.anchoredPosition.y > startX + moveDistanceX)
+                    {
+                        rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, rectTransform.anchoredPosition.y + (moveSpeedX * lacticAcidX * Time.deltaTime));
+                    }
+                    else
+                    {
+                        rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, startX + moveDistanceX);
+                        active = false;
+                    }
                 }
             }
         }

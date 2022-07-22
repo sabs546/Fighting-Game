@@ -856,6 +856,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 698864264}
+        m_MethodName: SetRoundTimer
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
   m_IsOn: 0
 --- !u!1 &71527224
 GameObject:
@@ -912,6 +923,7 @@ MonoBehaviour:
   moveDistanceX: 1289
   moveSpeedX: 2400
   reverseDecay: 1
+  vertical: 0
   rectTransform: {fileID: 71527225}
   useScreenWidth: 0
 --- !u!114 &71527227
@@ -3717,6 +3729,7 @@ MonoBehaviour:
   moveDistanceX: 325
   moveSpeedX: 1200
   reverseDecay: 0
+  vertical: 0
   rectTransform: {fileID: 303925253}
   useScreenWidth: 0
 --- !u!1 &316358844
@@ -6627,6 +6640,7 @@ MonoBehaviour:
   moveDistanceX: -1289
   moveSpeedX: -2400
   reverseDecay: 0
+  vertical: 0
   rectTransform: {fileID: 475308969}
   useScreenWidth: 0
 --- !u!114 &475308971
@@ -7473,6 +7487,7 @@ MonoBehaviour:
   moveDistanceX: 1289
   moveSpeedX: 1200
   reverseDecay: 0
+  vertical: 0
   rectTransform: {fileID: 527631557}
   useScreenWidth: 0
 --- !u!114 &527631560
@@ -9824,6 +9839,7 @@ MonoBehaviour:
   moveDistanceX: -1289
   moveSpeedX: -2400
   reverseDecay: 0
+  vertical: 0
   rectTransform: {fileID: 738229049}
   useScreenWidth: 1
 --- !u!114 &738229051
@@ -12700,6 +12716,7 @@ MonoBehaviour:
   moveDistanceX: 328
   moveSpeedX: 2400
   reverseDecay: 0
+  vertical: 0
   rectTransform: {fileID: 941321272}
   useScreenWidth: 0
 --- !u!1 &945152983
@@ -13850,6 +13867,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1011438337}
   - component: {fileID: 1011438338}
+  - component: {fileID: 1011438339}
   m_Layer: 5
   m_Name: Timer Circle
   m_TagString: Untagged
@@ -13877,7 +13895,7 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 150}
-  m_Pivot: {x: 0.5, y: 1}
+  m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1011438338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13892,6 +13910,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameStateControl: {fileID: 519420034}
   clockCircle: {fileID: 887712948}
+--- !u!114 &1011438339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1011438336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05fb043cf73420149b9e32b03e476596, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startX: 0
+  moveDistanceX: -150
+  moveSpeedX: -600
+  reverseDecay: 0
+  vertical: 1
+  rectTransform: {fileID: 1011438337}
+  useScreenWidth: 0
 --- !u!1 &1013520182
 GameObject:
   m_ObjectHideFlags: 0
@@ -21798,6 +21835,7 @@ MonoBehaviour:
   moveDistanceX: 645
   moveSpeedX: 1200
   reverseDecay: 0
+  vertical: 0
   rectTransform: {fileID: 1617866672}
   useScreenWidth: 0
 --- !u!114 &1617866674
@@ -23844,6 +23882,7 @@ MonoBehaviour:
   moveDistanceX: 600
   moveSpeedX: 1200
   reverseDecay: 0
+  vertical: 0
   rectTransform: {fileID: 1730987642}
   useScreenWidth: 0
 --- !u!114 &1730987644
@@ -27514,6 +27553,7 @@ MonoBehaviour:
   moveDistanceX: -645
   moveSpeedX: -1200
   reverseDecay: 0
+  vertical: 0
   rectTransform: {fileID: 2101540818}
   useScreenWidth: 0
 --- !u!114 &2101540820
@@ -27621,6 +27661,7 @@ MonoBehaviour:
   moveDistanceX: 600
   moveSpeedX: 2400
   reverseDecay: 0
+  vertical: 0
   rectTransform: {fileID: 2110569977}
   useScreenWidth: 0
 --- !u!1 &2122933064
