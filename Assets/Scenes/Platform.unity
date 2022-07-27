@@ -184,8 +184,9 @@ GameObject:
   m_Component:
   - component: {fileID: 6643911}
   - component: {fileID: 6643912}
+  - component: {fileID: 6643913}
   m_Layer: 0
-  m_Name: Tree 4
+  m_Name: Tree 4 D
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -256,6 +257,29 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &6643913
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6643910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb7a5b168d166fb418360fb903a7f8db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  critter: {fileID: 294334749908619547, guid: ea932e207f8349e4cb99b790b7bb8cf0, type: 3}
+  critters:
+  - xSpeed: 10
+    ySpeed: 20
+    lifeTime: 3
+    delay: 0.3
+  - xSpeed: 20
+    ySpeed: 20
+    lifeTime: 3
+    delay: 0.1
+  triggerRange: 15
 --- !u!1 &6994625
 GameObject:
   m_ObjectHideFlags: 0
@@ -3469,8 +3493,9 @@ GameObject:
   m_Component:
   - component: {fileID: 283140144}
   - component: {fileID: 283140145}
+  - component: {fileID: 283140146}
   m_Layer: 0
-  m_Name: Tree 10
+  m_Name: Tree 10 D
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3541,6 +3566,33 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &283140146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 283140143}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb7a5b168d166fb418360fb903a7f8db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  critter: {fileID: 294334749908619547, guid: ea932e207f8349e4cb99b790b7bb8cf0, type: 3}
+  critters:
+  - xSpeed: 40
+    ySpeed: 20
+    lifeTime: 3
+    delay: 0.2
+  - xSpeed: -10
+    ySpeed: 20
+    lifeTime: 3
+    delay: 0.5
+  - xSpeed: 20
+    ySpeed: 20
+    lifeTime: 3
+    delay: 0.1
+  triggerRange: 15
 --- !u!1 &296849983
 GameObject:
   m_ObjectHideFlags: 0
@@ -5782,8 +5834,9 @@ GameObject:
   m_Component:
   - component: {fileID: 405407765}
   - component: {fileID: 405407766}
+  - component: {fileID: 405407767}
   m_Layer: 0
-  m_Name: Tree 9
+  m_Name: Tree 9 D
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5854,6 +5907,33 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &405407767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 405407764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb7a5b168d166fb418360fb903a7f8db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  critter: {fileID: 294334749908619547, guid: ea932e207f8349e4cb99b790b7bb8cf0, type: 3}
+  critters:
+  - xSpeed: -10
+    ySpeed: 30
+    lifeTime: 3
+    delay: 0.5
+  - xSpeed: 0
+    ySpeed: 30
+    lifeTime: 3
+    delay: 0.1
+  - xSpeed: 20
+    ySpeed: 10
+    lifeTime: 3
+    delay: 0.2
+  triggerRange: 5
 --- !u!1 &411498035
 GameObject:
   m_ObjectHideFlags: 0
@@ -8512,6 +8592,7 @@ MonoBehaviour:
   roundClock: {fileID: 1011438338}
   whiteOut: {fileID: 168889505}
   winnerTag: {fileID: 603086101}
+  treeLine: {fileID: 1460128448}
 --- !u!114 &519420035
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9597,8 +9678,9 @@ GameObject:
   m_Component:
   - component: {fileID: 590354420}
   - component: {fileID: 590354421}
+  - component: {fileID: 590354422}
   m_Layer: 0
-  m_Name: Tree 8
+  m_Name: Tree 8 D
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9669,6 +9751,29 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &590354422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 590354419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb7a5b168d166fb418360fb903a7f8db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  critter: {fileID: 294334749908619547, guid: ea932e207f8349e4cb99b790b7bb8cf0, type: 3}
+  critters:
+  - xSpeed: -40
+    ySpeed: 20
+    lifeTime: 3
+    delay: 0.3
+  - xSpeed: 10
+    ySpeed: 20
+    lifeTime: 3
+    delay: 0.1
+  triggerRange: 5
 --- !u!1 &594972551
 GameObject:
   m_ObjectHideFlags: 0
@@ -12046,8 +12151,9 @@ GameObject:
   m_Component:
   - component: {fileID: 766808676}
   - component: {fileID: 766808677}
+  - component: {fileID: 766808678}
   m_Layer: 0
-  m_Name: Tree 6
+  m_Name: Tree 6 D
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12118,6 +12224,33 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &766808678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 766808675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb7a5b168d166fb418360fb903a7f8db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  critter: {fileID: 294334749908619547, guid: ea932e207f8349e4cb99b790b7bb8cf0, type: 3}
+  critters:
+  - xSpeed: 30
+    ySpeed: 20
+    lifeTime: 3
+    delay: 0.5
+  - xSpeed: 20
+    ySpeed: 10
+    lifeTime: 3
+    delay: 0.1
+  - xSpeed: 10
+    ySpeed: 10
+    lifeTime: 3
+    delay: 0.2
+  triggerRange: 5
 --- !u!1 &769522118
 GameObject:
   m_ObjectHideFlags: 0
@@ -28732,8 +28865,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1870589306}
   - component: {fileID: 1870589307}
+  - component: {fileID: 1870589308}
   m_Layer: 0
-  m_Name: Tree 3
+  m_Name: Tree 3 D
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28804,6 +28938,33 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1870589308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1870589305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb7a5b168d166fb418360fb903a7f8db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  critter: {fileID: 294334749908619547, guid: ea932e207f8349e4cb99b790b7bb8cf0, type: 3}
+  critters:
+  - xSpeed: 50
+    ySpeed: 10
+    lifeTime: 3
+    delay: 0.1
+  - xSpeed: 30
+    ySpeed: 20
+    lifeTime: 3
+    delay: 0.2
+  - xSpeed: -10
+    ySpeed: 2
+    lifeTime: 3
+    delay: 0.5
+  triggerRange: 15
 --- !u!1 &1874491943
 GameObject:
   m_ObjectHideFlags: 0

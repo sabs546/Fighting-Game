@@ -41,6 +41,8 @@ public class GameStateControl : MonoBehaviour
     private GameObject roundOverUI;  // Round over banner
     [SerializeField]
     private GameObject gameOverUI;   // Game over banner
+    [SerializeField]
+    private GameObject treeLine;     // To reset the birds
 
     // Audio ================================================================
     [Header("Audio")]
@@ -179,6 +181,12 @@ public class GameStateControl : MonoBehaviour
                     CPU.GetComponent<AIPhysics>().enabled = false;
                     CPU.SetActive(false);
                     CPU.SetActive(true);
+                }
+
+                Disturbance[] treeLineDisturbances = treeLine.GetComponentsInChildren<Disturbance>();
+                foreach (Disturbance disturbance in treeLineDisturbances)
+                {
+                    disturbance.enabled = true;
                 }
                 break;
             case GameState.Fighting:
