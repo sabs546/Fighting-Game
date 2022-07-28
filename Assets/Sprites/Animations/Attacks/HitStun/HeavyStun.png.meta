@@ -1,7 +1,16 @@
 fileFormatVersion: 2
-guid: e9a37f958ed12d944aaa2684c0c39c62
+guid: abceb82e7426c7e4989864f653ee9fb5
 TextureImporter:
   internalIDToNameTable:
+  - first:
+      213: 2600553422492800725
+    second: HeavyStun_Sheet_0_0
+  - first:
+      213: -7005192065322797601
+    second: HeavyStun_Sheet_0_1
+  - first:
+      213: 992636457754936677
+    second: HeavyStun_Sheet_0_2
   - first:
       213: 2868795400147295814
     second: HeavyStun_0
