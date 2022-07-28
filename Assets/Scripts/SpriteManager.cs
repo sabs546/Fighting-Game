@@ -98,6 +98,7 @@ public class SpriteManager : MonoBehaviour
         else
         {
             animator.SetBool("Stun", false);
+            animator.SetBool("HeavyStun", false);
         }
 
         // Can't turn around mid attack
@@ -124,5 +125,15 @@ public class SpriteManager : MonoBehaviour
     public void EnableBlock()
     {
         animator.SetBool("Guard", true);
+    }
+
+    public void HeavyStun()
+    {
+        animator.SetBool("HeavyStun", true);
+    }
+
+    public void UndoHeavy()
+    {
+        animator.SetBool("HeavyStun", false);
     }
 }

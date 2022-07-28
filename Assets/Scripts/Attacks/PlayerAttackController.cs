@@ -321,6 +321,7 @@ public class PlayerAttackController : MonoBehaviour
             else
             {
                 opponent.GetComponent<AIAttackController>().stunLimit = currentAttack.Stun;
+                opponent.GetComponent<AISpriteManager>().UndoHeavy();
             }
         }
         else
@@ -336,6 +337,7 @@ public class PlayerAttackController : MonoBehaviour
             else
             {
                 opponent.GetComponent<PlayerAttackController>().stunLimit = currentAttack.Stun;
+                opponent.GetComponent<SpriteManager>().UndoHeavy();
             }
         }
 
@@ -356,6 +358,8 @@ public class PlayerAttackController : MonoBehaviour
             if (currentAttack.SoundName == "Heavy_01")
             {
                 Camera.main.GetComponent<CameraControl>().StartShake(16, 2u, 0.5f);
+                if (WorldRules.PvP) opponent.GetComponent<SpriteManager>().HeavyStun();
+                else                opponent.GetComponent<AISpriteManager>().HeavyStun();
             }
         }
         else

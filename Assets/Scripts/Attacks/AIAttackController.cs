@@ -262,6 +262,7 @@ public class AIAttackController : MonoBehaviour
         else
         {
             opponentPhysics.GetComponent<PlayerAttackController>().stunLimit = currentAttack.Stun;
+            opponentPhysics.GetComponent<SpriteManager>().UndoHeavy();
         }
 
         // Hitspark stuff
@@ -281,6 +282,7 @@ public class AIAttackController : MonoBehaviour
             if (currentAttack.SoundName == "Heavy_01")
             {
                 Camera.main.GetComponent<CameraControl>().StartShake(16, 2u, 0.5f);
+                opponentPhysics.GetComponent<SpriteManager>().HeavyStun();
             }
         }
         else

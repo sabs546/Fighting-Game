@@ -125,4 +125,14 @@ public class AISpriteManager : MonoBehaviour
     {
         animator.SetBool("Guard", true);
     }
+
+    public void HeavyStun()
+    {
+        animator.SetBool("HeavyStun", true);
+    }
+
+    public void UndoHeavy()
+    {
+        animator.SetBool("HeavyStun", false);
+    }
 }
