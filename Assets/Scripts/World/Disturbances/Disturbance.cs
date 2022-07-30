@@ -25,7 +25,7 @@ public class Disturbance : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (cameraControl.isShaking)
+        if (cameraControl.startShaking)
         {
             Disturb();
         }

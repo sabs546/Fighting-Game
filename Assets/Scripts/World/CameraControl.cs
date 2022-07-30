@@ -17,7 +17,7 @@ public class CameraControl : MonoBehaviour
     private Vector2 p2Pos;
     private Vector3 cameraPos; // Alter these values then apply them to the camera once
     private Vector3 shakePos;  // Temp pos used when shaking so it can return to normal
-    public bool isShaking { get; private set; } // For other scripts to know
+    public bool startShaking { get; private set; } // For other scripts to know
 
     // States ===========================================================
     public enum CameraState { Menu, Close, Normal, Far };
@@ -48,7 +48,7 @@ public class CameraControl : MonoBehaviour
         gameStateControl = GetComponent<GameStateControl>();
         cameraPos = transform.position;
         ticker = 0;
-        isShaking = false;
+        startShaking = false;
     }
 
     // Update is called once per frame
@@ -212,9 +212,9 @@ public class CameraControl : MonoBehaviour
                 shakePower *= 0.9f; // Slowly null it down to the centre
                 transform.position = shakePos;
             }
-            else if (ticker == 0)
+            else
             {
-                isShaking = false;
+                startShaking = false;
             }
         }
     }
@@ -235,7 +235,7 @@ public class CameraControl : MonoBehaviour
         ticker = length;
         shakeSpeed = speed;
         shakePower = power;
-        isShaking = true;
+        startShaking = true;
     }
 }
 
