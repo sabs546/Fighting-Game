@@ -11256,7 +11256,7 @@ MonoBehaviour:
   - {fileID: 17380013}
   - {fileID: 661783234}
   - {fileID: 1052404466}
-  speed: 20
+  speed: 25
 --- !u!212 &676223931
 SpriteRenderer:
   m_ObjectHideFlags: 0

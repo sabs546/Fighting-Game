@@ -37,11 +37,11 @@ public class BushDisturbance : MonoBehaviour
     public int CheckInRange()
     {
         float gPos = transform.TransformPoint(Vector3.zero).x;
-        if (sound.position.x > gPos && sound.position.x > gPos - triggerRange)
+        if (sound.position.x > gPos && sound.position.x < gPos + triggerRange)
         {
             return 1;
         }
-        else if (sound.position.x < gPos && sound.position.x < gPos + triggerRange)
+        else if (sound.position.x < gPos && sound.position.x > gPos - triggerRange)
         {
             return -1;
         }
