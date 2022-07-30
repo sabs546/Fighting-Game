@@ -32,6 +32,8 @@ public class PlayerPhysics : MonoBehaviour
 
     private PlayerController controller;
     public  GameObject       opponent;
+    [SerializeField]
+    private SpriteRenderer   barrier; // The edge of the map
 
     [Header("Audio")]
     [SerializeField]
@@ -220,6 +222,7 @@ public class PlayerPhysics : MonoBehaviour
             startSprint = false;
             source.clip = jumpWind;
             source.Play();
+            barrier.color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
         }
         else if (pos.x > effectiveMaxRight)
         {
@@ -229,6 +232,7 @@ public class PlayerPhysics : MonoBehaviour
             startSprint = false;
             source.clip = jumpWind;
             source.Play();
+            barrier.color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
         }
 
         transform.position = pos;
