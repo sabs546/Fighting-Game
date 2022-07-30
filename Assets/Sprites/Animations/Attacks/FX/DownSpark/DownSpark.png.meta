@@ -1,19 +1,7 @@
 fileFormatVersion: 2
-guid: 80cbe597274c6214990f2dd939871cbe
+guid: fbf44b3aa283031429437d1e7937ce9c
 TextureImporter:
   internalIDToNameTable:
-  - first:
-      213: -6554457171613776914
-    second: DownSpark_Sheet_0_0
-  - first:
-      213: 6815651266285670152
-    second: DownSpark_Sheet_0_1
-  - first:
-      213: -6561323798425820130
-    second: DownSpark_Sheet_0_2
-  - first:
-      213: 8117335959653426664
-    second: DownSpark_Sheet_0_3
   - first:
       213: -7574500827671293624
     second: DownSpark_0
@@ -97,6 +85,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
