@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Photon.Pun;
 
 public class PlayerController : MonoBehaviour
 {
@@ -40,6 +41,7 @@ public class PlayerController : MonoBehaviour
     private SetControls controls;
     private PlayerPhysics physics;
     private PlayerAttackController attackController;
+    private PhotonView view;
 
     // Prevents knockback auto-block
     public bool blocking { get; private set; }
@@ -52,6 +54,7 @@ public class PlayerController : MonoBehaviour
         attackController = GetComponent<PlayerAttackController>();
         dpadInputs = GetComponent<DPadButtons>();
         keyboardInputs = GetComponent<KeyboardInput>();
+        view = GetComponent<PhotonView>();
     }
 
     private void OnDisable()
@@ -86,7 +89,7 @@ public class PlayerController : MonoBehaviour
         up = down = left = right = false;
         rUp = rDown = rLeft = rRight = false;
 
-        if (attackController.state == PlayerAttackController.AttackState.Empty && gState != GroundStates.Stun)
+        if ((view == null || view.IsMine) && attackController.state == PlayerAttackController.AttackState.Empty && gState != GroundStates.Stun)
         {
             if (controls.type == SetControls.ControllerType.Keyboard)
             {
@@ -298,5 +301,10 @@ public class PlayerController : MonoBehaviour
     public void DisableBlock()
     {
         blocking = false;
+    }
+
+    public void SwapOfflineInputs()
+    {
+        GetComponent<PhotonView>().TransferOwnership(PhotonNetwork.PlayerList[1].ActorNumber);
     }
 }

@@ -12,6 +12,8 @@ public class InputSwap : MonoBehaviour, IDeselectHandler
     private string originalString;
     [SerializeField]
     private SetControls controls;
+    [SerializeField]
+    private SetControls onlineControls;
     private TextMeshProUGUI currentText;
     private Button button;
     private bool keyboardSelected;
@@ -39,12 +41,15 @@ public class InputSwap : MonoBehaviour, IDeselectHandler
                     {
                         case "Punch - ":
                             controls.keyboardControls.Punch = code;
+                            if (onlineControls != null) controls.keyboardControls.Punch = code;
                             break;
                         case "Kick - ":
                             controls.keyboardControls.Kick = code;
+                            if (onlineControls != null) controls.keyboardControls.Kick = code;
                             break;
                         case "Throw - ":
                             controls.keyboardControls.Throw = code;
+                            if (onlineControls != null) controls.keyboardControls.Throw = code;
                             break;
                     }
                     keyboardSelected = false;
@@ -71,12 +76,15 @@ public class InputSwap : MonoBehaviour, IDeselectHandler
                         {
                             case "Punch - ":
                                 controls.gamepadControls.Punch = thisKeyCode;
+                                if (onlineControls != null) controls.gamepadControls.Punch = thisKeyCode;
                                 break;
                             case "Kick - ":
                                 controls.gamepadControls.Kick = thisKeyCode;
+                                if (onlineControls != null) controls.gamepadControls.Kick = thisKeyCode;
                                 break;
                             case "Throw - ":
                                 controls.gamepadControls.Throw = thisKeyCode;
+                                if (onlineControls != null) controls.gamepadControls.Throw = thisKeyCode;
                                 break;
                         }
                         gamepadSelected = false;

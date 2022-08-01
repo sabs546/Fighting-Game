@@ -25,6 +25,8 @@ GameObject:
   - component: {fileID: 3446603169683583356}
   - component: {fileID: 7335197953293451827}
   - component: {fileID: 3446603169683583357}
+  - component: {fileID: 1132608248038846105}
+  - component: {fileID: 2172446805969350168}
   m_Layer: 0
   m_Name: Player 2
   m_TagString: Untagged
@@ -116,6 +118,7 @@ MonoBehaviour:
   startSprint: 0
   airLock: 0
   opponent: {fileID: 0}
+  barrier: {fileID: 0}
   source: {fileID: 3446603169683583356}
   dashWind: {fileID: 8300000, guid: 11e629138cdcc254dbb867d0dd8db767, type: 3}
   jumpWind: {fileID: 8300000, guid: dfd8bd9e1bb89f44ca3e94204d1d930b, type: 3}
@@ -136,6 +139,7 @@ MonoBehaviour:
   healthBar: {fileID: 0}
   backBar: {fileID: 0}
   gameStateControl: {fileID: 0}
+  whiteOut: {fileID: 0}
 --- !u!114 &9091546037705337984
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -204,7 +208,6 @@ MonoBehaviour:
   sprint: 0.2
   dashDistance: 0.4
   jumpPower: 0.4
-  blocking: 0
   pState: 0
   gState: 0
   aState: 0
@@ -535,3 +538,59 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 0
+--- !u!114 &1132608248038846105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3446603169683583241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 1
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 0}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &2172446805969350168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3446603169683583241}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8efc6b1d64977384eb3405357896c656, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_PositionModel:
+    SynchronizeEnabled: 1
+    TeleportEnabled: 0
+    TeleportIfDistanceGreaterThan: 3
+    InterpolateOption: 3
+    InterpolateMoveTowardsSpeed: 1
+    InterpolateLerpSpeed: 1
+    ExtrapolateOption: 1
+    ExtrapolateSpeed: 1
+    ExtrapolateIncludingRoundTripTime: 1
+    ExtrapolateNumberOfStoredPositions: 1
+  m_RotationModel:
+    SynchronizeEnabled: 0
+    InterpolateOption: 1
+    InterpolateRotateTowardsSpeed: 180
+    InterpolateLerpSpeed: 5
+  m_ScaleModel:
+    SynchronizeEnabled: 0
+    InterpolateOption: 0
+    InterpolateMoveTowardsSpeed: 1
+    InterpolateLerpSpeed: 0
