@@ -191,6 +191,7 @@ public class PlayerController : MonoBehaviour
             {
                 physics.startSprint = false;
                 physics.travel = 0.0f;
+                view.RPC("RPC_CancelSprint", PhotonNetwork.PlayerListOthers[0]);
             }
         }
         else if (pState == PlayerStates.Grounded && gState != GroundStates.Stun)
@@ -198,6 +199,7 @@ public class PlayerController : MonoBehaviour
             if (up)
             {
                 physics.launch += jumpPower;
+                view.RPC("RPC_Jump", PhotonNetwork.PlayerListOthers[0]);
             }
 
             if (down)
@@ -205,39 +207,46 @@ public class PlayerController : MonoBehaviour
                 if (gState == GroundStates.Dash)
                 {
                     physics.enableCrouch = true;
+                    view.RPC("RPC_Crouch", PhotonNetwork.PlayerListOthers[0]);
                 }
             }
 
             if (left && gState == GroundStates.Neutral)
             {
                 physics.travel -= dashDistance;
+                view.RPC("RPC_DashLeft", PhotonNetwork.PlayerListOthers[0]);
                 blocking = true;
             }
             else if (left && gState != GroundStates.Neutral)
             {
                 physics.startSprint = true;
                 physics.travel = -sprint;
+                view.RPC("RPC_SprintLeft", PhotonNetwork.PlayerListOthers[0]);
             }
             else if (rLeft && gState != GroundStates.Neutral)
             {
                 physics.startSprint = false;
                 physics.travel = 0.0f;
+                view.RPC("RPC_CancelSprint", PhotonNetwork.PlayerListOthers[0]);
             }
 
             if (right && gState == GroundStates.Neutral)
             {
                 physics.travel += dashDistance;
+                view.RPC("RPC_DashRight", PhotonNetwork.PlayerListOthers[0]);
                 blocking = true;
             }
             else if (right && gState != GroundStates.Neutral)
             {
                 physics.startSprint = true;
                 physics.travel = sprint;
+                view.RPC("RPC_SprintRight", PhotonNetwork.PlayerListOthers[0]);
             }
             else if (rRight && gState != GroundStates.Neutral)
             {
                 physics.startSprint = false;
                 physics.travel = 0.0f;
+                view.RPC("RPC_CancelSprint", PhotonNetwork.PlayerListOthers[0]);
             }
         }
         else if (pState == PlayerStates.Airborne)
@@ -270,14 +279,17 @@ public class PlayerController : MonoBehaviour
                 if (Input.GetKeyUp(controls.keyboardControls.Punch))
                 {
                     attackController.sendPunch = true;
+                    view.RPC("RPC_SendPunch", PhotonNetwork.PlayerListOthers[0]);
                 }
                 else if (Input.GetKeyUp(controls.keyboardControls.Kick))
                 {
                     attackController.sendKick = true;
+                    view.RPC("RPC_SendKick", PhotonNetwork.PlayerListOthers[0]);
                 }
                 else if (Input.GetKeyUp(controls.keyboardControls.Throw))
                 {
                     attackController.sendThrow = true;
+                    view.RPC("RPC_SendThrow", PhotonNetwork.PlayerListOthers[0]);
                 }
             }
             else
@@ -285,14 +297,17 @@ public class PlayerController : MonoBehaviour
                 if (Input.GetKeyUp(controls.gamepadControls.Punch))
                 {
                     attackController.sendPunch = true;
+                    view.RPC("RPC_SendPunch", PhotonNetwork.PlayerListOthers[0]);
                 }
                 else if (Input.GetKeyUp(controls.gamepadControls.Kick))
                 {
                     attackController.sendKick = true;
+                    view.RPC("RPC_SendKick", PhotonNetwork.PlayerListOthers[0]);
                 }
                 else if (Input.GetKeyUp(controls.gamepadControls.Throw))
                 {
                     attackController.sendThrow = true;
+                    view.RPC("RPC_SendThrow", PhotonNetwork.PlayerListOthers[0]);
                 }
             }
         }
@@ -306,5 +321,62 @@ public class PlayerController : MonoBehaviour
     public void SwapOfflineInputs()
     {
         GetComponent<PhotonView>().TransferOwnership(PhotonNetwork.PlayerList[1].ActorNumber);
+    }
+
+    // ====================================================================================
+    // RPCFunctions
+    // =======
+    [PunRPC]
+    private void RPC_Jump()
+    {
+        physics.launch += jumpPower;
+    }
+    [PunRPC]
+    private void RPC_DashLeft()
+    {
+        physics.travel -= dashDistance;
+    }
+    [PunRPC]
+    private void RPC_DashRight()
+    {
+        physics.travel += dashDistance;
+    }
+    [PunRPC]
+    private void RPC_Crouch()
+    {
+        physics.enableCrouch = true;
+    }
+    [PunRPC]
+    private void RPC_SprintLeft()
+    {
+        physics.startSprint = true;
+        physics.travel = -sprint;
+    }
+    [PunRPC]
+    private void RPC_SprintRight()
+    {
+        physics.startSprint = true;
+        physics.travel = sprint;
+    }
+    [PunRPC]
+    private void RPC_CancelSprint()
+    {
+        physics.startSprint = false;
+        physics.travel = 0.0f;
+    }
+    [PunRPC]
+    private void RPC_SendPunch()
+    {
+        attackController.sendPunch = true;
+    }
+    [PunRPC]
+    private void RPC_SendKick()
+    {
+        attackController.sendKick = true;
+    }
+    [PunRPC]
+    private void RPC_SendThrow()
+    {
+        attackController.sendThrow = true;
     }
 }

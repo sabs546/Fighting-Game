@@ -39,6 +39,22 @@ MonoBehaviour:
   - DestroySpaceship
   - Fire
   - RespawnSpaceship
+  - SpeedUpdate
+  - StanceUpdate
+  - RPC_Jump
+  - RPC_BackDash
+  - RPC_Dash
+  - RPC_Sprint
+  - RPC_Crouch
+  - RPC_DashLeft
+  - RPC_DashRight
+  - RPC_SprintLeft
+  - RPC_SprintRight
+  - CancelSprint
+  - RPC_CancelSprint
+  - RPC_SendKick
+  - RPC_SendPunch
+  - RPC_SendThrow
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

@@ -169,6 +169,11 @@ namespace Photon.Pun
             get { return this.Owner != null && !this.Owner.IsInactive; }
         }
 
+        public void RPC(string v, object photonTargets)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// True if the PhotonView is "mine" and can be controlled by this client.
         /// </summary>
