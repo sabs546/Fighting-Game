@@ -2,9 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using UnityEngine.UI;
 
 public class ConnectToServer : MonoBehaviourPunCallbacks
 {
+    [SerializeField]
+    private Image whiteout;
+
     private void Start()
     {
         PhotonNetwork.ConnectUsingSettings();
@@ -17,6 +21,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
     public override void OnJoinedLobby()
     {
+        whiteout.color = Color.white;
         Debug.Log("Successfully joined lobby");
     }
 }

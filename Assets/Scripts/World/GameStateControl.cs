@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
 
 public class GameStateControl : MonoBehaviour
 {
@@ -80,6 +81,8 @@ public class GameStateControl : MonoBehaviour
     public TextMeshProUGUI winnerTag; // To set the winners name
     private string winnerName;        // To store the winners name
 
+    private bool ready;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -92,6 +95,7 @@ public class GameStateControl : MonoBehaviour
         CPUAnimator = CPU.GetComponent<Animator>();
 
         ticker = 0.0f;
+        ready = false;
     }
 
     private void Update()

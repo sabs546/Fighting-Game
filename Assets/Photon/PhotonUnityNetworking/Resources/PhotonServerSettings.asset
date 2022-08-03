@@ -55,6 +55,10 @@ MonoBehaviour:
   - RPC_SendKick
   - RPC_SendPunch
   - RPC_SendThrow
+  - RPC_SendBlock
+  - RPC_MenuUnlock
+  - RPC_StartGame
+  - StartGame
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
