@@ -8,15 +8,31 @@ using Photon.Realtime;
 
 public class CreaterAndJoinRooms : MonoBehaviourPunCallbacks
 {
-    public TextMeshProUGUI createInput;
-    public TextMeshProUGUI joinInput;
+    [Header("Text")]
+    [SerializeField]
+    private TextMeshProUGUI createInput;
+    [SerializeField]
+    private TextMeshProUGUI joinInput;
+    [SerializeField]
+    private TextMeshProUGUI roomName;
 
-    public Button startButton;
-    public Button leaveButton;
+    [Header("Buttons")]
+    [SerializeField]
+    private Button hostButton;
+    [SerializeField]
+    private Button joinButton;
+    [SerializeField]
+    private Button startButton;
+    [SerializeField]
+    private Button leaveButton;
+
+    [Header("Objects")]
+    [SerializeField]
+    private PlayerController p1Owner;
+    [SerializeField]
+    private PlayerController p2Owner;
 
     private bool host;
-    public PlayerController p1Owner;
-    public PlayerController p2Owner;
 
     [SerializeField]
     private Image whiteout;
@@ -38,11 +54,6 @@ public class CreaterAndJoinRooms : MonoBehaviourPunCallbacks
 
     public void JoinRoom()
     {
-        if (PhotonNetwork.CurrentRoom != null)
-        {
-            PhotonNetwork.LeaveRoom();
-        }
-
         if (PhotonNetwork.JoinRoom(joinInput.text))
         {
             host = false;
@@ -66,6 +77,9 @@ public class CreaterAndJoinRooms : MonoBehaviourPunCallbacks
     {
         Debug.Log("Successfully connected");
         whiteout.color = Color.white;
+        roomName.text = PhotonNetwork.CurrentRoom.Name;
+        hostButton.interactable = false;
+        joinButton.interactable = false;
         if (!host) p2Owner.SwapOfflineInputs();
     }
 
