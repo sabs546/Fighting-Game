@@ -10,8 +10,10 @@ public class CreaterAndJoinRooms : MonoBehaviourPunCallbacks
 {
     public TextMeshProUGUI createInput;
     public TextMeshProUGUI joinInput;
+
     public Button startButton;
     public Button leaveButton;
+
     private bool host;
     public PlayerController p1Owner;
     public PlayerController p2Owner;
@@ -26,7 +28,7 @@ public class CreaterAndJoinRooms : MonoBehaviourPunCallbacks
             host = true;
             p1Owner.SetView();
             leaveButton.interactable = true;
-            whiteout.color = Color.white;
+            WorldRules.offline = false;
         }
         else
         {
@@ -46,11 +48,7 @@ public class CreaterAndJoinRooms : MonoBehaviourPunCallbacks
             host = false;
             p2Owner.SetView();
             leaveButton.interactable = true;
-            whiteout.color = Color.white;
-        }
-        else
-        {
-            whiteout.color = Color.red;
+            WorldRules.offline = false;
         }
     }
 
@@ -61,12 +59,24 @@ public class CreaterAndJoinRooms : MonoBehaviourPunCallbacks
             PhotonNetwork.LeaveRoom();
         }
         leaveButton.interactable = false;
+        WorldRules.offline = true;
     }
 
     public override void OnJoinedRoom()
     {
         Debug.Log("Successfully connected");
+        whiteout.color = Color.white;
         if (!host) p2Owner.SwapOfflineInputs();
+    }
+
+    public override void OnJoinRoomFailed(short returnCode, string message)
+    {
+        base.OnJoinRoomFailed(returnCode, message);
+
+        if (!PhotonNetwork.InRoom)
+        {
+            whiteout.color = Color.red;
+        }
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)

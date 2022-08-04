@@ -88,7 +88,7 @@ public class PlayerController : MonoBehaviour
         up = down = left = right = false;
         rUp = rDown = rLeft = rRight = false;
 
-        if ((view == null || view.IsMine) && attackController.state == PlayerAttackController.AttackState.Empty && gState != GroundStates.Stun)
+        if ((WorldRules.offline || (view != null && view.IsMine)) && attackController.state == PlayerAttackController.AttackState.Empty && gState != GroundStates.Stun)
         {
             if (controls.type == SetControls.ControllerType.Keyboard)
             {

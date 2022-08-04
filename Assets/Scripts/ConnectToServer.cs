@@ -8,6 +8,8 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 {
     [SerializeField]
     private Image whiteout;
+    public Button HostButton;
+    public Button JoinButton;
 
     private void Start()
     {
@@ -23,5 +25,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     {
         whiteout.color = Color.white;
         Debug.Log("Successfully joined lobby");
+        HostButton.interactable = true;
+        JoinButton.interactable = true;
     }
 }

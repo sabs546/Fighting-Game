@@ -17403,7 +17403,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 979096955}
   m_OnClick:
     m_PersistentCalls:
@@ -25734,7 +25734,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 1446574000}
   m_OnClick:
     m_PersistentCalls:
@@ -31391,6 +31391,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   whiteout: {fileID: 168889505}
+  HostButton: {fileID: 1446573999}
+  JoinButton: {fileID: 979096954}
 --- !u!4 &1846845271
 Transform:
   m_ObjectHideFlags: 0
