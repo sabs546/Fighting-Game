@@ -59,6 +59,7 @@ MonoBehaviour:
   - RPC_MenuUnlock
   - RPC_StartGame
   - StartGame
+  - RPC_SetRoomConditions
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

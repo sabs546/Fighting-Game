@@ -71,6 +71,7 @@ public class CreaterAndJoinRooms : MonoBehaviourPunCallbacks
         }
         leaveButton.interactable = false;
         WorldRules.offline = true;
+        roomName.text = "No Room";
     }
 
     public override void OnJoinedRoom()
@@ -80,7 +81,10 @@ public class CreaterAndJoinRooms : MonoBehaviourPunCallbacks
         roomName.text = PhotonNetwork.CurrentRoom.Name;
         hostButton.interactable = false;
         joinButton.interactable = false;
-        if (!host) p2Owner.SwapOfflineInputs();
+        if (!host)
+        {
+            p2Owner.SwapOfflineInputs();
+        }
     }
 
     public override void OnJoinRoomFailed(short returnCode, string message)
@@ -96,10 +100,30 @@ public class CreaterAndJoinRooms : MonoBehaviourPunCallbacks
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         startButton.interactable = true;
+        GetComponent<PhotonView>().RPC("RPC_SetRoomConditions",
+                                       PhotonNetwork.PlayerListOthers[0],
+                                       p1Owner.GetComponent<HealthManager>().maxHealth,
+                                       WorldRules.roundLimit,
+                                       WorldRules.roundTimer);
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         startButton.interactable = false;
+    }
+
+    [PunRPC]
+    private void RPC_SetRoomConditions(int maxHealth, int roundLimit, float roundTimer)
+    {
+        HealthManager p1HP = p1Owner.GetComponent<HealthManager>();
+        HealthManager p2HP = p2Owner.GetComponent<HealthManager>();
+        p1HP.maxHealth = maxHealth;
+        p2HP.maxHealth = maxHealth;
+        p1HP.ResetHealth();
+        p2HP.ResetHealth();
+
+        // todo timer enabled switch
+        WorldRules.roundLimit = roundLimit;
+        WorldRules.roundTimer = roundTimer;
     }
 }
