@@ -16064,6 +16064,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 1878047851}
+        m_MethodName: LeaveRoom
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!114 &893737821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32214,6 +32225,7 @@ MonoBehaviour:
   leaveButton: {fileID: 1106627690}
   p1Owner: {fileID: 353790531}
   p2Owner: {fileID: 1108586768}
+  clock: {fileID: 1011438336}
   whiteout: {fileID: 168889505}
 --- !u!114 &1878047852
 MonoBehaviour:

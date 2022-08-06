@@ -264,17 +264,20 @@ public class PlayerController : MonoBehaviour
                 {
                     physics.startSprint = true;
                     physics.travel = -sprint;
+                    if (view != null) view.RPC("RPC_SprintLeft", PhotonNetwork.PlayerListOthers[0]);
                 }
                 else if (right && physics.airLock == 1)
                 {
                     physics.startSprint = true;
                     physics.travel = sprint;
+                    if (view != null) view.RPC("RPC_SprintRight", PhotonNetwork.PlayerListOthers[0]);
                 }
 
                 if (rLeft || rRight)
                 {
                     physics.startSprint = false;
                     physics.travel = 0.0f;
+                    if (view != null) view.RPC("RPC_CancelSprint", PhotonNetwork.PlayerListOthers[0]);
                 }
             }
         }

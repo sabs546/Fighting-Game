@@ -217,7 +217,7 @@ public class GameStateControl : MonoBehaviour
             case GameState.Pause:
                 gameState = GameState.Pause;
                 pauseUI.SetActive(true);
-                pauseSetting.enabled = true;
+                if (WorldRules.offline) pauseSetting.enabled = true;
                 fightUI.SetActive(false);
                 pauseVolumeSlider.value = WorldRules.volume;
                 break;

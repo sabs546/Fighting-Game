@@ -31,11 +31,15 @@ public class CreaterAndJoinRooms : MonoBehaviourPunCallbacks
     private PlayerController p1Owner;
     [SerializeField]
     private PlayerController p2Owner;
+    [SerializeField]
+    private GameObject clock;
 
     private bool host;
 
     [SerializeField]
     private Image whiteout;
+
+    SettingsStorage settingsBackup;
 
     public void CreateRoom()
     {
@@ -67,11 +71,27 @@ public class CreaterAndJoinRooms : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.CurrentRoom != null)
         {
+            if (!host)
+            {
+                HealthManager p1HP = p1Owner.GetComponent<HealthManager>();
+                HealthManager p2HP = p2Owner.GetComponent<HealthManager>();
+                p1HP.maxHealth = settingsBackup.MaxHealth;
+                p2HP.maxHealth = settingsBackup.MaxHealth;
+                p1HP.ResetHealth();
+                p2HP.ResetHealth();
+
+                WorldRules.roundLimit = settingsBackup.RoundLimit;
+                WorldRules.roundTimer = settingsBackup.RoundTimer;
+            }
+
             PhotonNetwork.LeaveRoom();
         }
         leaveButton.interactable = false;
         WorldRules.offline = true;
         roomName.text = "No Room";
+
+        hostButton.interactable = true;
+        joinButton.interactable = true;
     }
 
     public override void OnJoinedRoom()
@@ -104,7 +124,8 @@ public class CreaterAndJoinRooms : MonoBehaviourPunCallbacks
                                        PhotonNetwork.PlayerListOthers[0],
                                        p1Owner.GetComponent<HealthManager>().maxHealth,
                                        WorldRules.roundLimit,
-                                       WorldRules.roundTimer);
+                                       WorldRules.roundTimer,
+                                       clock.activeSelf);
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
@@ -113,17 +134,31 @@ public class CreaterAndJoinRooms : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    private void RPC_SetRoomConditions(int maxHealth, int roundLimit, float roundTimer)
+    private void RPC_SetRoomConditions(int maxHealth, int roundLimit, float roundTimer, bool activeClock)
     {
         HealthManager p1HP = p1Owner.GetComponent<HealthManager>();
         HealthManager p2HP = p2Owner.GetComponent<HealthManager>();
+
+        settingsBackup.MaxHealth = p1HP.maxHealth;
+        settingsBackup.MaxHealth = p2HP.maxHealth;
         p1HP.maxHealth = maxHealth;
         p2HP.maxHealth = maxHealth;
         p1HP.ResetHealth();
         p2HP.ResetHealth();
 
-        // todo timer enabled switch
+        settingsBackup.RoundLimit = WorldRules.roundLimit;
+        settingsBackup.RoundTimer = WorldRules.roundTimer;
+        settingsBackup.ClockActive = clock.activeSelf;
         WorldRules.roundLimit = roundLimit;
         WorldRules.roundTimer = roundTimer;
+        clock.SetActive(activeClock);
     }
+}
+
+struct SettingsStorage
+{
+    public int MaxHealth;
+    public int RoundLimit;
+    public float RoundTimer;
+    public bool ClockActive;
 }
