@@ -41,7 +41,7 @@ public class PlayerController : MonoBehaviour
     private SetControls controls;
     private PlayerPhysics physics;
     private PlayerAttackController attackController;
-    private PhotonView view;
+    public PhotonView view { get; private set; }
 
     // Prevents knockback auto-block
     public bool blocking { get; private set; }
@@ -190,7 +190,7 @@ public class PlayerController : MonoBehaviour
             {
                 physics.startSprint = false;
                 physics.travel = 0.0f;
-                if (view != null) view.RPC("RPC_CancelSprint", PhotonNetwork.PlayerListOthers[0]);
+                if (view != null) view.RPC("RPC_CancelSprint", PhotonNetwork.PlayerListOthers[0], transform.position);
             }
         }
         else if (pState == PlayerStates.Grounded && gState != GroundStates.Stun)
@@ -198,7 +198,7 @@ public class PlayerController : MonoBehaviour
             if (up)
             {
                 physics.launch += jumpPower;
-                if (view != null) view.RPC("RPC_Jump", PhotonNetwork.PlayerListOthers[0]);
+                if (view != null) view.RPC("RPC_Jump", PhotonNetwork.PlayerListOthers[0], transform.position);
             }
 
             if (down)
@@ -216,7 +216,7 @@ public class PlayerController : MonoBehaviour
                 blocking = true;
                 if (view != null)
                 {
-                    view.RPC("RPC_DashLeft", PhotonNetwork.PlayerListOthers[0]);
+                    view.RPC("RPC_DashLeft", PhotonNetwork.PlayerListOthers[0], transform.position);
                     view.RPC("RPC_SendBlock", PhotonNetwork.PlayerListOthers[0]);
                 }
             }
@@ -224,13 +224,13 @@ public class PlayerController : MonoBehaviour
             {
                 physics.startSprint = true;
                 physics.travel = -sprint;
-                if (view != null) view.RPC("RPC_SprintLeft", PhotonNetwork.PlayerListOthers[0]);
+                if (view != null) view.RPC("RPC_SprintLeft", PhotonNetwork.PlayerListOthers[0], transform.position);
             }
             else if (rLeft && gState != GroundStates.Neutral)
             {
                 physics.startSprint = false;
                 physics.travel = 0.0f;
-                if (view != null) view.RPC("RPC_CancelSprint", PhotonNetwork.PlayerListOthers[0]);
+                if (view != null) view.RPC("RPC_CancelSprint", PhotonNetwork.PlayerListOthers[0], transform.position);
             }
 
             if (right && gState == GroundStates.Neutral)
@@ -239,7 +239,7 @@ public class PlayerController : MonoBehaviour
                 blocking = true;
                 if (view != null)
                 {
-                    view.RPC("RPC_DashRight", PhotonNetwork.PlayerListOthers[0]);
+                    view.RPC("RPC_DashRight", PhotonNetwork.PlayerListOthers[0], transform.position);
                     view.RPC("RPC_SendBlock", PhotonNetwork.PlayerListOthers[0]);
                 }
             }
@@ -247,13 +247,13 @@ public class PlayerController : MonoBehaviour
             {
                 physics.startSprint = true;
                 physics.travel = sprint;
-                if (view != null) view.RPC("RPC_SprintRight", PhotonNetwork.PlayerListOthers[0]);
+                if (view != null) view.RPC("RPC_SprintRight", PhotonNetwork.PlayerListOthers[0], transform.position);
             }
             else if (rRight && gState != GroundStates.Neutral)
             {
                 physics.startSprint = false;
                 physics.travel = 0.0f;
-                if (view != null) view.RPC("RPC_CancelSprint", PhotonNetwork.PlayerListOthers[0]);
+                if (view != null) view.RPC("RPC_CancelSprint", PhotonNetwork.PlayerListOthers[0], transform.position);
             }
         }
         else if (pState == PlayerStates.Airborne)
@@ -264,20 +264,20 @@ public class PlayerController : MonoBehaviour
                 {
                     physics.startSprint = true;
                     physics.travel = -sprint;
-                    if (view != null) view.RPC("RPC_SprintLeft", PhotonNetwork.PlayerListOthers[0]);
+                    if (view != null) view.RPC("RPC_SprintLeft", PhotonNetwork.PlayerListOthers[0], transform.position);
                 }
                 else if (right && physics.airLock == 1)
                 {
                     physics.startSprint = true;
                     physics.travel = sprint;
-                    if (view != null) view.RPC("RPC_SprintRight", PhotonNetwork.PlayerListOthers[0]);
+                    if (view != null) view.RPC("RPC_SprintRight", PhotonNetwork.PlayerListOthers[0], transform.position);
                 }
 
                 if (rLeft || rRight)
                 {
                     physics.startSprint = false;
                     physics.travel = 0.0f;
-                    if (view != null) view.RPC("RPC_CancelSprint", PhotonNetwork.PlayerListOthers[0]);
+                    if (view != null) view.RPC("RPC_CancelSprint", PhotonNetwork.PlayerListOthers[0], transform.position);
                 }
             }
         }
@@ -289,17 +289,29 @@ public class PlayerController : MonoBehaviour
                 if (Input.GetKeyUp(controls.keyboardControls.Punch))
                 {
                     attackController.sendPunch = true;
-                    if (view != null) view.RPC("RPC_SendPunch", PhotonNetwork.PlayerListOthers[0]);
+                    if (view != null)
+                    {
+                        view.RPC("RPC_SendPunch", PhotonNetwork.PlayerListOthers[0], transform.position);
+                        view.RPC("RPC_SyncOppPos", PhotonNetwork.PlayerListOthers[0], transform.position);
+                    }
                 }
                 else if (Input.GetKeyUp(controls.keyboardControls.Kick))
                 {
                     attackController.sendKick = true;
-                    if (view != null) view.RPC("RPC_SendKick", PhotonNetwork.PlayerListOthers[0]);
+                    if (view != null)
+                    {
+                        view.RPC("RPC_SendKick", PhotonNetwork.PlayerListOthers[0], transform.position);
+                        view.RPC("RPC_SyncOppPos", PhotonNetwork.PlayerListOthers[0], transform.position);
+                    }
                 }
                 else if (Input.GetKeyUp(controls.keyboardControls.Throw))
                 {
                     attackController.sendThrow = true;
-                    if (view != null) view.RPC("RPC_SendThrow", PhotonNetwork.PlayerListOthers[0]);
+                    if (view != null)
+                    {
+                        view.RPC("RPC_SendThrow", PhotonNetwork.PlayerListOthers[0], transform.position);
+                        view.RPC("RPC_SyncOppPos", PhotonNetwork.PlayerListOthers[0], transform.position);
+                    }
                 }
             }
             else
@@ -307,17 +319,29 @@ public class PlayerController : MonoBehaviour
                 if (Input.GetKeyUp(controls.gamepadControls.Punch))
                 {
                     attackController.sendPunch = true;
-                    if (view != null) view.RPC("RPC_SendPunch", PhotonNetwork.PlayerListOthers[0]);
+                    if (view != null)
+                    {
+                        view.RPC("RPC_SendPunch", PhotonNetwork.PlayerListOthers[0], transform.position);
+                        view.RPC("RPC_SyncOppPos", PhotonNetwork.PlayerListOthers[0], transform.position);
+                    }
                 }
                 else if (Input.GetKeyUp(controls.gamepadControls.Kick))
                 {
                     attackController.sendKick = true;
-                    if (view != null) view.RPC("RPC_SendKick", PhotonNetwork.PlayerListOthers[0]);
+                    if (view != null)
+                    {
+                        view.RPC("RPC_SendKick", PhotonNetwork.PlayerListOthers[0], transform.position);
+                        view.RPC("RPC_SyncOppPos", PhotonNetwork.PlayerListOthers[0], transform.position);
+                    }
                 }
                 else if (Input.GetKeyUp(controls.gamepadControls.Throw))
                 {
                     attackController.sendThrow = true;
-                    if (view != null) view.RPC("RPC_SendThrow", PhotonNetwork.PlayerListOthers[0]);
+                    if (view != null)
+                    {
+                        view.RPC("RPC_SendThrow", PhotonNetwork.PlayerListOthers[0], transform.position);
+                        view.RPC("RPC_SyncOppPos", PhotonNetwork.PlayerListOthers[0], transform.position);
+                    }
                 }
             }
         }
@@ -347,19 +371,22 @@ public class PlayerController : MonoBehaviour
     // RPCFunctions
     // =======
     [PunRPC]
-    private void RPC_Jump()
+    private void RPC_Jump(Vector3 syncPos)
     {
         physics.launch += jumpPower;
+        transform.position = syncPos;
     }
     [PunRPC]
-    private void RPC_DashLeft()
+    private void RPC_DashLeft(Vector3 syncPos)
     {
         physics.travel -= dashDistance;
+        transform.position = syncPos;
     }
     [PunRPC]
-    private void RPC_DashRight()
+    private void RPC_DashRight(Vector3 syncPos)
     {
         physics.travel += dashDistance;
+        transform.position = syncPos;
     }
     [PunRPC]
     private void RPC_Crouch()
@@ -367,43 +394,59 @@ public class PlayerController : MonoBehaviour
         physics.enableCrouch = true;
     }
     [PunRPC]
-    private void RPC_SprintLeft()
+    private void RPC_SprintLeft(Vector3 syncPos)
     {
         physics.startSprint = true;
         physics.travel = -sprint;
+        transform.position = syncPos;
     }
     [PunRPC]
-    private void RPC_SprintRight()
+    private void RPC_SprintRight(Vector3 syncPos)
     {
         physics.startSprint = true;
         physics.travel = sprint;
+        transform.position = syncPos;
     }
     [PunRPC]
-    private void RPC_CancelSprint()
+    private void RPC_CancelSprint(Vector3 syncPos)
     {
         physics.startSprint = false;
         physics.travel = 0.0f;
+        transform.position = syncPos;
     }
     [PunRPC]
-    private void RPC_SendPunch()
+    private void RPC_SendPunch(Vector3 syncPos)
     {
         attackController.sendPunch = true;
+        transform.position = syncPos;
     }
     [PunRPC]
-    private void RPC_SendKick()
+    private void RPC_SendKick(Vector3 syncPos)
     {
         attackController.sendKick = true;
+        transform.position = syncPos;
     }
     [PunRPC]
-    private void RPC_SendThrow()
+    private void RPC_SendThrow(Vector3 syncPos)
     {
         attackController.sendThrow = true;
+        transform.position = syncPos;
     }
     // todo maybe not necessary? might want cancel block, not sure
     [PunRPC]
     private void RPC_SendBlock()
     {
         blocking = true;
+    }
+    [PunRPC]
+    private void RPC_SyncPos(Vector3 syncPos)
+    {
+        transform.position = syncPos;
+    }
+    [PunRPC]
+    private void RPC_SyncOppPos(Vector3 syncPos)
+    {
+        transform.position = syncPos;
     }
 
     public void StartGame()

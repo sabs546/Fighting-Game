@@ -60,6 +60,8 @@ MonoBehaviour:
   - RPC_StartGame
   - StartGame
   - RPC_SetRoomConditions
+  - RPC_SyncPos
+  - RPC_SyncOppPos
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
