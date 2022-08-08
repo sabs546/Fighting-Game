@@ -82,6 +82,7 @@ public class CreaterAndJoinRooms : MonoBehaviourPunCallbacks
 
             PhotonNetwork.LeaveRoom();
         }
+        startButton.interactable = false;
         leaveButton.interactable = false;
         WorldRules.online = false;
 
@@ -135,6 +136,7 @@ public class CreaterAndJoinRooms : MonoBehaviourPunCallbacks
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
+        if (!host) LeaveRoom();
         startButton.interactable = false;
     }
 
