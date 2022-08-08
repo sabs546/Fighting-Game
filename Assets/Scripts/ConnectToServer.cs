@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using UnityEngine.UI;
 using TMPro;
+using Photon.Realtime;
 
 public class ConnectToServer : MonoBehaviourPunCallbacks
 {
@@ -38,5 +39,16 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         roomName.text = "Lobby";
         HostButton.interactable = true;
         JoinButton.interactable = true;
+    }
+
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        base.OnDisconnected(cause);
+
+        if (cause == DisconnectCause.MaxCcuReached)
+        {
+            whiteout.color = Color.red;
+            roomName.text = "Failed to connect";
+        }
     }
 }
