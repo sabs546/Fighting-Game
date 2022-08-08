@@ -45,6 +45,7 @@ public class PlayerController : MonoBehaviour
 
     // Prevents knockback auto-block
     public bool blocking { get; private set; }
+    private int ticker;
 
     // Start is called before the first frame update
     void OnEnable()
@@ -54,6 +55,7 @@ public class PlayerController : MonoBehaviour
         attackController = GetComponent<PlayerAttackController>();
         dpadInputs = GetComponent<DPadButtons>();
         keyboardInputs = GetComponent<KeyboardInput>();
+        ticker = 0;
     }
 
     private void OnDisable()
@@ -165,6 +167,15 @@ public class PlayerController : MonoBehaviour
                 dpadInputs.ClearInputs();
             }
         }
+        if (view != null)
+        {
+            ticker++;
+            if (ticker == 6)
+            {
+                view.RPC("RPC_SmoothSyncPos", PhotonNetwork.PlayerListOthers[0], transform.position);
+                ticker = 0;
+            }
+        }
 
         // --------------------------------------------------------
         // - Movement Inputs -
@@ -216,7 +227,7 @@ public class PlayerController : MonoBehaviour
                 blocking = true;
                 if (view != null)
                 {
-                    view.RPC("RPC_DashLeft", PhotonNetwork.PlayerListOthers[0], transform.position);
+                    view.RPC("RPC_DashLeft", PhotonNetwork.PlayerListOthers[0]);
                     view.RPC("RPC_SendBlock", PhotonNetwork.PlayerListOthers[0]);
                 }
             }
@@ -239,7 +250,7 @@ public class PlayerController : MonoBehaviour
                 blocking = true;
                 if (view != null)
                 {
-                    view.RPC("RPC_DashRight", PhotonNetwork.PlayerListOthers[0], transform.position);
+                    view.RPC("RPC_DashRight", PhotonNetwork.PlayerListOthers[0]);
                     view.RPC("RPC_SendBlock", PhotonNetwork.PlayerListOthers[0]);
                 }
             }
@@ -292,7 +303,6 @@ public class PlayerController : MonoBehaviour
                     if (view != null)
                     {
                         view.RPC("RPC_SendPunch", PhotonNetwork.PlayerListOthers[0], transform.position);
-                        view.RPC("RPC_SyncOppPos", PhotonNetwork.PlayerListOthers[0], transform.position);
                     }
                 }
                 else if (Input.GetKeyUp(controls.keyboardControls.Kick))
@@ -301,7 +311,6 @@ public class PlayerController : MonoBehaviour
                     if (view != null)
                     {
                         view.RPC("RPC_SendKick", PhotonNetwork.PlayerListOthers[0], transform.position);
-                        view.RPC("RPC_SyncOppPos", PhotonNetwork.PlayerListOthers[0], transform.position);
                     }
                 }
                 else if (Input.GetKeyUp(controls.keyboardControls.Throw))
@@ -310,7 +319,6 @@ public class PlayerController : MonoBehaviour
                     if (view != null)
                     {
                         view.RPC("RPC_SendThrow", PhotonNetwork.PlayerListOthers[0], transform.position);
-                        view.RPC("RPC_SyncOppPos", PhotonNetwork.PlayerListOthers[0], transform.position);
                     }
                 }
             }
@@ -322,7 +330,6 @@ public class PlayerController : MonoBehaviour
                     if (view != null)
                     {
                         view.RPC("RPC_SendPunch", PhotonNetwork.PlayerListOthers[0], transform.position);
-                        view.RPC("RPC_SyncOppPos", PhotonNetwork.PlayerListOthers[0], transform.position);
                     }
                 }
                 else if (Input.GetKeyUp(controls.gamepadControls.Kick))
@@ -331,7 +338,6 @@ public class PlayerController : MonoBehaviour
                     if (view != null)
                     {
                         view.RPC("RPC_SendKick", PhotonNetwork.PlayerListOthers[0], transform.position);
-                        view.RPC("RPC_SyncOppPos", PhotonNetwork.PlayerListOthers[0], transform.position);
                     }
                 }
                 else if (Input.GetKeyUp(controls.gamepadControls.Throw))
@@ -340,7 +346,6 @@ public class PlayerController : MonoBehaviour
                     if (view != null)
                     {
                         view.RPC("RPC_SendThrow", PhotonNetwork.PlayerListOthers[0], transform.position);
-                        view.RPC("RPC_SyncOppPos", PhotonNetwork.PlayerListOthers[0], transform.position);
                     }
                 }
             }
@@ -374,19 +379,16 @@ public class PlayerController : MonoBehaviour
     private void RPC_Jump(Vector3 syncPos)
     {
         physics.launch += jumpPower;
-        transform.position = syncPos;
     }
     [PunRPC]
-    private void RPC_DashLeft(Vector3 syncPos)
+    private void RPC_DashLeft()
     {
         physics.travel -= dashDistance;
-        transform.position = syncPos;
     }
     [PunRPC]
-    private void RPC_DashRight(Vector3 syncPos)
+    private void RPC_DashRight()
     {
         physics.travel += dashDistance;
-        transform.position = syncPos;
     }
     [PunRPC]
     private void RPC_Crouch()
@@ -434,9 +436,10 @@ public class PlayerController : MonoBehaviour
     }
     // todo maybe not necessary? might want cancel block, not sure
     [PunRPC]
-    private void RPC_SendBlock()
+    private void RPC_SendBlock(Vector3 syncPos)
     {
         blocking = true;
+        transform.position = syncPos;
     }
     [PunRPC]
     private void RPC_SyncPos(Vector3 syncPos)
@@ -444,9 +447,27 @@ public class PlayerController : MonoBehaviour
         transform.position = syncPos;
     }
     [PunRPC]
-    private void RPC_SyncOppPos(Vector3 syncPos)
+    private void RPC_SmoothSyncPos(Vector3 syncPos)
     {
-        transform.position = syncPos;
+        float xPos = transform.position.x;
+        float yPos = transform.position.y;
+        if (transform.position.x != syncPos.x)
+        {
+            xPos -= (transform.position.x - syncPos.x) / 5;
+            if (xPos < 1.0f && xPos > -1.0f)
+            {
+                xPos = transform.position.x;
+            }
+        }
+        if (transform.position.y != syncPos.y)
+        {
+            yPos -= (transform.position.y - syncPos.y) / 5;
+            if (yPos < 1.0f && yPos > -1.0f)
+            {
+                yPos = transform.position.y;
+            }
+        }
+        transform.position = new Vector3(xPos, yPos, transform.position.z);
     }
 
     public void StartGame()
