@@ -68,6 +68,12 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (WorldRules.online && PhotonNetwork.PlayerListOthers.Length == 0)
+        {
+            Camera.main.GetComponent<GameStateControl>().IncorrectEndGame();
+            return;
+        }
+
         if (GameStateControl.gameState == GameStateControl.GameState.Pause)
         {
             if (controls.type == SetControls.ControllerType.Keyboard && Input.GetKeyDown(controls.keyboardControls.Pause) ||
@@ -90,7 +96,7 @@ public class PlayerController : MonoBehaviour
         up = down = left = right = false;
         rUp = rDown = rLeft = rRight = false;
 
-        if ((WorldRules.offline || (view != null && view.IsMine)) && attackController.state == PlayerAttackController.AttackState.Empty && gState != GroundStates.Stun)
+        if ((!WorldRules.online || (view != null && view.IsMine)) && attackController.state == PlayerAttackController.AttackState.Empty && gState != GroundStates.Stun)
         {
             if (controls.type == SetControls.ControllerType.Keyboard)
             {
@@ -228,7 +234,6 @@ public class PlayerController : MonoBehaviour
                 if (view != null)
                 {
                     view.RPC("RPC_DashLeft", PhotonNetwork.PlayerListOthers[0]);
-                    view.RPC("RPC_SendBlock", PhotonNetwork.PlayerListOthers[0]);
                 }
             }
             else if (left && gState != GroundStates.Neutral)
@@ -251,7 +256,6 @@ public class PlayerController : MonoBehaviour
                 if (view != null)
                 {
                     view.RPC("RPC_DashRight", PhotonNetwork.PlayerListOthers[0]);
-                    view.RPC("RPC_SendBlock", PhotonNetwork.PlayerListOthers[0]);
                 }
             }
             else if (right && gState != GroundStates.Neutral)
@@ -384,11 +388,13 @@ public class PlayerController : MonoBehaviour
     private void RPC_DashLeft()
     {
         physics.travel -= dashDistance;
+        blocking = true;
     }
     [PunRPC]
     private void RPC_DashRight()
     {
         physics.travel += dashDistance;
+        blocking = true;
     }
     [PunRPC]
     private void RPC_Crouch()
@@ -434,13 +440,6 @@ public class PlayerController : MonoBehaviour
         attackController.sendThrow = true;
         transform.position = syncPos;
     }
-    // todo maybe not necessary? might want cancel block, not sure
-    [PunRPC]
-    private void RPC_SendBlock(Vector3 syncPos)
-    {
-        blocking = true;
-        transform.position = syncPos;
-    }
     [PunRPC]
     private void RPC_SyncPos(Vector3 syncPos)
     {
@@ -472,12 +471,17 @@ public class PlayerController : MonoBehaviour
 
     public void StartGame()
     {
-        view.RPC("RPC_StartGame", PhotonNetwork.MasterClient);
+        Camera.main.GetComponent<CameraControl>().StartGame();
         view.RPC("RPC_StartGame", PhotonNetwork.PlayerListOthers[0]);
     }
     [PunRPC]
     private void RPC_StartGame()
     {
         Camera.main.GetComponent<CameraControl>().StartGame();
+    }
+    [PunRPC]
+    private void RPC_EndGame()
+    {
+        Camera.main.GetComponent<GameStateControl>().EndGame();
     }
 }

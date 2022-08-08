@@ -54,7 +54,7 @@ public class CameraControl : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (GameStateControl.gameState == GameStateControl.GameState.Pause && WorldRules.offline)
+        if (GameStateControl.gameState == GameStateControl.GameState.Pause && !WorldRules.online)
         {
             return;
         }

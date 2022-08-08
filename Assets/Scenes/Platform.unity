@@ -7604,6 +7604,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1846845270}
+        m_MethodName: ServerConnect
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &436079731
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9867,6 +9878,8 @@ MonoBehaviour:
   roundClock: {fileID: 1011438338}
   whiteOut: {fileID: 168889505}
   winnerTag: {fileID: 603086101}
+  onlineStart: {fileID: 192669802}
+  room: {fileID: 1878047851}
 --- !u!114 &519420035
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16066,6 +16079,17 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1878047851}
         m_MethodName: LeaveRoom
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 1846845270}
+        m_MethodName: ServerDisconnect
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -31606,6 +31630,7 @@ MonoBehaviour:
   whiteout: {fileID: 168889505}
   HostButton: {fileID: 1446573999}
   JoinButton: {fileID: 979096954}
+  roomName: {fileID: 163564241}
 --- !u!4 &1846845271
 Transform:
   m_ObjectHideFlags: 0

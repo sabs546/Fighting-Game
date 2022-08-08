@@ -3,17 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using UnityEngine.UI;
+using TMPro;
 
 public class ConnectToServer : MonoBehaviourPunCallbacks
 {
     [SerializeField]
     private Image whiteout;
-    public Button HostButton;
-    public Button JoinButton;
+    [SerializeField]
+    private Button HostButton;
+    [SerializeField]
+    private Button JoinButton;
+    [SerializeField]
+    private TextMeshProUGUI roomName;
 
-    private void Start()
+    public void ServerDisconnect()
+    {
+        PhotonNetwork.Disconnect();
+    }
+
+    public void ServerConnect()
     {
         PhotonNetwork.ConnectUsingSettings();
+        roomName.text = "Connecting...";
     }
 
     public override void OnConnectedToMaster()
@@ -24,7 +35,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     public override void OnJoinedLobby()
     {
         whiteout.color = Color.white;
-        Debug.Log("Successfully joined lobby");
+        roomName.text = "Lobby";
         HostButton.interactable = true;
         JoinButton.interactable = true;
     }

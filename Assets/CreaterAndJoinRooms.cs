@@ -48,11 +48,7 @@ public class CreaterAndJoinRooms : MonoBehaviourPunCallbacks
             host = true;
             p1Owner.SetView();
             leaveButton.interactable = true;
-            WorldRules.offline = false;
-        }
-        else
-        {
-            whiteout.color = Color.red;
+            WorldRules.online = true;
         }
     }
 
@@ -63,7 +59,7 @@ public class CreaterAndJoinRooms : MonoBehaviourPunCallbacks
             host = false;
             p2Owner.SetView();
             leaveButton.interactable = true;
-            WorldRules.offline = false;
+            WorldRules.online = true;
         }
     }
 
@@ -87,8 +83,7 @@ public class CreaterAndJoinRooms : MonoBehaviourPunCallbacks
             PhotonNetwork.LeaveRoom();
         }
         leaveButton.interactable = false;
-        WorldRules.offline = true;
-        roomName.text = "No Room";
+        WorldRules.online = false;
 
         hostButton.interactable = true;
         joinButton.interactable = true;
@@ -104,6 +99,16 @@ public class CreaterAndJoinRooms : MonoBehaviourPunCallbacks
         if (!host)
         {
             p2Owner.SwapOfflineInputs();
+        }
+    }
+
+    public override void OnCreateRoomFailed(short returnCode, string message)
+    {
+        base.OnCreateRoomFailed(returnCode, message);
+
+        if (!PhotonNetwork.InRoom)
+        {
+            whiteout.color = Color.red;
         }
     }
 

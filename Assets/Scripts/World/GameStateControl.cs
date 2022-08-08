@@ -80,6 +80,10 @@ public class GameStateControl : MonoBehaviour
     [Header("Game Over")]
     public TextMeshProUGUI winnerTag; // To set the winners name
     private string winnerName;        // To store the winners name
+    [SerializeField]
+    private Button onlineStart;
+    [SerializeField]
+    private CreaterAndJoinRooms room;
 
     private bool ready;
 
@@ -217,7 +221,7 @@ public class GameStateControl : MonoBehaviour
             case GameState.Pause:
                 gameState = GameState.Pause;
                 pauseUI.SetActive(true);
-                if (WorldRules.offline) pauseSetting.enabled = true;
+                if (WorldRules.online) pauseSetting.enabled = false;
                 fightUI.SetActive(false);
                 pauseVolumeSlider.value = WorldRules.volume;
                 break;
@@ -383,6 +387,24 @@ public class GameStateControl : MonoBehaviour
             CPUAnimator.enabled = true;
             CPU.GetComponent<HealthManager>().Kill();
         }
+
+        if (WorldRules.online)
+        {
+            room.LeaveRoom();
+            onlineStart.interactable = false;
+        }
+
+        SetGameState(GameState.GameOver);
+    }
+
+    public void IncorrectEndGame()
+    {
+        p1Animator.enabled = true;
+        p2Animator.enabled = true;
+        p1.GetComponent<HealthManager>().Kill();
+        p2.GetComponent<HealthManager>().Kill();
+        room.LeaveRoom();
+        onlineStart.interactable = false;
         SetGameState(GameState.GameOver);
     }
 

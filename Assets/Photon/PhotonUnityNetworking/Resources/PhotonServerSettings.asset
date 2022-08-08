@@ -63,6 +63,7 @@ MonoBehaviour:
   - RPC_SyncPos
   - RPC_SyncOppPos
   - RPC_SmoothSyncPos
+  - RPC_EndGame
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
