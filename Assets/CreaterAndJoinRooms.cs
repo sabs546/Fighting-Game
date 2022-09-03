@@ -10,17 +10,13 @@ public class CreaterAndJoinRooms : MonoBehaviourPunCallbacks
 {
     [Header("Text")]
     [SerializeField]
-    private TextMeshProUGUI createInput;
-    [SerializeField]
-    private TextMeshProUGUI joinInput;
+    private TextMeshProUGUI roomInput;
     [SerializeField]
     private TextMeshProUGUI roomName;
 
     [Header("Buttons")]
     [SerializeField]
-    private Button hostButton;
-    [SerializeField]
-    private Button joinButton;
+    private Button searchButton;
     [SerializeField]
     private Button startButton;
     [SerializeField]
@@ -43,21 +39,11 @@ public class CreaterAndJoinRooms : MonoBehaviourPunCallbacks
 
     public void CreateRoom()
     {
-        if (PhotonNetwork.CreateRoom(createInput.text))
+        RoomOptions options = new RoomOptions();
+        options.MaxPlayers = 2;
+        options.IsVisible = true;
+        if (PhotonNetwork.JoinOrCreateRoom(roomInput.text, options, TypedLobby.Default))
         {
-            host = true;
-            p1Owner.SetView();
-            leaveButton.interactable = true;
-            WorldRules.online = true;
-        }
-    }
-
-    public void JoinRoom()
-    {
-        if (PhotonNetwork.JoinRoom(joinInput.text))
-        {
-            host = false;
-            p2Owner.SetView();
             leaveButton.interactable = true;
             WorldRules.online = true;
         }
@@ -86,19 +72,24 @@ public class CreaterAndJoinRooms : MonoBehaviourPunCallbacks
         leaveButton.interactable = false;
         WorldRules.online = false;
 
-        hostButton.interactable = true;
-        joinButton.interactable = true;
+        searchButton.interactable = true;
     }
 
     public override void OnJoinedRoom()
     {
         Debug.Log("Successfully connected");
         whiteout.color = Color.white;
-        roomName.text = PhotonNetwork.CurrentRoom.Name;
-        hostButton.interactable = false;
-        joinButton.interactable = false;
-        if (!host)
+        roomName.text = "Room: " + PhotonNetwork.CurrentRoom.Name;
+        searchButton.interactable = false;
+        if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
         {
+            host = true;
+            p1Owner.SetView();
+        }
+        else
+        {
+            host = false;
+            p2Owner.SetView();
             p2Owner.SwapOfflineInputs();
         }
     }

@@ -11,9 +11,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     [SerializeField]
     private Image whiteout;
     [SerializeField]
-    private Button HostButton;
-    [SerializeField]
-    private Button JoinButton;
+    private Button searchButton;
     [SerializeField]
     private TextMeshProUGUI roomName;
 
@@ -36,9 +34,8 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     public override void OnJoinedLobby()
     {
         whiteout.color = Color.white;
-        roomName.text = "Lobby";
-        HostButton.interactable = true;
-        JoinButton.interactable = true;
+        roomName.text = "Waiting in lobby";
+        searchButton.interactable = true;
     }
 
     public override void OnDisconnected(DisconnectCause cause)
