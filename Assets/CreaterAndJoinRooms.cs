@@ -34,6 +34,8 @@ public class CreaterAndJoinRooms : MonoBehaviourPunCallbacks
 
     [SerializeField]
     private Image whiteout;
+    [SerializeField]
+    private GameObject roomListBox;
 
     SettingsStorage settingsBackup;
 
@@ -43,6 +45,15 @@ public class CreaterAndJoinRooms : MonoBehaviourPunCallbacks
         options.MaxPlayers = 2;
         options.IsVisible = true;
         if (PhotonNetwork.JoinOrCreateRoom(roomInput.text, options, TypedLobby.Default))
+        {
+            leaveButton.interactable = true;
+            WorldRules.online = true;
+        }
+    }
+
+    public void JoinRoom(string roomName)
+    {
+        if (PhotonNetwork.JoinRoom(roomName))
         {
             leaveButton.interactable = true;
             WorldRules.online = true;
@@ -91,6 +102,11 @@ public class CreaterAndJoinRooms : MonoBehaviourPunCallbacks
             host = false;
             p2Owner.SetView();
             p2Owner.SwapOfflineInputs();
+        }
+
+        foreach (Transform child in roomListBox.transform)
+        {
+            Destroy(child.gameObject);
         }
     }
 
