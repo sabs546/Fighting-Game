@@ -37,8 +37,30 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         targetRoomCount = -1;
     }
 
-    public void ServerConnect()
+    public void ServerConnect(TMP_Dropdown region)
     {
+        string regionText = string.Empty;
+        switch (region.value)
+        {
+            case 0: regionText = string.Empty; break;
+            case 1: regionText = "asia"; break;
+            case 2: regionText = "au"; break;
+            case 3: regionText = "cae"; break;
+            case 4: regionText = "eu"; break;
+            case 5: regionText = "in"; break;
+            case 6: regionText = "jp"; break;
+            case 7: regionText = "ru"; break;
+            case 8: regionText = "sa"; break;
+            case 9: regionText = "kr"; break;
+            case 10: regionText = "us"; break;
+            case 11: regionText = "usw"; break;
+        }
+
+        if (regionText != string.Empty)
+        {
+            PhotonNetwork.PhotonServerSettings.AppSettings.FixedRegion = regionText;
+        }
+
         PhotonNetwork.ConnectUsingSettings();
         roomName.text = "Connecting...";
     }

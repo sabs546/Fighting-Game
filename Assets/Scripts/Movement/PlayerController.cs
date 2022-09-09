@@ -50,11 +50,21 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void OnEnable()
     {
-        controls = GetComponent<SetControls>();
+        if (!WorldRules.online)
+        {
+            view = null;
+            controls = GetComponent<SetControls>();
+            dpadInputs = GetComponent<DPadButtons>();
+            keyboardInputs = GetComponent<KeyboardInput>();
+        }
+        else if (controls == null)
+        { // todo controls seems very awkward here, it's separate from the controls used in keyboard and pad controls
+            controls = GetComponent<SetControls>();
+            dpadInputs = GetComponent<DPadButtons>();
+            keyboardInputs = GetComponent<KeyboardInput>();
+        }
         physics = GetComponent<PlayerPhysics>();
         attackController = GetComponent<PlayerAttackController>();
-        dpadInputs = GetComponent<DPadButtons>();
-        keyboardInputs = GetComponent<KeyboardInput>();
         ticker = 0;
     }
 
@@ -74,22 +84,25 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        if (GameStateControl.gameState == GameStateControl.GameState.Pause)
+        if (!WorldRules.online || (view != null && view.IsMine))
         {
-            if (controls.type == SetControls.ControllerType.Keyboard && Input.GetKeyDown(controls.keyboardControls.Pause) ||
-                controls.type == SetControls.ControllerType.Controller && Input.GetKeyDown(controls.gamepadControls.Pause))
+            if (GameStateControl.gameState == GameStateControl.GameState.Pause)
             {
-                Camera.main.GetComponent<GameStateControl>().SetGameState(GameStateControl.GameState.Fighting);
+                if (controls.type == SetControls.ControllerType.Keyboard && Input.GetKeyDown(controls.keyboardControls.Pause) ||
+                    controls.type == SetControls.ControllerType.Controller && Input.GetKeyDown(controls.gamepadControls.Pause))
+                {
+                    Camera.main.GetComponent<GameStateControl>().SetGameState(GameStateControl.GameState.Fighting);
+                }
+                return;
             }
-            return;
-        }
-        else
-        {
-            if (GameStateControl.gameState == GameStateControl.GameState.Fighting &&
-                controls.type == SetControls.ControllerType.Keyboard && Input.GetKeyDown(controls.keyboardControls.Pause) ||
-                controls.type == SetControls.ControllerType.Controller && Input.GetKeyDown(controls.gamepadControls.Pause))
+            else
             {
-                Camera.main.GetComponent<GameStateControl>().SetGameState(GameStateControl.GameState.Pause);
+                if (GameStateControl.gameState == GameStateControl.GameState.Fighting &&
+                    controls.type == SetControls.ControllerType.Keyboard && Input.GetKeyDown(controls.keyboardControls.Pause) ||
+                    controls.type == SetControls.ControllerType.Controller && Input.GetKeyDown(controls.gamepadControls.Pause))
+                {
+                    Camera.main.GetComponent<GameStateControl>().SetGameState(GameStateControl.GameState.Pause);
+                }
             }
         }
 
@@ -364,6 +377,11 @@ public class PlayerController : MonoBehaviour
     public void SwapOfflineInputs()
     {
         GetComponent<PhotonView>().TransferOwnership(PhotonNetwork.PlayerList[1].ActorNumber);
+
+        physics = GetComponent<PlayerPhysics>();
+        controls = physics.opponent.GetComponent<SetControls>();
+        dpadInputs = physics.opponent.GetComponent<DPadButtons>();
+        keyboardInputs = physics.opponent.GetComponent<KeyboardInput>();
     }
 
     public void SetView()
