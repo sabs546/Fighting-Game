@@ -15,6 +15,13 @@ public class SlideInAnimation : MonoBehaviour
     [SerializeField]
     private bool vertical;       // I'm not reentering all those variables ima just flip it here
 
+    [Header("Colour values")]
+    [SerializeField]
+    private bool fadeIn;
+    [SerializeField]
+    [Range(0.0f, 1.0f)]
+    private float targetAlpha;
+
     // Extra Values ===========================================================================
     [Header("Externals")]
     [SerializeField]
@@ -60,11 +67,25 @@ public class SlideInAnimation : MonoBehaviour
             distLeft = (startX + moveDistanceX * 0.99f) - (!vertical ? rectTransform.anchoredPosition.x : rectTransform.anchoredPosition.y);
             distLeft = moveDistanceX - distLeft;
             lacticAcidX = distLeft / moveDistanceX;
+
+            if (fadeIn)
+            {
+                Color colour = GetComponent<UnityEngine.UI.Image>().color;
+                colour.a = lacticAcidX * targetAlpha;
+                GetComponent<UnityEngine.UI.Image>().color = colour;
+            }
         }
         else
         {
             distLeft = (startX + moveDistanceX * 1.01f) - (!vertical ? rectTransform.anchoredPosition.x : rectTransform.anchoredPosition.y);
             lacticAcidX = distLeft / moveDistanceX;
+
+            if (fadeIn)
+            {
+                Color colour = GetComponent<UnityEngine.UI.Image>().color;
+                colour.a = (1.0f - lacticAcidX) * targetAlpha;
+                GetComponent<UnityEngine.UI.Image>().color = colour;
+            }
         }
 
         if (active)
@@ -76,11 +97,11 @@ public class SlideInAnimation : MonoBehaviour
                     if (rectTransform.anchoredPosition.x < startX + moveDistanceX)
                     {
                         rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x + (moveSpeedX * lacticAcidX * Time.deltaTime), rectTransform.anchoredPosition.y);
-                    }
-                    else
-                    {
-                        rectTransform.anchoredPosition = new Vector2(startX + moveDistanceX, rectTransform.anchoredPosition.y);
-                        active = false;
+                        if (rectTransform.anchoredPosition.x > startX + moveDistanceX)
+                        {
+                            rectTransform.anchoredPosition = new Vector2(startX + moveDistanceX, rectTransform.anchoredPosition.y);
+                            active = false;
+                        }
                     }
                 }
                 else
@@ -88,11 +109,11 @@ public class SlideInAnimation : MonoBehaviour
                     if (rectTransform.anchoredPosition.x > startX + moveDistanceX)
                     {
                         rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x + (moveSpeedX * lacticAcidX * Time.deltaTime), rectTransform.anchoredPosition.y);
-                    }
-                    else
-                    {
-                        rectTransform.anchoredPosition = new Vector2(startX + moveDistanceX, rectTransform.anchoredPosition.y);
-                        active = false;
+                        if (rectTransform.anchoredPosition.x < startX + moveDistanceX)
+                        {
+                            rectTransform.anchoredPosition = new Vector2(startX + moveDistanceX, rectTransform.anchoredPosition.y);
+                            active = false;
+                        }
                     }
                 }
             }
@@ -103,11 +124,11 @@ public class SlideInAnimation : MonoBehaviour
                     if (rectTransform.anchoredPosition.y < startX + moveDistanceX)
                     {
                         rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, rectTransform.anchoredPosition.y + (moveSpeedX * lacticAcidX * Time.deltaTime));
-                    }
-                    else
-                    {
-                        rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, startX + moveDistanceX);
-                        active = false;
+                        if (rectTransform.anchoredPosition.y > startX + moveDistanceX)
+                        {
+                            rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, startX + moveDistanceX);
+                            active = false;
+                        }
                     }
                 }
                 else
@@ -115,11 +136,11 @@ public class SlideInAnimation : MonoBehaviour
                     if (rectTransform.anchoredPosition.y > startX + moveDistanceX)
                     {
                         rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, rectTransform.anchoredPosition.y + (moveSpeedX * lacticAcidX * Time.deltaTime));
-                    }
-                    else
-                    {
-                        rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, startX + moveDistanceX);
-                        active = false;
+                        if (rectTransform.anchoredPosition.y < startX + moveDistanceX)
+                        {
+                            rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, startX + moveDistanceX);
+                            active = false;
+                        }
                     }
                 }
             }
