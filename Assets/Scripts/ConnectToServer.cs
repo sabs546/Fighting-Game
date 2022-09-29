@@ -39,10 +39,9 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
     public void ServerConnect(TMP_Dropdown region)
     {
-        string regionText = string.Empty;
+        string regionText = PhotonNetwork.PhotonServerSettings.AppSettings.FixedRegion = string.Empty;
         switch (region.value)
         {
-            case 0: regionText = string.Empty; break;
             case 1: regionText = "asia"; break;
             case 2: regionText = "au"; break;
             case 3: regionText = "cae"; break;
