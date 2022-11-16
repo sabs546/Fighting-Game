@@ -111,9 +111,9 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (WorldRules.online && delayedInput != string.Empty && keyboardInputs.delayFrames >= 0)
+        if (WorldRules.online && delayedInput != string.Empty && (keyboardInputs.delayFrames >= 0 || dpadInputs.delayFrames >= 0))
         {
-            if (keyboardInputs.delayFrames == 0)
+            if (keyboardInputs.delayFrames == 0 || dpadInputs.delayFrames == 0)
             {
                 switch (delayedInput)
                 {
@@ -148,6 +148,19 @@ public class PlayerController : MonoBehaviour
                     case "RPC_CancelSprint":
                         physics.startSprint = false;
                         physics.travel = 0.0f;
+                        delayedInput = string.Empty;
+                        break;
+
+                    case "RPC_SendPunch":
+                        attackController.sendPunch = true;
+                        delayedInput = string.Empty;
+                        break;
+                    case "RPC_SendKick":
+                        attackController.sendKick = true;
+                        delayedInput = string.Empty;
+                        break;
+                    case "RPC_SendThrow":
+                        attackController.sendThrow = true;
                         delayedInput = string.Empty;
                         break;
                 }
@@ -446,26 +459,38 @@ public class PlayerController : MonoBehaviour
             {
                 if (Input.GetKeyUp(controls.keyboardControls.Punch))
                 {
-                    attackController.sendPunch = true;
                     if (view != null)
                     {
-                        view.RPC("RPC_SendPunch", PhotonNetwork.PlayerListOthers[0], transform.position);
+                        delayedInput = "RPC_SendPunch";
+                        view.RPC(delayedInput, PhotonNetwork.PlayerListOthers[0], transform.position);
+                    }
+                    else
+                    {
+                        attackController.sendPunch = true;
                     }
                 }
                 else if (Input.GetKeyUp(controls.keyboardControls.Kick))
                 {
-                    attackController.sendKick = true;
                     if (view != null)
                     {
-                        view.RPC("RPC_SendKick", PhotonNetwork.PlayerListOthers[0], transform.position);
+                        delayedInput = "RPC_SendKick";
+                        view.RPC(delayedInput, PhotonNetwork.PlayerListOthers[0], transform.position);
+                    }
+                    else
+                    {
+                        attackController.sendKick = true;
                     }
                 }
                 else if (Input.GetKeyUp(controls.keyboardControls.Throw))
                 {
-                    attackController.sendThrow = true;
                     if (view != null)
                     {
-                        view.RPC("RPC_SendThrow", PhotonNetwork.PlayerListOthers[0], transform.position);
+                        delayedInput = "RPC_SendThrow";
+                        view.RPC(delayedInput, PhotonNetwork.PlayerListOthers[0], transform.position);
+                    }
+                    else
+                    {
+                        attackController.sendThrow = true;
                     }
                 }
             }
@@ -473,26 +498,38 @@ public class PlayerController : MonoBehaviour
             {
                 if (Input.GetKeyUp(controls.gamepadControls.Punch))
                 {
-                    attackController.sendPunch = true;
                     if (view != null)
                     {
-                        view.RPC("RPC_SendPunch", PhotonNetwork.PlayerListOthers[0], transform.position);
+                        delayedInput = "RPC_SendPunch";
+                        view.RPC(delayedInput, PhotonNetwork.PlayerListOthers[0], transform.position);
+                    }
+                    else
+                    {
+                        attackController.sendPunch = true;
                     }
                 }
                 else if (Input.GetKeyUp(controls.gamepadControls.Kick))
                 {
-                    attackController.sendKick = true;
                     if (view != null)
                     {
-                        view.RPC("RPC_SendKick", PhotonNetwork.PlayerListOthers[0], transform.position);
+                        delayedInput = "RPC_SendKick";
+                        view.RPC(delayedInput, PhotonNetwork.PlayerListOthers[0], transform.position);
+                    }
+                    else
+                    {
+                        attackController.sendKick = true;
                     }
                 }
                 else if (Input.GetKeyUp(controls.gamepadControls.Throw))
                 {
-                    attackController.sendThrow = true;
                     if (view != null)
                     {
-                        view.RPC("RPC_SendThrow", PhotonNetwork.PlayerListOthers[0], transform.position);
+                        delayedInput = "RPC_SendThrow";
+                        view.RPC(delayedInput, PhotonNetwork.PlayerListOthers[0], transform.position);
+                    }
+                    else
+                    {
+                        attackController.sendThrow = true;
                     }
                 }
             }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class DPadButtons : MonoBehaviour
 {
@@ -13,6 +14,10 @@ public class DPadButtons : MonoBehaviour
     private float currentX;
     private float currentY;
 
+    private float msSendTime;
+    public int delayFrames;
+    private int currentDelay; // The delay on the key you just hit
+
     private bool useController2;
 
     // Start is called before the first frame update
@@ -24,6 +29,21 @@ public class DPadButtons : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (WorldRules.online)
+        {
+            if (delayFrames > 0)
+            {
+                // Delay moment
+                delayFrames--;
+                return;
+            }
+            msSendTime = PhotonNetwork.GetPing() / 2;
+            msSendTime /= 1000.0f;
+            delayFrames = 0;
+        }
+
+        currentX = 0;
+        currentY = 0;
         if (useController2)
         {
             currentX = Input.GetAxisRaw("DPadX2");
@@ -33,6 +53,10 @@ public class DPadButtons : MonoBehaviour
         {
             currentX = Input.GetAxisRaw("DPadX");
             currentY = Input.GetAxisRaw("DPadY");
+        }
+        if (currentX != 0 && currentY != 0)
+        {
+            delayFrames = Mathf.RoundToInt((Time.deltaTime / msSendTime) + 0.5f);
         }
     }
 
