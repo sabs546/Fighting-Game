@@ -24,6 +24,7 @@ public class CameraControl : MonoBehaviour
     public CameraState state; // Keeps track of where the camera is going
     private Camera cam;       // To access orthographicSize
     private GameStateControl gameStateControl;
+    private int startDelay;   // Online start delay
 
     // State Value Storage ===================================
     public CameraSetting menu;   // Store menu screen values
@@ -49,6 +50,7 @@ public class CameraControl : MonoBehaviour
         cameraPos = transform.position;
         ticker = 0;
         startShaking = false;
+        startDelay = -1;
     }
 
     // Update is called once per frame
@@ -198,6 +200,16 @@ public class CameraControl : MonoBehaviour
                     cam.orthographicSize = menu.zoom;
                 }
             }
+
+            if (startDelay > 0)
+            {
+                startDelay--;
+            }
+            else if (startDelay == 0)
+            {
+                startDelay = -1;
+                StartGame();
+            }
         }
         transform.position = cameraPos;
 
@@ -223,6 +235,11 @@ public class CameraControl : MonoBehaviour
     {
         state = CameraState.Normal;
         gameStateControl.SetGameState(GameStateControl.GameState.Fighting);
+    }
+
+    public void StartGame(int delay)
+    {
+        startDelay = delay;
     }
 
     public void ResetToMenu()

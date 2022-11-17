@@ -38,7 +38,7 @@ public class KeyboardInput : MonoBehaviour
                 delayFrames--;
                 return;
             }
-            msSendTime = PhotonNetwork.GetPing() / 2;
+            msSendTime = PhotonNetwork.GetPing();
             msSendTime /= 1000.0f;
             delayFrames = 0;
         }
@@ -63,6 +63,13 @@ public class KeyboardInput : MonoBehaviour
         else if (Input.GetKey(controls.keyboardControls.Down))
         {
             currentY = -1;
+            delayFrames = Mathf.RoundToInt((Time.deltaTime / msSendTime) + 0.5f);
+        }
+
+        if (Input.GetKey(controls.keyboardControls.Punch) ||
+            Input.GetKey(controls.keyboardControls.Kick) ||
+            Input.GetKey(controls.keyboardControls.Throw))
+        {
             delayFrames = Mathf.RoundToInt((Time.deltaTime / msSendTime) + 0.5f);
         }
     }

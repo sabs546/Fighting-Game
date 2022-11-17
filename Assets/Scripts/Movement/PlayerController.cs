@@ -47,7 +47,6 @@ public class PlayerController : MonoBehaviour
 
     // Prevents knockback auto-block
     public bool blocking { get; private set; }
-    private int ticker;
 
     // Start is called before the first frame update
     void OnEnable()
@@ -69,7 +68,6 @@ public class PlayerController : MonoBehaviour
         }
         physics = GetComponent<PlayerPhysics>();
         attackController = GetComponent<PlayerAttackController>();
-        ticker = 0;
     }
 
     private void OnDisable()
@@ -82,7 +80,6 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         if (WorldRules.online && PhotonNetwork.PlayerListOthers.Length == 0)
         {
             Camera.main.GetComponent<GameStateControl>().IncorrectEndGame();
@@ -656,7 +653,8 @@ public class PlayerController : MonoBehaviour
 
     public void StartGame()
     {
-        Camera.main.GetComponent<CameraControl>().StartGame();
+        float msSendTime = PhotonNetwork.GetPing() / 1000.0f;
+        Camera.main.GetComponent<CameraControl>().StartGame(Mathf.RoundToInt((Time.deltaTime / msSendTime) + 0.5f));
         view.RPC("RPC_StartGame", PhotonNetwork.PlayerListOthers[0]);
     }
     [PunRPC]

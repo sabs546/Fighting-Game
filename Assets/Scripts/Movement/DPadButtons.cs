@@ -19,11 +19,13 @@ public class DPadButtons : MonoBehaviour
     private int currentDelay; // The delay on the key you just hit
 
     private bool useController2;
+    private SetControls controls;
 
     // Start is called before the first frame update
     void Start()
     {
         lastX = lastY = 0.0f;
+        controls = GetComponent<SetControls>();
     }
 
     // Update is called once per frame
@@ -37,7 +39,7 @@ public class DPadButtons : MonoBehaviour
                 delayFrames--;
                 return;
             }
-            msSendTime = PhotonNetwork.GetPing() / 2;
+            msSendTime = PhotonNetwork.GetPing();
             msSendTime /= 1000.0f;
             delayFrames = 0;
         }
@@ -54,7 +56,11 @@ public class DPadButtons : MonoBehaviour
             currentX = Input.GetAxisRaw("DPadX");
             currentY = Input.GetAxisRaw("DPadY");
         }
-        if (currentX != 0 && currentY != 0)
+
+        if (Input.GetKey(controls.keyboardControls.Punch) ||
+            Input.GetKey(controls.keyboardControls.Kick) ||
+            Input.GetKey(controls.keyboardControls.Throw) ||
+            currentX != 0 && currentY != 0)
         {
             delayFrames = Mathf.RoundToInt((Time.deltaTime / msSendTime) + 0.5f);
         }

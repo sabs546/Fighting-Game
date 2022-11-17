@@ -85,8 +85,6 @@ public class GameStateControl : MonoBehaviour
     [SerializeField]
     private CreaterAndJoinRooms room;
 
-    private bool ready;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -99,7 +97,6 @@ public class GameStateControl : MonoBehaviour
         CPUAnimator = CPU.GetComponent<Animator>();
 
         ticker = 0.0f;
-        ready = false;
     }
 
     private void Update()
