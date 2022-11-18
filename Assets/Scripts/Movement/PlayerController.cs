@@ -653,8 +653,7 @@ public class PlayerController : MonoBehaviour
 
     public void StartGame()
     {
-        float msSendTime = PhotonNetwork.GetPing() / 1000.0f;
-        Camera.main.GetComponent<CameraControl>().StartGame(Mathf.RoundToInt((Time.deltaTime / msSendTime) + 0.5f));
+        Camera.main.GetComponent<CameraControl>().StartGame(Mathf.RoundToInt((Time.deltaTime / PhotonNetwork.GetPing()) + 0.5f));
         view.RPC("RPC_StartGame", PhotonNetwork.PlayerListOthers[0]);
     }
     [PunRPC]

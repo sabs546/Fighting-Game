@@ -14,9 +14,7 @@ public class KeyboardInput : MonoBehaviour
     private int currentX;
     private int currentY;
 
-    private float msSendTime;
     public int delayFrames;
-    private int currentDelay; // The delay on the key you just hit
 
     private SetControls controls;
 
@@ -31,15 +29,12 @@ public class KeyboardInput : MonoBehaviour
     void Update()
     {
         if (WorldRules.online)
-        {
+        { // Delay moment
             if (delayFrames > 0)
             {
-                // Delay moment
                 delayFrames--;
                 return;
             }
-            msSendTime = PhotonNetwork.GetPing();
-            msSendTime /= 1000.0f;
             delayFrames = 0;
         }
 
@@ -62,12 +57,13 @@ public class KeyboardInput : MonoBehaviour
             currentY = -1;
         }
 
-        if (Input.GetKey(controls.keyboardControls.Punch) ||
+        if (WorldRules.online && (
+            Input.GetKey(controls.keyboardControls.Punch) ||
             Input.GetKey(controls.keyboardControls.Kick)  ||
             Input.GetKey(controls.keyboardControls.Throw) ||
-            currentX != 0 && currentY != 0)
+            currentX != 0 && currentY != 0))
         {
-            delayFrames = Mathf.RoundToInt((Time.deltaTime / msSendTime) + 0.5f);
+            delayFrames = Mathf.RoundToInt((Time.deltaTime / PhotonNetwork.GetPing()) + 0.5f);
         }
     }
 

@@ -14,9 +14,7 @@ public class DPadButtons : MonoBehaviour
     private float currentX;
     private float currentY;
 
-    private float msSendTime;
     public int delayFrames;
-    private int currentDelay; // The delay on the key you just hit
 
     private bool useController2;
     private SetControls controls;
@@ -39,8 +37,6 @@ public class DPadButtons : MonoBehaviour
                 delayFrames--;
                 return;
             }
-            msSendTime = PhotonNetwork.GetPing();
-            msSendTime /= 1000.0f;
             delayFrames = 0;
         }
 
@@ -57,12 +53,13 @@ public class DPadButtons : MonoBehaviour
             currentY = Input.GetAxisRaw("DPadY");
         }
 
-        if (Input.GetKey(controls.keyboardControls.Punch) ||
+        if (WorldRules.online && (
+            Input.GetKey(controls.keyboardControls.Punch) ||
             Input.GetKey(controls.keyboardControls.Kick) ||
             Input.GetKey(controls.keyboardControls.Throw) ||
-            currentX != 0 && currentY != 0)
+            currentX != 0 && currentY != 0))
         {
-            delayFrames = Mathf.RoundToInt((Time.deltaTime / msSendTime) + 0.5f);
+            delayFrames = Mathf.RoundToInt((Time.deltaTime / PhotonNetwork.GetPing()) + 0.5f);
         }
     }
 
