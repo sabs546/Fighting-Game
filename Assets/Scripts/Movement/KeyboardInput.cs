@@ -44,31 +44,28 @@ public class KeyboardInput : MonoBehaviour
         }
 
         currentX = 0;
+        currentY = 0;
         if (Input.GetKey(controls.keyboardControls.Left))
         {
             currentX = -1;
-            delayFrames = Mathf.RoundToInt((Time.deltaTime / msSendTime) + 0.5f);
         }
         else if (Input.GetKey(controls.keyboardControls.Right))
         {
             currentX = 1;
-            delayFrames = Mathf.RoundToInt((Time.deltaTime / msSendTime) + 0.5f);
         }
-        currentY = 0;
         if (Input.GetKey(controls.keyboardControls.Up))
         {
             currentY = 1;
-            delayFrames = Mathf.RoundToInt((Time.deltaTime / msSendTime) + 0.5f);
         }
         else if (Input.GetKey(controls.keyboardControls.Down))
         {
             currentY = -1;
-            delayFrames = Mathf.RoundToInt((Time.deltaTime / msSendTime) + 0.5f);
         }
 
         if (Input.GetKey(controls.keyboardControls.Punch) ||
-            Input.GetKey(controls.keyboardControls.Kick) ||
-            Input.GetKey(controls.keyboardControls.Throw))
+            Input.GetKey(controls.keyboardControls.Kick)  ||
+            Input.GetKey(controls.keyboardControls.Throw) ||
+            currentX != 0 && currentY != 0)
         {
             delayFrames = Mathf.RoundToInt((Time.deltaTime / msSendTime) + 0.5f);
         }
