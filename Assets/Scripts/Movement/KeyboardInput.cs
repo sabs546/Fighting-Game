@@ -26,7 +26,7 @@ public class KeyboardInput : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (WorldRules.online)
         { // Delay moment
@@ -61,9 +61,9 @@ public class KeyboardInput : MonoBehaviour
             Input.GetKey(controls.keyboardControls.Punch) ||
             Input.GetKey(controls.keyboardControls.Kick)  ||
             Input.GetKey(controls.keyboardControls.Throw) ||
-            currentX != 0 && currentY != 0))
+            currentX != 0 || currentY != 0))
         {
-            delayFrames = Mathf.RoundToInt((Time.deltaTime / PhotonNetwork.GetPing()) + 0.5f);
+            delayFrames = Mathf.RoundToInt((PhotonNetwork.GetPing() / (1000.0f / WorldRules.physicsRate)) + 0.5f);
         }
     }
 

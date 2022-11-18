@@ -77,37 +77,8 @@ public class PlayerController : MonoBehaviour
         physics.startSprint = false;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void FixedUpdate()
     {
-        if (WorldRules.online && PhotonNetwork.PlayerListOthers.Length == 0)
-        {
-            Camera.main.GetComponent<GameStateControl>().IncorrectEndGame();
-            return;
-        }
-
-        if (!WorldRules.online || (view != null && view.IsMine))
-        {
-            if (GameStateControl.gameState == GameStateControl.GameState.Pause)
-            {
-                if (controls.type == SetControls.ControllerType.Keyboard && Input.GetKeyDown(controls.keyboardControls.Pause) ||
-                    controls.type == SetControls.ControllerType.Controller && Input.GetKeyDown(controls.gamepadControls.Pause))
-                {
-                    Camera.main.GetComponent<GameStateControl>().SetGameState(GameStateControl.GameState.Fighting);
-                }
-                return;
-            }
-            else
-            {
-                if (GameStateControl.gameState == GameStateControl.GameState.Fighting &&
-                    controls.type == SetControls.ControllerType.Keyboard && Input.GetKeyDown(controls.keyboardControls.Pause) ||
-                    controls.type == SetControls.ControllerType.Controller && Input.GetKeyDown(controls.gamepadControls.Pause))
-                {
-                    Camera.main.GetComponent<GameStateControl>().SetGameState(GameStateControl.GameState.Pause);
-                }
-            }
-        }
-
         if (WorldRules.online && delayedInput != string.Empty && (keyboardInputs.delayFrames >= 0 || dpadInputs.delayFrames >= 0))
         {
             if (keyboardInputs.delayFrames == 0 || dpadInputs.delayFrames == 0)
@@ -167,7 +138,44 @@ public class PlayerController : MonoBehaviour
                 return;
             }
         }
-        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (WorldRules.online && PhotonNetwork.PlayerListOthers.Length == 0)
+        {
+            Camera.main.GetComponent<GameStateControl>().IncorrectEndGame();
+            return;
+        }
+
+        if (!WorldRules.online || (view != null && view.IsMine))
+        {
+            if (GameStateControl.gameState == GameStateControl.GameState.Pause)
+            {
+                if (controls.type == SetControls.ControllerType.Keyboard && Input.GetKeyDown(controls.keyboardControls.Pause) ||
+                    controls.type == SetControls.ControllerType.Controller && Input.GetKeyDown(controls.gamepadControls.Pause))
+                {
+                    Camera.main.GetComponent<GameStateControl>().SetGameState(GameStateControl.GameState.Fighting);
+                }
+                return;
+            }
+            else
+            {
+                if (GameStateControl.gameState == GameStateControl.GameState.Fighting &&
+                    controls.type == SetControls.ControllerType.Keyboard && Input.GetKeyDown(controls.keyboardControls.Pause) ||
+                    controls.type == SetControls.ControllerType.Controller && Input.GetKeyDown(controls.gamepadControls.Pause))
+                {
+                    Camera.main.GetComponent<GameStateControl>().SetGameState(GameStateControl.GameState.Pause);
+                }
+            }
+        }
+
+        if (WorldRules.online && delayedInput != string.Empty && (keyboardInputs.delayFrames > 0 || dpadInputs.delayFrames > 0))
+        {
+            return;
+        }
+
         up = down = left = right = false;
         rUp = rDown = rLeft = rRight = false;
 
@@ -653,7 +661,7 @@ public class PlayerController : MonoBehaviour
 
     public void StartGame()
     {
-        Camera.main.GetComponent<CameraControl>().StartGame(Mathf.RoundToInt((Time.deltaTime / PhotonNetwork.GetPing()) + 0.5f));
+        Camera.main.GetComponent<CameraControl>().StartGame(Mathf.RoundToInt((PhotonNetwork.GetPing() / (1000.0f / WorldRules.physicsRate)) + 0.5f));
         view.RPC("RPC_StartGame", PhotonNetwork.PlayerListOthers[0]);
     }
     [PunRPC]
