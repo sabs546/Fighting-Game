@@ -12,13 +12,9 @@ public class Disturbance : MonoBehaviour
     private CritterInfo[] critters;
     [SerializeField]
     private float triggerRange;
-    private bool inRange;
-    private bool disturbed;
 
     private void Start()
     {
-        disturbed = false;
-        inRange = false;
         cameraControl = Camera.main.GetComponent<CameraControl>();
         sound = Camera.main.transform;
     }

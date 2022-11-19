@@ -333,7 +333,7 @@ public class AIController : MonoBehaviour
     private void DefensiveDecision()
     {
         // First we check if we're within hitting range or not, but this time it's the opponents hitting range
-        if (!CheckInRange(true))
+        if (!CheckInRange(true) && !CheckInRange(false))
         {
             attackController.allowFollowup = false;
             // So we're not within attack range, we need to know if we're grounded or not first off

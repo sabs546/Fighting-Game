@@ -19,7 +19,7 @@ public class GameStateControl : MonoBehaviour
     private GameObject p2;
     [SerializeField]
     private GameObject CPU;
-    // Fighter Components -------
+    // - Fighter Components -
     private Animator p1Animator;
     private Animator p2Animator;
     private Animator CPUAnimator;
