@@ -15,6 +15,7 @@ public class KeyboardInput : MonoBehaviour
     private int currentY;
 
     public int delayFrames;
+    public bool forceDelay;
 
     private SetControls controls;
 
@@ -23,6 +24,7 @@ public class KeyboardInput : MonoBehaviour
     {
         lastX = lastY = 0;
         controls = GetComponent<SetControls>();
+        forceDelay = false;
     }
 
     // Update is called once per frame
@@ -61,9 +63,11 @@ public class KeyboardInput : MonoBehaviour
             Input.GetKey(controls.keyboardControls.Punch) ||
             Input.GetKey(controls.keyboardControls.Kick)  ||
             Input.GetKey(controls.keyboardControls.Throw) ||
-            currentX != 0 || currentY != 0))
+            currentX != 0 || currentY != 0 || forceDelay))
         {
-            delayFrames = Mathf.RoundToInt((PhotonNetwork.GetPing() / (1000.0f / WorldRules.physicsRate)) + 0.5f);
+            //delayFrames = Mathf.RoundToInt((PhotonNetwork.GetPing() / (1000.0f / WorldRules.physicsRate)) + 0.5f);
+            delayFrames = Mathf.CeilToInt((PhotonNetwork.GetPing() + 0) / (2 * (1000.0f / WorldRules.physicsRate)));
+            forceDelay = false;
         }
     }
 

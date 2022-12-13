@@ -5,8 +5,8 @@ public class AltSlideKick : BaseAttack
     public AltSlideKick()
     {
         attackType = AttackType.Kick;
-        Damage = 10;
-        Speed = new Vector3Int(10, 20, 52);
+        Damage = 5;
+        Speed = new Vector3Int(10, 20, 32);
         Stun = 20;
         Followup = null;
 

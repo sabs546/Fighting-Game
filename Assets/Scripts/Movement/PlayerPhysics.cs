@@ -7,6 +7,7 @@ public class PlayerPhysics : MonoBehaviour
     private float   fTimeGravity;     // Gravity locked to 60fps
     private float   fTimeDrag;        // Drag locked to 60fps
     private float   fTimeFloorDrag;   // FloorDrag locked to 60fps
+    public  int     fastSimulate;     // Simulate more frames
 
     // Controlled Values ======================================================
     [HideInInspector]
@@ -68,6 +69,7 @@ public class PlayerPhysics : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        beginning:
         pos = transform.position;                                                                                                  // We can apply all the forces to this first
         effectiveGravity += fTimeGravity;                                                                                          // Gravity is always applied
         if (controller.gState == PlayerController.GroundStates.Dash ||
@@ -244,6 +246,12 @@ public class PlayerPhysics : MonoBehaviour
         {
                  if (effectiveMovement < 0) { controller.currentSide = PlayerController.Side.Right; }
             else if (effectiveMovement > 0) { controller.currentSide = PlayerController.Side.Left; }
+        }
+
+        if (fastSimulate > 0)
+        {
+            fastSimulate--;
+            goto beginning;
         }
     }
 

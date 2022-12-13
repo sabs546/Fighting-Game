@@ -64,6 +64,9 @@ MonoBehaviour:
   - RPC_SyncOppPos
   - RPC_SmoothSyncPos
   - RPC_EndGame
+  - RPC_OppSmoothSyncPos
+  - RPC_VerifyPos
+  - RPC_SetOpponentController
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

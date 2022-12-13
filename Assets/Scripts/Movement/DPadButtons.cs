@@ -15,6 +15,7 @@ public class DPadButtons : MonoBehaviour
     private float currentY;
 
     public int delayFrames;
+    public bool forceDelay;
 
     private bool useController2;
     private SetControls controls;
@@ -24,6 +25,7 @@ public class DPadButtons : MonoBehaviour
     {
         lastX = lastY = 0.0f;
         controls = GetComponent<SetControls>();
+        forceDelay = false;
     }
 
     // Update is called once per frame
@@ -57,9 +59,11 @@ public class DPadButtons : MonoBehaviour
             Input.GetKey(controls.keyboardControls.Punch) ||
             Input.GetKey(controls.keyboardControls.Kick)  ||
             Input.GetKey(controls.keyboardControls.Throw) ||
-            currentX != 0 || currentY != 0))
+            currentX != 0 || currentY != 0 || forceDelay))
         {
-            delayFrames = Mathf.RoundToInt((PhotonNetwork.GetPing() / (1000.0f / WorldRules.physicsRate)) + 0.5f);
+            //delayFrames = Mathf.RoundToInt((PhotonNetwork.GetPing() / (1000.0f / WorldRules.physicsRate)) + 0.5f);
+            delayFrames = Mathf.CeilToInt((PhotonNetwork.GetPing() + 0) / (2 * (1000.0f / WorldRules.physicsRate)));
+            forceDelay = false;
         }
     }
 
