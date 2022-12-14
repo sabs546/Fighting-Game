@@ -25,7 +25,7 @@ GameObject:
   - component: {fileID: 3446603169683583356}
   - component: {fileID: 8828048127839465575}
   - component: {fileID: 3446603169683583357}
-  - component: {fileID: 4817662706241562268}
+  - component: {fileID: 2385531307457869881}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -110,6 +110,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7ae9c1af033be14c8806f7d05bf756d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fastSimulate: 0
   launch: 0
   travel: 0
   enableSprint: 0
@@ -152,6 +153,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentInput: 0
+  delayFrames: 0
+  forceDelay: 0
 --- !u!114 &3270242786235848279
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -165,6 +168,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentInput: 0
+  delayFrames: 0
+  forceDelay: 0
 --- !u!114 &3446603169683583236
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -537,7 +542,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 0
---- !u!114 &4817662706241562268
+--- !u!114 &2385531307457869881
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -546,17 +551,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 3446603169683583241}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Script: {fileID: 155943207, guid: 5b00bf8b25851d440940a40ec23344f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents:
-  - {fileID: 0}
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
+  _sceneGuid: 
+  _serializerGuid: 00000000-0000-0000-0000-000000000000
+  _prefabId: 2
+  _updateRate: 1
+  _autoFreezeProxyFrames: 0
+  _clientPredicted: 1
+  _allowInstantiateOnClient: 1
+  _persistThroughSceneLoads: 0
+  _sceneObjectDestroyOnDetach: 1
+  _sceneObjectAutoAttach: 1
+  _alwaysProxy: 0
+  _detachOnDisable: 1
+  _allowFirstReplicationWhenFrozen: 0
+  _autoRemoveChildEntities: 0
+  _entityBehaviourQueryOption: 0
+  _entityPriorityCalculatorQueryOption: 1
+  _entityReplicationFilterQueryOption: 1

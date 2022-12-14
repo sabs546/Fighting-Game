@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Photon.Pun;
 using TMPro;
-using Photon.Realtime;
+using Photon.Bolt;
+using Photon.Bolt.Matchmaking;
+using UdpKit;
+using System;
 
-public class CreaterAndJoinRooms : MonoBehaviourPunCallbacks
+public class CreaterAndJoinRooms : GlobalEventListener
 {
     [Header("Text")]
     [SerializeField]
@@ -36,33 +38,58 @@ public class CreaterAndJoinRooms : MonoBehaviourPunCallbacks
     private Image whiteout;
     [SerializeField]
     private GameObject roomListBox;
+    [SerializeField]
+    private GameObject roomButton;
 
     SettingsStorage settingsBackup;
 
     public void CreateRoom()
     {
-        RoomOptions options = new RoomOptions();
-        options.MaxPlayers = 2;
-        options.IsVisible = true;
-        if (PhotonNetwork.JoinOrCreateRoom(roomInput.text, options, TypedLobby.Default))
+        BoltLauncher.StartServer();
+        leaveButton.interactable = true;
+        WorldRules.online = true;
+    }
+
+    public void JoinRoom()
+    {
+        BoltLauncher.StartClient();
+        leaveButton.interactable = true;
+        WorldRules.online = true;
+    }
+
+    public override void BoltStartDone()
+    {
+        if (BoltNetwork.IsServer)
         {
-            leaveButton.interactable = true;
-            WorldRules.online = true;
+            string matchname = Guid.NewGuid().ToString();
+            BoltMatchmaking.CreateSession(
+                sessionID: roomInput.text
+                );
         }
     }
 
-    public void JoinRoom(string roomName)
+    public override void SessionListUpdated(Map<Guid, UdpSession> sessionList)
     {
-        if (PhotonNetwork.JoinRoom(roomName))
+        ClearSessions();
+        int i = 0;
+        foreach (var session in sessionList)
         {
-            leaveButton.interactable = true;
-            WorldRules.online = true;
+            UdpSession photonSession = session.Value;
+
+            GameObject newButton = roomButton;
+            roomButton.GetComponentInChildren<TextMeshProUGUI>().text = BoltMatchmaking.CurrentSession.Id.ToString();
+            Vector3 pos = roomButton.GetComponent<RectTransform>().anchoredPosition;
+            Vector3 buttonPos = new Vector3(pos.x, pos.y - roomButton.GetComponent<RectTransform>().rect.height * i, pos.z);
+
+            roomButton.GetComponent<RectTransform>().anchoredPosition = buttonPos;
+            Instantiate(roomButton, roomListBox.transform).GetComponent<Button>().onClick.AddListener(delegate { BoltMatchmaking.JoinSession(photonSession); });
+            i++;
         }
     }
 
     public void LeaveRoom()
     {
-        if (PhotonNetwork.CurrentRoom != null)
+        if (BoltMatchmaking.CurrentSession != null)
         {
             if (!host)
             {
@@ -77,7 +104,7 @@ public class CreaterAndJoinRooms : MonoBehaviourPunCallbacks
                 WorldRules.roundTimer = settingsBackup.RoundTimer;
             }
 
-            PhotonNetwork.LeaveRoom();
+            //BoltMatchmaking.LeaveRoom();
         }
         startButton.interactable = false;
         leaveButton.interactable = false;
@@ -86,87 +113,95 @@ public class CreaterAndJoinRooms : MonoBehaviourPunCallbacks
         searchButton.interactable = true;
     }
 
-    public override void OnJoinedRoom()
+    private void ClearSessions()
     {
-        Debug.Log("Successfully connected");
-        whiteout.color = Color.white;
-        roomName.text = "Room: " + PhotonNetwork.CurrentRoom.Name;
-        searchButton.interactable = false;
-        if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
-        {
-            host = true;
-            p1Owner.SetView();
-        }
-        else
-        {
-            host = false;
-            p2Owner.SetView();
-            p2Owner.SwapOfflineInputs();
-        }
-
         foreach (Transform child in roomListBox.transform)
         {
             Destroy(child.gameObject);
         }
     }
 
-    public override void OnCreateRoomFailed(short returnCode, string message)
-    {
-        base.OnCreateRoomFailed(returnCode, message);
+    //public override void OnJoinedRoom()
+    //{
+    //    Debug.Log("Successfully connected");
+    //    whiteout.color = Color.white;
+    //    roomName.text = "Room: " + PhotonNetwork.CurrentRoom.Name;
+    //    searchButton.interactable = false;
+    //    if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
+    //    {
+    //        host = true;
+    //        p1Owner.SetView();
+    //    }
+    //    else
+    //    {
+    //        host = false;
+    //        p2Owner.SetView();
+    //        p2Owner.SwapOfflineInputs();
+    //    }
 
-        if (!PhotonNetwork.InRoom)
-        {
-            whiteout.color = Color.red;
-        }
-    }
+    //    foreach (Transform child in roomListBox.transform)
+    //    {
+    //        Destroy(child.gameObject);
+    //    }
+    //}
 
-    public override void OnJoinRoomFailed(short returnCode, string message)
-    {
-        base.OnJoinRoomFailed(returnCode, message);
+    //public override void OnCreateRoomFailed(short returnCode, string message)
+    //{
+    //    base.OnCreateRoomFailed(returnCode, message);
 
-        if (!PhotonNetwork.InRoom)
-        {
-            whiteout.color = Color.red;
-        }
-    }
+    //    if (!PhotonNetwork.InRoom)
+    //    {
+    //        whiteout.color = Color.red;
+    //    }
+    //}
 
-    public override void OnPlayerEnteredRoom(Player newPlayer)
-    {
-        startButton.interactable = true;
-        GetComponent<PhotonView>().RPC("RPC_SetRoomConditions",
-                                       PhotonNetwork.PlayerListOthers[0],
-                                       p1Owner.GetComponent<HealthManager>().maxHealth,
-                                       WorldRules.roundLimit,
-                                       WorldRules.roundTimer,
-                                       clock.activeSelf);
-    }
+    //public override void OnJoinRoomFailed(short returnCode, string message)
+    //{
+    //    base.OnJoinRoomFailed(returnCode, message);
 
-    public override void OnPlayerLeftRoom(Player otherPlayer)
-    {
-        if (!host) LeaveRoom();
-        startButton.interactable = false;
-    }
+    //    if (!PhotonNetwork.InRoom)
+    //    {
+    //        whiteout.color = Color.red;
+    //    }
+    //}
 
-    [PunRPC]
-    private void RPC_SetRoomConditions(int maxHealth, int roundLimit, float roundTimer, bool activeClock)
-    {
-        HealthManager p1HP = p1Owner.GetComponent<HealthManager>();
-        HealthManager p2HP = p2Owner.GetComponent<HealthManager>();
+    //public override void OnPlayerEnteredRoom(Player newPlayer)
+    //{
+    //    startButton.interactable = true;
+    //    GetComponent<PhotonView>().RPC("RPC_SetRoomConditions",
+    //                                   PhotonNetwork.PlayerListOthers[0],
+    //                                   p1Owner.GetComponent<HealthManager>().maxHealth,
+    //                                   WorldRules.roundLimit,
+    //                                   WorldRules.roundTimer,
+    //                                   clock.activeSelf);
+    //}
 
-        settingsBackup.MaxHealth = p1HP.maxHealth;
-        settingsBackup.MaxHealth = p2HP.maxHealth;
-        p1HP.maxHealth = maxHealth;
-        p2HP.maxHealth = maxHealth;
-        p1HP.ResetHealth();
-        p2HP.ResetHealth();
+    //public override void OnPlayerLeftRoom(Player otherPlayer)
+    //{
+    //    if (!host) LeaveRoom();
+    //    startButton.interactable = false;
+    //}
 
-        settingsBackup.RoundLimit = WorldRules.roundLimit;
-        settingsBackup.RoundTimer = WorldRules.roundTimer;
-        settingsBackup.ClockActive = clock.activeSelf;
-        WorldRules.roundLimit = roundLimit;
-        WorldRules.roundTimer = roundTimer;
-        clock.SetActive(activeClock);
-    }
+    //[PunRPC]
+    //private void RPC_SetRoomConditions(int maxHealth, int roundLimit, float roundTimer, bool activeClock)
+    //{
+    //    HealthManager p1HP = p1Owner.GetComponent<HealthManager>();
+    //    HealthManager p2HP = p2Owner.GetComponent<HealthManager>();
+
+    //    settingsBackup.MaxHealth = p1HP.maxHealth;
+    //    settingsBackup.MaxHealth = p2HP.maxHealth;
+    //    p1HP.maxHealth = maxHealth;
+    //    p2HP.maxHealth = maxHealth;
+    //    p1HP.ResetHealth();
+    //    p2HP.ResetHealth();
+
+    //    settingsBackup.RoundLimit = WorldRules.roundLimit;
+    //    settingsBackup.RoundTimer = WorldRules.roundTimer;
+    //    settingsBackup.ClockActive = clock.activeSelf;
+    //    WorldRules.roundLimit = roundLimit;
+    //    WorldRules.roundTimer = roundTimer;
+    //    clock.SetActive(activeClock);
+    //}
 }
 
 struct SettingsStorage
