@@ -59,16 +59,16 @@ public class KeyboardInput : MonoBehaviour
             currentY = -1;
         }
 
-        if (WorldRules.online && (
-            Input.GetKey(controls.keyboardControls.Punch) ||
-            Input.GetKey(controls.keyboardControls.Kick)  ||
-            Input.GetKey(controls.keyboardControls.Throw) ||
-            currentX != 0 || currentY != 0 || forceDelay))
-        {
-            //delayFrames = Mathf.RoundToInt((PhotonNetwork.GetPing() / (1000.0f / WorldRules.physicsRate)) + 0.5f);
-            delayFrames = Mathf.CeilToInt((PhotonNetwork.GetPing() + 0) / (2 * (1000.0f / WorldRules.physicsRate)));
-            forceDelay = false;
-        }
+        //if (WorldRules.online && (
+        //    Input.GetKey(controls.keyboardControls.Punch) ||
+        //    Input.GetKey(controls.keyboardControls.Kick)  ||
+        //    Input.GetKey(controls.keyboardControls.Throw) ||
+        //    currentX != 0 || currentY != 0 || forceDelay))
+        //{
+        //    //delayFrames = Mathf.RoundToInt((PhotonNetwork.GetPing() / (1000.0f / WorldRules.physicsRate)) + 0.5f);
+        //    delayFrames = Mathf.CeilToInt((PhotonNetwork.GetPing() + 0) / (2 * (1000.0f / WorldRules.physicsRate)));
+        //    forceDelay = false;
+        //}
     }
 
     // This seems convoluted, I mean why not just go with Input.GetKey?

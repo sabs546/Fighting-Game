@@ -55,16 +55,16 @@ public class DPadButtons : MonoBehaviour
             currentY = Input.GetAxisRaw("DPadY");
         }
 
-        if (WorldRules.online && (
-            Input.GetKey(controls.keyboardControls.Punch) ||
-            Input.GetKey(controls.keyboardControls.Kick)  ||
-            Input.GetKey(controls.keyboardControls.Throw) ||
-            currentX != 0 || currentY != 0 || forceDelay))
-        {
-            //delayFrames = Mathf.RoundToInt((PhotonNetwork.GetPing() / (1000.0f / WorldRules.physicsRate)) + 0.5f);
-            delayFrames = Mathf.CeilToInt((PhotonNetwork.GetPing() + 0) / (2 * (1000.0f / WorldRules.physicsRate)));
-            forceDelay = false;
-        }
+        //if (WorldRules.online && (
+        //    Input.GetKey(controls.keyboardControls.Punch) ||
+        //    Input.GetKey(controls.keyboardControls.Kick)  ||
+        //    Input.GetKey(controls.keyboardControls.Throw) ||
+        //    currentX != 0 || currentY != 0 || forceDelay))
+        //{
+        //    //delayFrames = Mathf.RoundToInt((PhotonNetwork.GetPing() / (1000.0f / WorldRules.physicsRate)) + 0.5f);
+        //    delayFrames = Mathf.CeilToInt((PhotonNetwork.GetPing() + 0) / (2 * (1000.0f / WorldRules.physicsRate)));
+        //    forceDelay = false;
+        //}
     }
 
     public void SwapControllerNumber(bool setting)

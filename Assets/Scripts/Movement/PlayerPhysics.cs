@@ -70,6 +70,12 @@ public class PlayerPhysics : MonoBehaviour
     void FixedUpdate()
     {
         beginning:
+        if (fastSimulate < 0)
+        {
+            fastSimulate++;
+            return;
+        }
+
         pos = transform.position;                                                                                                  // We can apply all the forces to this first
         effectiveGravity += fTimeGravity;                                                                                          // Gravity is always applied
         if (controller.gState == PlayerController.GroundStates.Dash ||
@@ -216,7 +222,7 @@ public class PlayerPhysics : MonoBehaviour
         // --------------------------------------------------------
         // - Walls -
         // -------
-        if (pos.x < effectiveMaxLeft)
+        if (pos.x < effectiveMaxLeft) // todo Might need to mess with force correction here
         {
             pos.x = effectiveMaxLeft;
             effectiveMovement = Mathf.Clamp(-effectiveMovement, -controller.dashDistance, controller.dashDistance);
@@ -276,5 +282,20 @@ public class PlayerPhysics : MonoBehaviour
     public void SetOpponentType(GameObject type)
     {
         opponent = type;
+    }
+
+    // Only use this for online syncing
+    public void ForceMovementState(float forceGravity, float forceMovement)
+    {
+        if (WorldRules.online)
+        {
+            effectiveMovement = forceMovement;
+            effectiveGravity = forceGravity;
+        }
+    }
+
+    public float GetMovementState(bool gravity)
+    {
+        return gravity ? effectiveGravity : effectiveMovement;
     }
 }

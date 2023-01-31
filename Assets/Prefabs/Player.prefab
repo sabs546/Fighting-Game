@@ -10,12 +10,12 @@ GameObject:
   m_Component:
   - component: {fileID: 3446603169683583238}
   - component: {fileID: 3446603169683583239}
-  - component: {fileID: 3446603169683583240}
   - component: {fileID: 3446603169683583358}
   - component: {fileID: 7360938161609387033}
   - component: {fileID: 3270242786235848279}
   - component: {fileID: 3446603169683583236}
   - component: {fileID: 3446603169683583237}
+  - component: {fileID: 3446603169683583240}
   - component: {fileID: 3446603169683583235}
   - component: {fileID: 3446603169683583232}
   - component: {fileID: 3446603169683583233}
@@ -98,29 +98,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &3446603169683583240
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3446603169683583241}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7ae9c1af033be14c8806f7d05bf756d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  launch: 0
-  travel: 0
-  enableSprint: 0
-  enableCrouch: 0
-  startSprint: 0
-  airLock: 0
-  opponent: {fileID: 0}
-  barrier: {fileID: 0}
-  source: {fileID: 3446603169683583356}
-  dashWind: {fileID: 8300000, guid: 11e629138cdcc254dbb867d0dd8db767, type: 3}
-  jumpWind: {fileID: 8300000, guid: dfd8bd9e1bb89f44ca3e94204d1d930b, type: 3}
 --- !u!114 &3446603169683583358
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -152,6 +129,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentInput: 0
+  delayFrames: 0
+  forceDelay: 0
 --- !u!114 &3270242786235848279
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -165,6 +144,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentInput: 0
+  delayFrames: 0
+  forceDelay: 0
 --- !u!114 &3446603169683583236
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -207,10 +188,36 @@ MonoBehaviour:
   sprint: 0.2
   dashDistance: 0.4
   jumpPower: 0.4
+  Delay: {fileID: 0}
+  Correction: {fileID: 0}
   pState: 0
   gState: 0
   aState: 0
   currentSide: 0
+--- !u!114 &3446603169683583240
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3446603169683583241}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7ae9c1af033be14c8806f7d05bf756d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fastSimulate: 0
+  launch: 0
+  travel: 0
+  enableSprint: 0
+  enableCrouch: 0
+  startSprint: 0
+  airLock: 0
+  opponent: {fileID: 0}
+  barrier: {fileID: 0}
+  source: {fileID: 3446603169683583356}
+  dashWind: {fileID: 8300000, guid: 11e629138cdcc254dbb867d0dd8db767, type: 3}
+  jumpWind: {fileID: 8300000, guid: dfd8bd9e1bb89f44ca3e94204d1d930b, type: 3}
 --- !u!114 &3446603169683583235
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -223,6 +230,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47b10881a1404e24c993c09e3ed74ff8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fastSimulate: 0
   state: 0
   physics: {fileID: 0}
   p2Physics: {fileID: 0}
@@ -555,8 +563,7 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents:
-  - {fileID: 0}
+  ObservedComponents: []
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0

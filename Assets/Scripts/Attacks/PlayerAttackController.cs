@@ -6,6 +6,7 @@ public class PlayerAttackController : MonoBehaviour
     // Attack Values ===================================================================
     public  BaseAttack currentAttack;         // Attack currently playing
     private BaseAttack nextAttack;            // The next available attack in the string
+    public  int        fastSimulate;          // Simulate more frames
     
     public enum AttackState { Empty, Startup, Active, Recovery };
     public AttackState state;                 // Attack phases and what will hold them
@@ -65,6 +66,13 @@ public class PlayerAttackController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        beginning:
+        if (fastSimulate < 0)
+        {
+            fastSimulate++;
+            return;
+        }
+
         // First attack
         if (state == AttackState.Empty && controller.gState != PlayerController.GroundStates.Stun)
         {
@@ -225,6 +233,12 @@ public class PlayerAttackController : MonoBehaviour
                 currentAttack = null;
                 cancelCancel = false;
             }
+        }
+
+        if (fastSimulate > 0)
+        {
+            fastSimulate--;
+            goto beginning;
         }
     }
 
